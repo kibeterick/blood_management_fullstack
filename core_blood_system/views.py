@@ -708,3 +708,55 @@ def find_compatible_donors(request, blood_type):
 def donor_search_view(request):
     """Advanced donor search with filters"""
     return render(request, 'donor_search.html')
+
+
+
+# Certificate Download View
+@login_required
+def download_certificate(request, donation_id):
+    """Download donation certificate as PDF"""
+    from .certificates import generate_donation_certificate
+    
+    try:
+        donation = BloodDonation.objects.get(id=donation_id)
+        
+        # Check if user has permission to download this certificate
+        if request.user.role != 'admin' and donation.donor.user != request.user:
+            messages.error(request, 'You do not have permission to download this certificate.')
+            return redirect('user_dashboard')
+        
+        # Generate certificate
+        pdf_buffer = generate_donation_certificate(donation)
+        
+        # Create response
+        response = HttpResponse(pdf_buffer, content_type='application/pdf')
+        filename = f"Blood_Donation_Certificate_{donation.donor.last_name}_{donation.donation_date}.pdf"
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        return response
+        
+    except BloodDonation.DoesNotExist:
+        messages.error(request, 'Donation record not found.')
+        return redirect('user_dashboard')
+
+
+
+# My Donations View
+@login_required
+def my_donations(request):
+    """View user's donation history and download certificates"""
+    # Get donations for the logged-in user's donor profile
+    try:
+        donor = Donor.objects.get(user=request.user)
+        donations = BloodDonation.objects.filter(donor=donor).order_by('-donation_date')
+        total_units = sum(d.units_donated for d in donations)
+    except Donor.DoesNotExist:
+        donations = []
+        total_units = 0
+    
+    context = {
+        'donations': donations,
+        'total_units': total_units,
+    }
+    
+    return render(request, 'donations/my_donations.html', context)

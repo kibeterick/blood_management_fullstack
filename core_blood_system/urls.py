@@ -40,6 +40,10 @@ urlpatterns = [
     # BLOOD COMPATIBILITY CHECKER
     path('compatibility/', views.blood_compatibility_checker, name='blood_compatibility_checker'),
     
+    # CERTIFICATES
+    path('certificate/download/<int:donation_id>/', views.download_certificate, name='download_certificate'),
+    path('my-donations/', views.my_donations, name='my_donations'),
+    
     # API ENDPOINTS FOR AJAX
     path('api/donors/search/', api_views.donor_search_api, name='api_donor_search'),
     path('api/donor/<int:donor_id>/eligibility/', api_views.check_donor_eligibility_api, name='api_donor_eligibility'),
