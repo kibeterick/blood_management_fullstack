@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="bi bi-search"></i> Advanced Donor Search</h4>
+        </div>
+        <div class="card-body">
+            <!-- Search Form -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">Search by Name/Email/Phone</label>
+                    <input type="text" id="searchQuery" class="form-control" placeholder="Type to search...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Blood Type</label>
+                    <select id="bloodTypeFilter" class="form-select">
+                        <option value="">All Blood Types</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Availability</label>
+                    <select id="availabilityFilter" class="form-select">
+                        <option value="">All</option>
+                        <option value="available">Available</option>
+                        <option value="unavailable">Unavailable</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">City</label>
+                    <input type="text" id="cityFilter" class="form-control" placeholder="City">
+                </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loadingIndicator" class="text-center d-none">
+                <div class="spinner-border text-danger" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Searching donors...</p>
+            </div>
+
+            <!-- Results Count -->
+            <div id="resultsCount" class="alert alert-info d-none"></div>
+
+            <!-- Results Table -->
+            <div id="searchResults" class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Blood Type</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Last Donation</th>
+                        </tr>
+                    </thead>
+                    <tbody id="donorTableBody">
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">
+                                Use the filters above to search for donors
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Debounce function to limit API calls
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Search function
+function searchDonors() {
+    const query = document.getElementById('searchQuery').value;
+    const bloodType = document.getElementById('bloodTypeFilter').value;
+    const availability = document.getElementById('availabilityFilter').value;
+    const city = document.getElementById('cityFilter').value;
+
+    // Show loading
+    document.getElementById('loadingIndicator').classList.remove('d-none');
+    document.getElementById('resultsCount').classList.add('d-none');
+
+    // Build query string
+    const params = new URLSearchParams();
+    if (query) params.append('q', query);
+    if (bloodType) params.append('blood_type', bloodType);
+    if (availability) params.append('availability', availability);
+    if (city) params.append('city', city);
+
+    // Make AJAX request
+    fetch(`/api/donors/search/?${params.toString()}`)
+        .then(response => response.json())
+        .then(data => {
+            displayResults(data);
+            document.getElementById('loadingIndicator').classList.add('d-none');
+            
+            // Show results count
+            const countDiv = document.getElementById('resultsCount');
+            countDiv.textContent = `Found ${data.length} donor(s)`;
+            countDiv.classList.remove('d-none');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('loadingIndicator').classList.add('d-none');
+            alert('Error searching donors. Please try again.');
+        });
+}
+
+// Display results in table
+function displayResults(donors) {
+    const tbody = document.getElementById('donorTableBody');
+    
+    if (donors.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center text-muted">
+                    No donors found matching your criteria
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = donors.map(donor => `
+        <tr>
+            <td><strong>${donor.first_name} ${donor.last_name}</strong></td>
+            <td><span class="badge bg-danger">${donor.blood_type}</span></td>
+            <td>${donor.email}</td>
+            <td>${donor.phone_number}</td>
+            <td>${donor.city}, ${donor.state}</td>
+            <td>
+                ${donor.is_available 
+                    ? '<span class="badge bg-success">Available</span>' 
+                    : '<span class="badge bg-secondary">Unavailable</span>'}
+            </td>
+            <td>${donor.last_donation_date || 'Never'}</td>
+        </tr>
+    `).join('');
+}
+
+// Add event listeners with debounce
+const debouncedSearch = debounce(searchDonors, 500);
+
+document.getElementById('searchQuery').addEventListener('input', debouncedSearch);
+document.getElementById('bloodTypeFilter').addEventListener('change', searchDonors);
+document.getElementById('availabilityFilter').addEventListener('change', searchDonors);
+document.getElementById('cityFilter').addEventListener('input', debouncedSearch);
+
+// Initial load
+searchDonors();
+</script>
+{% endblock %}

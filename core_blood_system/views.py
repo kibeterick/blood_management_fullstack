@@ -700,3 +700,11 @@ def find_compatible_donors(request, blood_type):
     }
     
     return render(request, 'compatibility/compatible_donors.html', context)
+
+
+
+# Advanced Donor Search View
+@login_required
+def donor_search_view(request):
+    """Advanced donor search with filters"""
+    return render(request, 'donor_search.html')
