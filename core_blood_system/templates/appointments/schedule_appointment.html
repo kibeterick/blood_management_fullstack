@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4><i class="bi bi-calendar-plus"></i> Schedule Blood Donation Appointment</h4>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" id="appointmentForm">
+                {% csrf_token %}
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Select Donor *</label>
+                        <select name="donor" class="form-select" required>
+                            <option value="">Choose donor...</option>
+                            {% for donor in donors %}
+                                <option value="{{ donor.id }}">
+                                    {{ donor.first_name }} {{ donor.last_name }} - {{ donor.blood_type }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Appointment Date *</label>
+                        <input type="date" name="appointment_date" class="form-control" 
+                               min="{{ today }}" required id="dateInput">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Time Slot *</label>
+                        <select name="time_slot" class="form-select" required id="timeSlotSelect">
+                            <option value="">Select time...</option>
+                            <option value="09:00">9:00 AM</option>
+                            <option value="10:00">10:00 AM</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="15:00">3:00 PM</option>
+                            <option value="16:00">4:00 PM</option>
+                        </select>
+                        <small class="text-muted">Available slots will be shown</small>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label class="form-label">Location/Hospital *</label>
+                        <input type="text" name="location" class="form-control" 
+                               placeholder="Hospital or donation center name" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Address *</label>
+                    <textarea name="address" class="form-control" rows="2" 
+                              placeholder="Full address of donation location" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Notes (Optional)</label>
+                    <textarea name="notes" class="form-control" rows="3" 
+                              placeholder="Any special instructions or requirements"></textarea>
+                </div>
+
+                <div class="alert alert-info">
+                    <h6><i class="bi bi-info-circle"></i> Before Your Appointment:</h6>
+                    <ul class="mb-0">
+                        <li>Eat a healthy meal</li>
+                        <li>Stay well hydrated</li>
+                        <li>Get adequate rest</li>
+                        <li>Bring a valid ID</li>
+                        <li>Avoid alcohol 24 hours before</li>
+                    </ul>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-calendar-check"></i> Schedule Appointment
+                    </button>
+                    <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Check available time slots when date changes
+document.getElementById('dateInput').addEventListener('change', function() {
+    // In a real implementation, this would make an AJAX call to check availability
+    console.log('Checking available slots for:', this.value);
+});
+</script>
+{% endblock %}

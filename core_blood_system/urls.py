@@ -49,5 +49,3 @@ urlpatterns = [
     path('api/donor/<int:donor_id>/availability/', api_views.update_donor_availability_api, name='api_update_availability'),
     path('api/dashboard-stats/', api_views.dashboard_stats_api, name='api_dashboard_stats'),
 ]
-    path('compatibility/<str:blood_type>/', views.find_compatible_donors, name='find_compatible_donors'),
-]
