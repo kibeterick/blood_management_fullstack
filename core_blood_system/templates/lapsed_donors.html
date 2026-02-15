@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h2 class="fw-bold text-dark mb-4">📢 Lapsed Donor Outreach</h2>
+  <div class="card shadow-sm">
+    <div class="card-header bg-warning text-dark fw-bold">Donors who haven't given in 3+ months</div>
+    <ul class="list-group list-group-flush">
+      {% for donor in donors %}
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ donor.name }}</strong> ({{ donor.blood_group }})
+          <br><span class="badge bg-danger">Last gave {{ donor.months_since_last }} months ago</span>
+        </div>
+        <div>
+          <a href="https://wa.me/{{ donor.phone }}?text=Hi%20{{ donor.name }},%20it%20has%20been%20{{ donor.months_since_last }}%20months%20since%20your%20last%20donation.%20We%20currently%20need%20{{ donor.blood_group }}%20blood.%20Are%20you%20available?" target="_blank" class="btn btn-sm btn-success">Reach Out</a>
+        </div>
+      </li>
+      {% empty %}
+      <li class="list-group-item text-center py-4 text-muted">No lapsed donors found. Everyone is staying on track!</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

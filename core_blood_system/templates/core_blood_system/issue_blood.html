@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Issue Blood</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 5px; }
+        .unit-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .unit-card:hover { background: #f9f9f9; }
+        .btn { padding: 10px 20px; background: #28a745; color: white; text-decoration: none; border: none; cursor: pointer; border-radius: 4px; }
+        .details { font-size: 0.9em; color: #555; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Issue Blood for: {{ recipient.first_name }} {{ recipient.last_name }}</h2>
+        <p><strong>Patient Type:</strong> {{ recipient.blood_type }} | <strong>Hospital:</strong> {{ recipient.hospital_name }}</p>
+        <hr>
+        
+        <h3>Compatible Blood Units Found (FIFO Order):</h3>
+        <p>Click to assign a unit to this patient:</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            {% for unit in compatible_units %}
+            <div class="unit-card">
+                <strong>Unit ID:</strong> {{ unit.id }}<br>
+                <strong>Blood Type:</strong> {{ unit.blood_type }}<br>
+                <div class="details">
+                    Donated: {{ unit.donation_date }} | Expiry: {{ unit.expiry_date }}
+                </div>
+                <br>
+                <button type="submit" name="unit_id" value="{{ unit.id }}" class="btn">Assign This Unit</button>
+            </div>
+            {% empty %}
+            <div style="color: red; padding: 20px; background: #ffe6e6; border-radius: 5px;">
+                <strong>No compatible blood units found in stock!</strong>
+                <p>Please check inventory or add donations.</p>
+            </div>
+            {% endfor %}
+        </form>
+
+        <br>
+        <a href="/">Cancel and Return to Dashboard</a>
+    </div>
+</body>
+</html>

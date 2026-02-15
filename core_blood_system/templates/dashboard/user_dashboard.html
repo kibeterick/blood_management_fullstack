@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-primary">
+                <h4>👋 Welcome, {{ user.first_name|default:user.username }}!</h4>
+                <p class="mb-0">Manage your blood donation activities from this dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <div style="font-size: 60px;">👤</div>
+                    <h5 class="mt-3">Register as Donor</h5>
+                    <p class="text-muted">Share your blood type and save lives</p>
+                    <a href="{% url 'register_donor' %}" class="btn btn-primary">Register Now</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-danger">
+                <div class="card-body text-center">
+                    <div style="font-size: 60px;">🩸</div>
+                    <h5 class="mt-3">Request Blood</h5>
+                    <p class="text-muted">Submit urgent blood request</p>
+                    <a href="{% url 'request_blood' %}" class="btn btn-danger">Request Blood</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <div style="font-size: 60px;">👥</div>
+                    <h5 class="mt-3">View Donors</h5>
+                    <p class="text-muted">Find blood donors by type</p>
+                    <a href="{% url 'donor_list' %}" class="btn btn-info">View Donors</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card border-success">
+                <div class="card-body text-center">
+                    <div style="font-size: 60px;">🔬</div>
+                    <h5 class="mt-3">Compatibility Checker</h5>
+                    <p class="text-muted">Find compatible blood donors</p>
+                    <a href="{% url 'blood_compatibility_checker' %}" class="btn btn-success">Check Compatibility</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Requests Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">🩸 My Blood Requests</h5>
+                </div>
+                <div class="card-body">
+                    {% if user_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <th>Blood Type</th>
+                                        <th>Purpose</th>
+                                        <th>Units</th>
+                                        <th>Urgency</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in user_requests %}
+                                    <tr>
+                                        <td><strong>{{ request.patient_name }}</strong></td>
+                                        <td><span class="badge bg-danger">{{ request.blood_type }}</span></td>
+                                        <td><span class="badge bg-info">{{ request.get_purpose_display }}</span></td>
+                                        <td>{{ request.units_needed }}</td>
+                                        <td>
+                                            {% if request.urgency == 'critical' %}
+                                                <span class="badge bg-danger">Critical</span>
+                                            {% elif request.urgency == 'high' %}
+                                                <span class="badge bg-warning">High</span>
+                                            {% elif request.urgency == 'medium' %}
+                                                <span class="badge bg-primary">Medium</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Low</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <span class="badge bg-warning">Pending</span>
+                                            {% elif request.status == 'approved' %}
+                                                <span class="badge bg-info">Approved</span>
+                                            {% elif request.status == 'fulfilled' %}
+                                                <span class="badge bg-success">Fulfilled</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            You haven't made any blood requests yet.
+                            <a href="{% url 'request_blood' %}" class="alert-link">Create your first request</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h6>📋 Available Blood Types:</h6>
+                    <div class="d-flex flex-wrap">
+                        <span class="badge bg-danger m-1">A+</span>
+                        <span class="badge bg-danger m-1">A-</span>
+                        <span class="badge bg-danger m-1">B+</span>
+                        <span class="badge bg-danger m-1">B-</span>
+                        <span class="badge bg-danger m-1">AB+</span>
+                        <span class="badge bg-danger m-1">AB-</span>
+                        <span class="badge bg-danger m-1">O+</span>
+                        <span class="badge bg-danger m-1">O-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

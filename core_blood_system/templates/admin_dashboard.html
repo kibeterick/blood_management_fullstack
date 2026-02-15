@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-success">
+                <h4>👋 Welcome, Admin {{ user.first_name|default:user.username }}!</h4>
+                <p class="mb-0">Manage the blood management system from this dashboard</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Total Donors</h5>
+                    <h2 class="display-4">{{ total_donors }}</h2>
+                    <a href="{% url 'donor_list' %}" class="btn btn-light btn-sm mt-2">View Donors</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-danger">
+                <div class="card-body">
+                    <h5 class="card-title">🩸 Total Requests</h5>
+                    <h2 class="display-4">{{ total_requests }}</h2>
+                    <a href="{% url 'all_requests' %}" class="btn btn-light btn-sm mt-2">View Requests</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">⏳ Pending Requests</h5>
+                    <h2 class="display-4">{{ pending_requests }}</h2>
+                    <a href="{% url 'all_requests' %}?status=pending" class="btn btn-light btn-sm mt-2">View Pending</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">💉 Total Donations</h5>
+                    <h2 class="display-4">{{ total_donations }}</h2>
+                    <small class="text-white">All time donations</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">⚡ Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'register_donor' %}" class="btn btn-primary w-100 p-3">
+                                <i class="bi bi-person-plus"></i><br>
+                                <strong>Register New Donor</strong><br>
+                                <small>Add donor with blood type</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'request_blood' %}" class="btn btn-danger w-100 p-3">
+                                <i class="bi bi-droplet"></i><br>
+                                <strong>Request Blood</strong><br>
+                                <small>Create new blood request</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'donor_list' %}" class="btn btn-info w-100 p-3">
+                                <i class="bi bi-people"></i><br>
+                                <strong>View All Donors</strong><br>
+                                <small>Search & filter donors</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'all_requests' %}" class="btn btn-warning w-100 p-3">
+                                <i class="bi bi-list-check"></i><br>
+                                <strong>View All Requests</strong><br>
+                                <small>Manage blood requests</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{% url 'blood_compatibility_checker' %}" class="btn btn-success w-100 p-3">
+                                <i class="bi bi-heart-pulse"></i><br>
+                                <strong>Compatibility Checker</strong><br>
+                                <small>Find compatible donors</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Blood Inventory -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">📊 Blood Inventory</h5>
+                </div>
+                <div class="card-body">
+                    {% if inventory %}
+                        <div class="row">
+                            {% for item in inventory %}
+                            <div class="col-md-3 mb-3">
+                                <div class="card {% if item.is_low_stock %}border-danger{% else %}border-success{% endif %}">
+                                    <div class="card-body text-center">
+                                        <h3 class="text-danger">{{ item.blood_type }}</h3>
+                                        <h2 class="display-5">{{ item.units_available }}</h2>
+                                        <small class="text-muted">units available</small>
+                                        {% if item.is_low_stock %}
+                                            <div class="badge bg-danger mt-2">Low Stock!</div>
+                                        {% else %}
+                                            <div class="badge bg-success mt-2">Adequate</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No inventory data available. Blood inventory will be updated after donations are recorded.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Requests -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">📋 Recent Blood Requests</h5>
+                    <a href="{% url 'all_requests' %}" class="btn btn-light btn-sm">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_requests %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Patient Name</th>
+                                        <th>Blood Type</th>
+                                        <th>Purpose</th>
+                                        <th>Units</th>
+                                        <th>Urgency</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for request in recent_requests %}
+                                    <tr>
+                                        <td><strong>{{ request.patient_name }}</strong></td>
+                                        <td><span class="badge bg-danger">{{ request.blood_type }}</span></td>
+                                        <td><span class="badge bg-info">{{ request.get_purpose_display }}</span></td>
+                                        <td>{{ request.units_needed }}</td>
+                                        <td>
+                                            {% if request.urgency == 'critical' %}
+                                                <span class="badge bg-danger">Critical</span>
+                                            {% elif request.urgency == 'high' %}
+                                                <span class="badge bg-warning">High</span>
+                                            {% elif request.urgency == 'medium' %}
+                                                <span class="badge bg-primary">Medium</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Low</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if request.status == 'pending' %}
+                                                <span class="badge bg-warning">Pending</span>
+                                            {% elif request.status == 'approved' %}
+                                                <span class="badge bg-info">Approved</span>
+                                            {% elif request.status == 'fulfilled' %}
+                                                <span class="badge bg-success">Fulfilled</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ request.created_at|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            No blood requests yet. Requests will appear here once submitted.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Info -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">ℹ️ System Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>📋 Available Blood Types:</h6>
+                            <div class="d-flex flex-wrap">
+                                <span class="badge bg-danger m-1">A+</span>
+                                <span class="badge bg-danger m-1">A-</span>
+                                <span class="badge bg-danger m-1">B+</span>
+                                <span class="badge bg-danger m-1">B-</span>
+                                <span class="badge bg-danger m-1">AB+</span>
+                                <span class="badge bg-danger m-1">AB-</span>
+                                <span class="badge bg-danger m-1">O+</span>
+                                <span class="badge bg-danger m-1">O-</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>🎯 Request Purposes:</h6>
+                            <div class="d-flex flex-wrap">
+                                <span class="badge bg-info m-1">Surgery</span>
+                                <span class="badge bg-info m-1">Emergency</span>
+                                <span class="badge bg-info m-1">Accident</span>
+                                <span class="badge bg-info m-1">Anemia</span>
+                                <span class="badge bg-info m-1">Cancer</span>
+                                <span class="badge bg-info m-1">Pregnancy</span>
+                                <span class="badge bg-info m-1">Other</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Success</title>
+    <style>
+        body { font-family: sans-serif; padding: 50px; text-align: center; background: #f4f4f4; }
+        .card { background: white; padding: 40px; border-radius: 10px; max-width: 500px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1 { color: #28a745; }
+        .btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Blood Issued Successfully!</h1>
+        <p><strong>Patient:</strong> {{ recipient.first_name }} {{ recipient.last_name }}</p>
+        <p><strong>Blood Unit ID:</strong> {{ recipient.blood_unit.id }} ({{ recipient.blood_unit.blood_type }})</p>
+        <p><strong>Hospital:</strong> {{ recipient.hospital_name }}</p>
+        <br>
+        <a href="/" class="btn">Return to Dashboard</a>
+    </div>
+</body>
+</html>

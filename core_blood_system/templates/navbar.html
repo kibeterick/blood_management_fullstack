@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="{% url 'home_portal' %}">BLOOD BANK</a>
+    <div class="navbar-nav ms-auto">
+      <a class="nav-link" href="{% url 'home_portal' %}">Home</a>
+      <a class="nav-link" href="{% url 'donor_list' %}">Donors</a>
+      {% if user.is_staff %}
+        <a class="nav-link text-warning fw-bold" href="{% url 'admin_home' %}">Dashboard</a>
+      {% endif %}
+      {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">{% csrf_token %}<button type="submit" class="btn btn-link nav-link">Logout</button></form>
+      {% else %}
+        <a class="nav-link" href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

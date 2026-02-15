@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Request Blood</h2>
+<form method="POST">{% csrf_token %}
+<input type="text" name="username" placeholder="Patient Name" required><br>
+<select name="purpose" required>
+  <option value="">-- Select Purpose --</option>
+  <option value="Emergency">Emergency</option>
+  <option value="Surgery">Surgery</option>
+  <option value="Accident">Accident</option>
+</select><br>
+<button type="submit">Submit Request</button>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Blood Bank | Dashboard</title>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-danger shadow">
+        <div class="container"><span class="navbar-brand mb-0 h1">🩸 Blood Bank Management System</span></div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3 shadow">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Donors</h5>
+                        <p class="display-4">{{ total_donors }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-header bg-white"><h5 class="m-0">Quick Actions</h5></div>
+                    <div class="card-body">
+                        <a href="/register/" class="btn btn-outline-danger btn-lg">+ Add New Donor</a>
+                        <a href="/admin/" class="btn btn-outline-secondary btn-lg">Database Settings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

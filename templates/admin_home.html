@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Admin Dashboard</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'export_donors_csv' %}" class="btn btn-outline-success btn-sm">Export Donors CSV</a>
+        </div>
+    </div>
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form method="GET" action="{% url 'admin_home' %}" class="row g-2">
+                <div class="col-md-10">
+                    <input type="text" name="global_q" class="form-control" placeholder="Search donors or requests by name/blood group..." value="{{ query }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Global Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if query %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h4 class="text-primary">Search Results for "{{ query }}"</h4>
+            <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name/Type</th>
+                            <th>Details</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in donor_results %}
+                        <tr>
+                            <td><strong>{{ d.name }}</strong> <span class="badge bg-info">Donor</span></td>
+                            <td>Group: {{ d.blood_group }} | Phone: {{ d.phone }}</td>
+                            <td>
+                                <form method="POST" onsubmit="return confirm('Delete this donor?');" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="donor_id" value="{{ d.id }}">
+                                    <button name="delete_donor" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% for r in request_results %}
+                        <tr>
+                            <td><strong>{{ r.username }}</strong> <span class="badge bg-warning text-dark">Request</span></td>
+                            <td>Needs: {{ r.blood_group }} | Units: {{ r.units }}</td>
+                            <td><a href="{% url 'all_requests' %}" class="btn btn-sm btn-outline-secondary">View</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% endif %}
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <h4>Blood Inventory Management</h4>
+            <div class="list-group shadow-sm">
+                {% for item in stock %}
+                <div class="list-group-item">
+                    <form method="POST" class="d-flex justify-content-between align-items-center">
+                        {% csrf_token %}
+                        <span><strong>{{ item.blood_group }}</strong></span>
+                        <div class="input-group input-group-sm w-50">
+                            <input type="number" name="bags" class="form-control" value="{{ item.bags }}">
+                            <input type="hidden" name="stock_id" value="{{ item.id }}">
+                            <button class="btn btn-success" type="submit">Update</button>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h4>Live Matching: {{ latest_request.blood_group }}</h4>
+            <div class="card border-primary">
+                <div class="card-body">
+                    {% if latest_request %}
+                        <p>Latest Request: <strong>{{ latest_request.username }}</strong> needs <strong>{{ latest_request.blood_group }}</strong></p>
+                        <h6>Available Matches:</h6>
+                        <ul class="list-group">
+                            {% for match in matches %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ match.name }} ({{ match.phone }})
+                                <a href="{% url 'log_donation' match.id %}" class="btn btn-sm btn-primary">Log Donation</a>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-muted">No eligible donors for this group.</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted">No active requests to match.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4"><h2>Donor Directory</h2>
+<table class="table table-bordered"><thead class="table-dark"><tr><th>Name</th><th>Blood Group</th></tr></thead>
+<tbody>{% for donor in donors %}<tr><td>{{ donor.name }}</td><td>{{ donor.blood_group }}</td></tr>
+{% empty %}<tr><td colspan="2">No donors found.</td></tr>{% endfor %}</tbody></table></div>
+{% endblock %}

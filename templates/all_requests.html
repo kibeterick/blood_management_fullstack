@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4"><h2>All Blood Requests</h2><div class="row">
+{% for req in requests %}<div class="col-md-6 mb-3"><div class="card border-danger shadow-sm">
+<div class="card-body"><h5>{{ req.username }} <span class="badge bg-danger">{{ req.blood_group }}</span></h5>
+<div class="p-2 bg-light border rounded text-primary mb-2"><strong>Medical Purpose: </strong>{{ req.purpose }}</div>
+<p>Units: {{ req.units }} | Contact: {{ req.email }}</p>
+</div></div></div>{% empty %}<p>No requests found.</p>{% endfor %}
+</div></div>{% endblock %}

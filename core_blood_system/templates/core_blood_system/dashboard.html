@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blood Bank Dashboard</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; margin: 0; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .card { background: white; padding: 20px; margin: 10px 0; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #eee; }
+        .btn { padding: 8px 15px; background: #28a745; color: white; text-decoration: none; border-radius: 4px; }
+        .alert { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="background: #007bff; color: white; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+            <h1>Blood Management System Dashboard</h1>
+        </div>
+
+        <div class="card">
+            <h3>Inventory Overview</h3>
+            <p><strong>Total Available Stock:</strong> {{ total_stock }} units</p>
+        </div>
+
+        <div class="card">
+            <h3>Pending Requests</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Blood Type</th>
+                        <th>Hospital</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in pending_requests %}
+                    <tr>
+                        <td>{{ req.first_name }} {{ req.last_name }}</td>
+                        <td>{{ req.blood_type }}</td>
+                        <td>{{ req.hospital_name }}</td>
+                        <td><a href="/issue/{{ req.id }}/" class="btn">Issue Blood</a></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No pending requests currently.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card">
+            <h3>System Access</h3>
+            <a href="/admin/" class="btn" style="background: #6c757d;">Go to Admin Panel</a>
+        </div>
+    </div>
+</body>
+</html>

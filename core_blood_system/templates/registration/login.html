@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Blood Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-container {
+            max-width: 900px;
+            margin: auto;
+        }
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        .login-left {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+        }
+        .login-right {
+            padding: 40px;
+        }
+        .form-header h2 {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px;
+            font-weight: bold;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+        }
+        .info-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+        .feature-icon {
+            font-size: 30px;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="row login-card g-0">
+            <!-- Left Side - Information -->
+            <div class="col-md-5 login-left">
+                <h3 class="mb-4">🩸 Welcome Back!</h3>
+                <p class="mb-4">Login to access your Blood Management System account</p>
+                
+                <div class="info-box">
+                    <h5>✨ What You Can Do:</h5>
+                    <div class="feature-item">
+                        <div class="feature-icon">👤</div>
+                        <div>
+                            <strong>Register as Donor</strong><br>
+                            <small>Share your blood type and help save lives</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🩸</div>
+                        <div>
+                            <strong>Request Blood</strong><br>
+                            <small>Submit urgent requests with specific needs</small>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <div>
+                            <strong>Track Requests</strong><br>
+                            <small>Monitor your donations and requests</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h6>🔐 Account Required</h6>
+                    <p class="small">You must be logged in to register as a donor or request blood. All accounts are secure and verified.</p>
+                </div>
+
+                <div class="mt-4">
+                    <h6>📋 Blood Types Available:</h6>
+                    <div class="d-flex flex-wrap mt-2">
+                        <span class="badge bg-light text-dark m-1">A+</span>
+                        <span class="badge bg-light text-dark m-1">A-</span>
+                        <span class="badge bg-light text-dark m-1">B+</span>
+                        <span class="badge bg-light text-dark m-1">B-</span>
+                        <span class="badge bg-light text-dark m-1">AB+</span>
+                        <span class="badge bg-light text-dark m-1">AB-</span>
+                        <span class="badge bg-light text-dark m-1">O+</span>
+                        <span class="badge bg-light text-dark m-1">O-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Login Form -->
+            <div class="col-md-7 login-right">
+                <div class="form-header text-center mb-4">
+                    <h2>Login to Your Account</h2>
+                    <p class="text-muted">Enter your credentials to continue</p>
+                </div>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Show what action requires login -->
+                {% if request.GET.next %}
+                    <div class="alert alert-info">
+                        <strong>ℹ️ Login Required</strong><br>
+                        {% if 'register-donor' in request.GET.next %}
+                            You need to login to register as a blood donor.
+                        {% elif 'request-blood' in request.GET.next %}
+                            You need to login to request blood.
+                        {% elif 'donor-list' in request.GET.next %}
+                            You need to login to view the donor list.
+                        {% else %}
+                            Please login to access this page.
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label">
+                            <strong>Username</strong>
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="error-message">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.password.id_for_label }}" class="form-label">
+                            <strong>Password</strong>
+                        </label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="error-message">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            <strong>❌ Login Failed</strong><br>
+                            {{ form.non_field_errors.0 }}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-login btn-primary w-100 mb-3">
+                        Login to Continue
+                    </button>
+                </form>
+
+                <hr>
+
+                <div class="text-center">
+                    <p class="mb-3"><strong>Don't have an account?</strong></p>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <a href="{% url 'user_register' %}" class="btn btn-outline-primary w-100">
+                                <strong>Register as User</strong><br>
+                                <small>For donors & blood requests</small>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="{% url 'admin_register' %}" class="btn btn-outline-danger w-100">
+                                <strong>Register as Admin</strong><br>
+                                <small>For system management</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'home' %}" class="text-decoration-none">
+                        ← Back to Home
+                    </a>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="alert alert-light mt-4">
+                    <small>
+                        <strong>💡 First Time Here?</strong><br>
+                        • Register as <strong>User</strong> if you want to donate blood or request blood<br>
+                        • Register as <strong>Admin</strong> if you need to manage the system<br>
+                        • All registrations require email verification
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Info -->
+        <div class="text-center text-white mt-4">
+            <p class="mb-0">&copy; 2026 Blood Management System. Saving lives together.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

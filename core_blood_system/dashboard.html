@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Dashboard | Premium UI</title>
+    
+    <!-- CSS Reset & Vars -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #6c757d;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; background: #f0f2f5; color: #333; min-height: 100vh; display: flex; flex-direction: column; }
+        
+        body { display: flex; flex: 1; }
+        
+        /* Sidebar (Full Stack Feature) */
+        aside {
+            width: 260px;
+            background: white;
+            height: 100vh;
+            padding: 20px;
+            border-right: 1px solid #e9ecef;
+            box-shadow: 5px 0 15px 25px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .sidebar-header { margin-bottom: 20px; font-weight: 700; color: var(--primary); }
+        .nav-link { display: block; padding: 12px; color: #666; text-decoration: none; transition: 0.3s; border-radius: 6px; }
+        .nav-link:hover { background: var(--primary); color: white; }
+
+        /* Main Content */
+        main { flex: 1; padding: 20px; width: 100%; overflow-y: auto; background: #f4f4f5; }
+
+        /* --- HEADER --- */
+        .top-bar { background: white; padding: 15px 30px; border-radius: 0 0 0 0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .brand { font-weight: 700; font-size: 1.5em; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .user-profile { font-size: 0.9em; color: #666; }
+        .logout-btn { background: var(--danger); border: none; padding: 8px 15px; color: white; border-radius: 6px; cursor: pointer; }
+
+        /* --- DASHBOARD GRID --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* --- GLASS CARDS (Premium UI) --- */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover { transform: translateY(-5px); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,255,0.1); padding-bottom: 10px; }
+        .card-title { font-size: 1.25em; color: var(--primary); font-weight: 600; }
+        .card-value { font-size: 2em; font-weight: 700; color: var(--primary); }
+        
+        /* --- CHARTS (Simulated Visuals) --- */
+        .chart-container { height: 150px; display: flex; align-items: flex-end; gap: 10px; margin-bottom: 20px; }
+        .bar-wrapper { width: 45px; height: 100%; background: var(--primary); border-radius: 4px; position: relative; overflow: hidden; }
+        .bar-fill { height: 100%; border-radius: 4px; animation: fillBar 1.5s ease-out; }
+        .chart-legend { font-size: 0.8em; color: #999; margin-bottom: 5px; }
+        
+        /* --- TABLES --- */
+        .data-table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+        th { background: var(--primary); color: white; font-weight: 600; }
+        tr:hover { background: #f8f9fa; }
+        .action-btn { padding: 6px 12px; border-radius: 4px; font-weight: 600; }
+
+        /* --- TOAST NOTIFICATIONS --- */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .toast {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex; align-items: center; gap: 10px;
+            transform: translateY(50px); opacity: 0; transition: 0.3s ease;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { border-left: 5px solid var(--success); }
+        .toast.error { border-left: 5px solid var(--danger); }
+
+    </style>
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="sidebar-header">
+            <h2>Blood Bank</h2>
+            <div class="user-profile">Admin: {{ user.username|default:"Guest" }}</div>
+            <div class="logout-btn">Logout</div>
+        </div>
+        
+        <nav>
+            <a href="/" class="nav-link">Dashboard</a>
+            <a href="/donors/" class="nav-link">Donors</a>
+            <a href="/admin/" class="nav-link">Admin Panel</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <div class="brand">
+                <i class="fas fa-tint" style="color: var(--secondary);"></i>
+                <div>
+                    <span>Blood Management System</span>
+                    <span>Full Stack Edition</span>
+                </div>
+            </div>
+            <div class="user-profile">
+                <span>Welcome, {{ user.username|default:"Guest" }}</span>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTENT -->
+        <div class="dashboard-grid">
+            
+            <!-- 1. LIVE INVENTORY (With Simulated Charts) -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Live Inventory</h3>
+                    <span style="font-size: 0.9em; color: #666;">Real-time tracking & FIFO Policy</span>
+                </div>
+
+                <div class="chart-container">
+                    <div class="bar-wrapper">
+                        <div class="bar-fill" style="width: 45%; --pct: 35%;"></div> <span style="font-size: 0.8em;">A+</span>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill" style="width: 30%; --pct: 25%;"></div> <span style="font-size: 0.8em;">B+</span>
+                    </div>
+                    <div class="bar-wrapper">
+                        <div class="bar-fill" style="width: 25%; --pct: 15%;"></div> <span style="font-size: 0.8em;">AB+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. AI SYSTEM INSIGHTS -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-brain" style="color: var(--primary);"></i> AI Insights</h3>
+                </div>
+
+                {% for insight in ai_insights %}
+                <div style="display: flex; align-items: center; gap: 15px; padding: 10px; background: rgba(255,255,255,255,0.1); border-radius: 8px;">
+                    <i class="fas {{ 'fa-exclamation-circle' if insight.type == 'critical' else 'fa-check-circle' }}" style="color: var(--danger)"></i>
+                    <div>
+                        <strong style="display: block;">{{ insight.msg }}</strong>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- 3. PENDING REQUESTS -->
+            <div class="glass-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-clock"></i> Pending Requests</h3>
+                </div>
+
+                {% if pending_requests %}
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Blood Type</th>
+                            <th>Hospital</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in pending_requests %}
+                        <tr>
+                            <td>{{ req.first_name }} {{ req.last_name }}</td>
+                            <td><span class="tag tag-critical">{{ req.blood_type }}</span></td>
+                            <td>{{ req.hospital_name }}</td>
+                            <td>
+                                <a href="/issue/{{ req.id }}/" class="action-btn">Issue Blood</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 20px; color: #999;">
+                                <i class="fas fa-check-square" style="font-size: 1.5em; color: var(--success);"></i>
+                                <p>No pending requests in queue.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div style="text-align: center; padding: 30px; color: #999;">
+                    <i class="fas fa-inbox" style="font-size: 1.5em; margin-bottom: 10px;"></i>
+                    <p>System is currently idle.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION (Smart UI) -->
+    <div id="toast-container"></div>
+    <script>
+        // Vanilla JS for Smart Interactions (Charts, Toasts)
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Simulate Chart Animation on Load
+            const bars = document.querySelectorAll('.bar-fill');
+            setTimeout(() => {
+                bars.forEach(bar => {
+                    const width = bar.style.width; // Get width from CSS variable
+                    bar.style.width = width; // Apply it
+                });
+            }, 500);
+
+            // 2. Toast Notification Handler
+            const toastMsg = "{{ toast_msg|escapejs }}";
+            const toastType = "{{ toast_type|escapejs }}";
+
+            if (toastMsg && toastType) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = `<i class="fas fa-${toastType === 'success' ? 'check' : 'exclamation-circle'}"></i> <span>${toastMsg}</span>`;
+                
+                document.getElementById('toast-container').appendChild(toast);
+
+                // Animate In
+                requestAnimationFrame(() => {
+                    toast.classList.add('show');
+                });
+
+                // Auto Remove
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                toast.parentNode.removeChild(toast);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
