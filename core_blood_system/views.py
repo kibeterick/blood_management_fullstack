@@ -128,9 +128,9 @@ def user_logout(request):
 # User Dashboard
 @login_required
 def user_dashboard(request):
-    """Dashboard for regular users"""
+    """Dashboard for regular users - Enhanced version"""
     user_requests = BloodRequest.objects.filter(requester=request.user)
-    return render(request, 'dashboard/user_dashboard.html', {
+    return render(request, 'dashboard/user_dashboard_enhanced.html', {
         'user_requests': user_requests
     })
 
@@ -138,7 +138,7 @@ def user_dashboard(request):
 # Admin Dashboard
 @login_required
 def admin_dashboard(request):
-    """Dashboard for administrators"""
+    """Dashboard for administrators - Enhanced version"""
     if request.user.role != 'admin':
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('user_dashboard')
@@ -164,7 +164,7 @@ def admin_dashboard(request):
         'inventory': inventory,
     }
     
-    return render(request, 'admin_dashboard.html', context)
+    return render(request, 'admin_dashboard_enhanced.html', context)
 
 
 # Donor Registration

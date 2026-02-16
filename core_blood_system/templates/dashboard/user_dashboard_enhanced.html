@@ -1,0 +1,428 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Dashboard - Blood Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        min-height: 100vh;
+    }
+    
+    .user-dashboard {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+        background: white;
+        border-radius: 25px;
+        padding: 50px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '🩸';
+        position: absolute;
+        font-size: 200px;
+        opacity: 0.05;
+        top: -50px;
+        right: -50px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: #7f8c8d;
+        margin-bottom: 30px;
+    }
+    
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    
+    .hero-stat {
+        text-align: center;
+    }
+    
+    .hero-stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-stat-label {
+        font-size: 0.9rem;
+        color: #95a5a6;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Action Cards */
+    .actions-section {
+        margin-bottom: 30px;
+    }
+    
+    .section-header {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .action-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    
+    .action-card {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        text-decoration: none;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .action-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .action-card:hover::before {
+        transform: scaleX(1);
+    }
+    
+    .action-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+    }
+    
+    .action-card-icon {
+        font-size: 50px;
+        margin-bottom: 20px;
+        display: block;
+    }
+    
+    .action-card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+    
+    .action-card-desc {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    /* My Requests Section */
+    .requests-section {
+        background: white;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        margin-bottom: 30px;
+    }
+    
+    .request-item {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border-left: 5px solid #667eea;
+        transition: all 0.3s ease;
+    }
+    
+    .request-item:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .request-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .request-patient {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .request-status {
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: #d1ecf1;
+        color: #0c5460;
+    }
+    
+    .status-fulfilled {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .request-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .request-detail {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .request-detail-icon {
+        font-size: 20px;
+    }
+    
+    .request-detail-text {
+        font-size: 0.9rem;
+        color: #7f8c8d;
+    }
+    
+    .request-detail-value {
+        font-weight: 700;
+        color: #2c3e50;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #95a5a6;
+    }
+    
+    .empty-state-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+    
+    .empty-state-text {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .btn-primary-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 700;
+        display: inline-block;
+        transition: all 0.3s ease;
+        border: none;
+    }
+    
+    .btn-primary-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 30px 20px;
+        }
+        
+        .hero-title {
+            font-size: 1.8rem;
+        }
+        
+        .hero-stats {
+            gap: 20px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="user-dashboard">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1 class="hero-title">Welcome, {{ user.first_name|default:user.username }}! 👋</h1>
+        <p class="hero-subtitle">Your blood donation journey starts here</p>
+        
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">{{ user_requests.count }}</div>
+                <div class="hero-stat-label">My Requests</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">
+                    {% if user.blood_type %}{{ user.blood_type }}{% else %}--{% endif %}
+                </div>
+                <div class="hero-stat-label">Blood Type</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="actions-section">
+        <h2 class="section-header">
+            <i class="bi bi-lightning-charge-fill"></i>
+            Quick Actions
+        </h2>
+        
+        <div class="action-cards">
+            <a href="{% url 'register_donor' %}" class="action-card">
+                <span class="action-card-icon">🩸</span>
+                <h3 class="action-card-title">Register as Donor</h3>
+                <p class="action-card-desc">Join our community of life-savers by registering as a blood donor</p>
+            </a>
+            
+            <a href="{% url 'request_blood' %}" class="action-card">
+                <span class="action-card-icon">🆘</span>
+                <h3 class="action-card-title">Request Blood</h3>
+                <p class="action-card-desc">Submit a blood request for yourself or a loved one</p>
+            </a>
+            
+            <a href="{% url 'donor_list' %}" class="action-card">
+                <span class="action-card-icon">👥</span>
+                <h3 class="action-card-title">Find Donors</h3>
+                <p class="action-card-desc">Search for available blood donors by blood type and location</p>
+            </a>
+            
+            <a href="{% url 'blood_compatibility_checker' %}" class="action-card">
+                <span class="action-card-icon">🔬</span>
+                <h3 class="action-card-title">Check Compatibility</h3>
+                <p class="action-card-desc">Find out which blood types are compatible with yours</p>
+            </a>
+            
+            <a href="{% url 'my_donations' %}" class="action-card">
+                <span class="action-card-icon">🏆</span>
+                <h3 class="action-card-title">My Certificates</h3>
+                <p class="action-card-desc">View and download your blood donation certificates</p>
+            </a>
+            
+            <a href="{% url 'contact_for_blood' %}" class="action-card">
+                <span class="action-card-icon">📞</span>
+                <h3 class="action-card-title">Emergency Contact</h3>
+                <p class="action-card-desc">Quick emergency blood request form for urgent needs</p>
+            </a>
+        </div>
+    </div>
+    
+    <!-- My Blood Requests -->
+    <div class="requests-section">
+        <h2 class="section-header">
+            <i class="bi bi-clipboard-heart-fill"></i>
+            My Blood Requests
+        </h2>
+        
+        {% if user_requests %}
+            {% for request in user_requests %}
+            <div class="request-item">
+                <div class="request-header">
+                    <div class="request-patient">{{ request.patient_name }}</div>
+                    <span class="request-status status-{{ request.status }}">
+                        {{ request.get_status_display }}
+                    </span>
+                </div>
+                
+                <div class="request-details">
+                    <div class="request-detail">
+                        <span class="request-detail-icon">🩸</span>
+                        <div>
+                            <div class="request-detail-text">Blood Type</div>
+                            <div class="request-detail-value">{{ request.blood_type }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-detail">
+                        <span class="request-detail-icon">💉</span>
+                        <div>
+                            <div class="request-detail-text">Units Needed</div>
+                            <div class="request-detail-value">{{ request.units_needed }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-detail">
+                        <span class="request-detail-icon">🏥</span>
+                        <div>
+                            <div class="request-detail-text">Hospital</div>
+                            <div class="request-detail-value">{{ request.hospital_name }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="request-detail">
+                        <span class="request-detail-icon">📅</span>
+                        <div>
+                            <div class="request-detail-text">Requested</div>
+                            <div class="request-detail-value">{{ request.created_at|date:"M d, Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <div class="text-center mt-4">
+                <a href="{% url 'blood_request_list' %}" class="btn-primary-custom">
+                    View All My Requests
+                </a>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <div class="empty-state-text">You haven't made any blood requests yet</div>
+                <a href="{% url 'request_blood' %}" class="btn-primary-custom">
+                    Make Your First Request
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
