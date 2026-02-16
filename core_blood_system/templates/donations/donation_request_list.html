@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blood Donation Requests{% endblock %}
+
+{% block extra_css %}
+<style>
+    .donation-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .page-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .page-header h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .filters-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .filters-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .filter-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .filter-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+    
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .btn-filter {
+        background: #667eea;
+        color: white;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 24px;
+    }
+    
+    .btn-filter:hover {
+        background: #5568d3;
+    }
+    
+    .donations-table {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    thead {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    tbody tr:hover {
+        background: #f8f9ff;
+    }
+    
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-block;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .blood-type-badge {
+        background: #dc3545;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-weight: 700;
+        display: inline-block;
+        min-width: 50px;
+        text-align: center;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .btn-approve {
+        background: #28a745;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-approve:hover {
+        background: #218838;
+    }
+    
+    .btn-reject {
+        background: #dc3545;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-reject:hover {
+        background: #c82333;
+    }
+    
+    .no-donations {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+    
+    .no-donations i {
+        font-size: 64px;
+        color: #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .donor-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .donor-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="donation-container">
+    <div class="page-header">
+        <h1>🩸 Blood Donation Requests</h1>
+        <p style="margin: 10px 0 0 0; opacity: 0.9;">Manage and approve blood donation submissions</p>
+    </div>
+    
+    <div class="filters-section">
+        <form method="GET" action="{% url 'donation_request_list' %}">
+            <div class="filters-row">
+                <div class="filter-group">
+                    <label>Search</label>
+                    <input type="text" name="search" placeholder="Search by donor name, blood type..." value="{{ search_query }}">
+                </div>
+                
+                <div class="filter-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All Status</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-filter">Filter</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="donations-table">
+        {% if donations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Donor</th>
+                    <th>Blood Type</th>
+                    <th>Units</th>
+                    <th>Donation Date</th>
+                    <th>Hospital</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donations %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <div class="donor-info">
+                            <div class="donor-avatar">
+                                {{ donation.donor.first_name.0 }}{{ donation.donor.last_name.0 }}
+                            </div>
+                            <div>
+                                <strong>{{ donation.donor.first_name }} {{ donation.donor.last_name }}</strong><br>
+                                <small style="color: #666;">{{ donation.donor.phone_number }}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="blood-type-badge">{{ donation.blood_type }}</span>
+                    </td>
+                    <td><strong>{{ donation.units_donated }}</strong> unit(s)</td>
+                    <td>{{ donation.donation_date|date:"M d, Y" }}</td>
+                    <td>{{ donation.hospital_name }}</td>
+                    <td>
+                        <span class="status-badge status-{{ donation.status }}">
+                            {{ donation.get_status_display }}
+                        </span>
+                        {% if donation.rejection_reason %}
+                        <br><small style="color: #dc3545;">{{ donation.rejection_reason }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if donation.status == 'pending' %}
+                        <div class="action-buttons">
+                            <a href="{% url 'approve_donation' donation.id %}" class="btn-approve" onclick="return confirm('Approve this donation? This will add {{ donation.units_donated }} unit(s) of {{ donation.blood_type }} to inventory.')">
+                                ✓ APPROVE
+                            </a>
+                            <a href="{% url 'reject_donation' donation.id %}" class="btn-reject">
+                                ✗ REJECT
+                            </a>
+                        </div>
+                        {% else %}
+                        <small style="color: #666;">
+                            {% if donation.approved_by %}
+                            By: {{ donation.approved_by.username }}<br>
+                            {% endif %}
+                            {% if donation.approved_at %}
+                            {{ donation.approved_at|date:"M d, Y H:i" }}
+                            {% endif %}
+                        </small>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-donations">
+            <i class="fas fa-inbox"></i>
+            <h3>No Donation Requests Found</h3>
+            <p>There are no donation requests matching your filters.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

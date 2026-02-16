@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    .contact-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .contact-header h1 {
+        font-size: 2.5rem;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .contact-header p {
+        font-size: 1.1rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .contact-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+    
+    .contact-card {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+    
+    .contact-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 35px;
+        color: white;
+    }
+    
+    .contact-card h3 {
+        color: #333;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .contact-card p {
+        color: #666;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+    
+    .contact-info {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+    }
+    
+    .contact-info a {
+        color: #dc3545;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .contact-info a:hover {
+        text-decoration: underline;
+    }
+    
+    .help-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 50px 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+    }
+    
+    .help-section h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    .help-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    
+    .help-item {
+        background: rgba(255,255,255,0.1);
+        padding: 25px;
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .help-item h4 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+    
+    .help-item p {
+        margin: 0;
+        opacity: 0.95;
+        line-height: 1.6;
+    }
+    
+    .faq-section {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .faq-section h2 {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 700;
+    }
+    
+    .faq-item {
+        margin-bottom: 25px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .faq-item:last-child {
+        border-bottom: none;
+    }
+    
+    .faq-question {
+        font-size: 1.1rem;
+        color: #dc3545;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    
+    .faq-answer {
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .emergency-banner {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .emergency-banner h3 {
+        font-size: 1.8rem;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+    
+    .emergency-banner p {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+    
+    .emergency-phone {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    
+    @media (max-width: 768px) {
+        .contact-header h1 {
+            font-size: 2rem;
+        }
+        
+        .help-section h2,
+        .faq-section h2 {
+            font-size: 1.5rem;
+        }
+        
+        .emergency-banner h3 {
+            font-size: 1.5rem;
+        }
+        
+        .emergency-phone {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-container">
+    <div class="contact-header">
+        <h1>📞 Contact Us</h1>
+        <p>We're here to help! Reach out to us for any questions, concerns, or assistance with the Blood Management System.</p>
+    </div>
+    
+    <div class="emergency-banner">
+        <h3>🚨 Emergency Blood Request?</h3>
+        <p>For urgent blood requirements, call us immediately:</p>
+        <div class="emergency-phone">📱 +254 700 123 456</div>
+        <p style="margin-top: 15px; font-size: 0.9rem;">Available 24/7 for emergency situations</p>
+    </div>
+    
+    <div class="help-section">
+        <h2>When Should You Contact Us?</h2>
+        <div class="help-grid">
+            <div class="help-item">
+                <h4>🔐 Registration Issues</h4>
+                <p>If you're unable to create an account or experiencing login problems, contact us for immediate assistance.</p>
+            </div>
+            <div class="help-item">
+                <h4>🩸 Blood Request Status</h4>
+                <p>Haven't received feedback on your blood request? We'll check the status and provide updates.</p>
+            </div>
+            <div class="help-item">
+                <h4>❓ General Inquiries</h4>
+                <p>Questions about blood donation, eligibility, or how the system works? We're happy to help!</p>
+            </div>
+            <div class="help-item">
+                <h4>🐛 Technical Support</h4>
+                <p>Experiencing technical issues or errors? Report them to us for quick resolution.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contact-grid">
+        <div class="contact-card">
+            <div class="contact-icon">
+                <i class="bi bi-telephone-fill"></i>
+            </div>
+            <h3>Phone Support</h3>
+            <p>Call us during business hours for immediate assistance</p>
+            <div class="contact-info">
+                <a href="tel:+254700123456">+254 700 123 456</a>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #999;">Mon-Fri: 8:00 AM - 6:00 PM<br>Sat: 9:00 AM - 2:00 PM</p>
+        </div>
+        
+        <div class="contact-card">
+            <div class="contact-icon">
+                <i class="bi bi-envelope-fill"></i>
+            </div>
+            <h3>Email Support</h3>
+            <p>Send us an email and we'll respond within 24 hours</p>
+            <div class="contact-info">
+                <a href="mailto:support@bloodmanagement.com">support@bloodmanagement.com</a>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #999;">For non-urgent inquiries</p>
+        </div>
+        
+        <div class="contact-card">
+            <div class="contact-icon">
+                <i class="bi bi-whatsapp"></i>
+            </div>
+            <h3>WhatsApp</h3>
+            <p>Chat with us on WhatsApp for quick responses</p>
+            <div class="contact-info">
+                <a href="https://wa.me/254700123456" target="_blank">+254 700 123 456</a>
+            </div>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #999;">Available 24/7</p>
+        </div>
+    </div>
+    
+    <div class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q: I can't register for an account. What should I do?</div>
+            <div class="faq-answer">
+                A: If you're experiencing registration issues, please contact us via phone (+254 700 123 456) or email (support@bloodmanagement.com). Provide your full name, email address, and a description of the error you're encountering. Our team will create an account for you or resolve the issue within 24 hours.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q: I submitted a blood request but haven't received any feedback. What's happening?</div>
+            <div class="faq-answer">
+                A: Blood requests are typically reviewed within 24-48 hours. If you haven't received feedback after this period, please contact us immediately with your request details. We'll check the status and provide an update. For urgent requests, call our emergency hotline: +254 700 123 456.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q: How long does it take to get a response?</div>
+            <div class="faq-answer">
+                A: Phone calls are answered immediately during business hours. Emails are typically responded to within 24 hours. WhatsApp messages receive responses within a few hours. For emergencies, call our 24/7 hotline.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q: Can I track my blood request status?</div>
+            <div class="faq-answer">
+                A: Yes! Once logged in, go to your dashboard to view all your blood requests and their current status (Pending, Approved, Fulfilled, or Cancelled). If you need more details, contact us.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">Q: What information should I provide when contacting support?</div>
+            <div class="faq-answer">
+                A: Please provide: Your full name, email address or phone number, a detailed description of your issue, and any relevant screenshots or error messages. This helps us resolve your issue faster.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

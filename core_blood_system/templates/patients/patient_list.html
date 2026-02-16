@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    .patient-table-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-top: 20px;
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .table-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .patient-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .patient-table thead {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .patient-table thead th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+    }
+
+    .patient-table tbody tr {
+        border-bottom: 1px solid #e9ecef;
+        transition: all 0.3s;
+    }
+
+    .patient-table tbody tr:hover {
+        background: #f8f9fa;
+        transform: scale(1.01);
+    }
+
+    .patient-table tbody td {
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .profile-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #4a90e2;
+    }
+
+    .profile-placeholder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2rem;
+        border: 3px solid #17a2b8;
+    }
+
+    .blood-badge {
+        display: inline-block;
+        padding: 5px 15px;
+        background: #dc3545;
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .disease-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        background: #ffc107;
+        color: #333;
+        border-radius: 15px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .btn-action {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 25px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0 5px;
+    }
+
+    .btn-edit {
+        background: #007bff;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+    }
+
+    .btn-delete {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(220,53,69,0.3);
+    }
+
+    .search-bar {
+        padding: 20px;
+        background: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 20px;
+        border: 2px solid #4a90e2;
+        border-radius: 25px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: #357abd;
+        box-shadow: 0 0 10px rgba(74,144,226,0.3);
+    }
+
+    .no-patients {
+        text-align: center;
+        padding: 40px;
+        color: #6c757d;
+    }
+
+    .patient-count {
+        background: #e7f3ff;
+        padding: 15px;
+        border-left: 4px solid #4a90e2;
+        margin-bottom: 20px;
+        border-radius: 5px;
+    }
+
+    .hospital-info {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+
+    @media (max-width: 768px) {
+        .patient-table {
+            font-size: 0.85rem;
+        }
+        
+        .profile-img, .profile-placeholder {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .btn-action {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="patient-count">
+        <h5 class="mb-0">
+            <i class="bi bi-hospital-fill"></i> 
+            Total Patients: <strong>{{ patients.count }}</strong>
+        </h5>
+    </div>
+
+    <div class="patient-table-container">
+        <div class="table-header">
+            <h2>PATIENT DETAILS</h2>
+        </div>
+
+        <div class="search-bar">
+            <form method="GET" action="">
+                <input type="text" 
+                       name="search" 
+                       class="search-input" 
+                       placeholder="🔍 Search by patient name, blood type, hospital, or disease..." 
+                       value="{{ search_query }}">
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="patient-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Profile</th>
+                        <th>Blood Group</th>
+                        <th>Age</th>
+                        <th>Disease</th>
+                        <th>Mobile</th>
+                        <th>Hospital</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>
+                            <strong>{{ patient.patient_name }}</strong><br>
+                            <small class="text-muted">Requested by: {{ patient.requester.username }}</small>
+                        </td>
+                        <td>
+                            {% if patient.requester.profile_picture %}
+                                <img src="{{ patient.requester.profile_picture.url }}" alt="Profile" class="profile-img">
+                            {% else %}
+                                <div class="profile-placeholder">
+                                    {{ patient.patient_name|first }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="blood-badge">{{ patient.blood_type }}</span>
+                        </td>
+                        <td>
+                            {% if patient.requester.date_of_birth %}
+                                {% now "Y" as current_year %}
+                                {{ current_year|add:"-1"|add:patient.requester.date_of_birth.year|add:"-1" }} years
+                            {% else %}
+                                <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="disease-badge">{{ patient.get_purpose_display }}</span><br>
+                            {% if patient.purpose_details %}
+                                <small class="text-muted">{{ patient.purpose_details|truncatewords:5 }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <i class="bi bi-telephone-fill"></i> {{ patient.contact_number }}
+                        </td>
+                        <td>
+                            <strong>{{ patient.hospital_name }}</strong><br>
+                            <small class="hospital-info">{{ patient.hospital_address|truncatewords:5 }}</small>
+                        </td>
+                        <td>
+                            <a href="{% url 'edit_patient' patient.id %}" class="btn-action btn-edit">
+                                EDIT
+                            </a>
+                            <a href="{% url 'delete_patient' patient.id %}" 
+                               class="btn-action btn-delete"
+                               onclick="return confirm('Are you sure you want to delete this patient record?')">
+                                DELETE
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="no-patients">
+                            <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
+                            <p>No patient records found.</p>
+                            <a href="{% url 'request_blood' %}" class="btn btn-primary">
+                                <i class="bi bi-plus-circle-fill"></i> Add First Patient
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'request_blood' %}" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle-fill"></i> Add New Patient
+        </a>
+        <a href="{% url 'export_requests_excel' %}" class="btn btn-primary btn-lg">
+            <i class="bi bi-file-excel-fill"></i> Export to Excel
+        </a>
+        <a href="{% url 'export_requests_pdf' %}" class="btn btn-danger btn-lg">
+            <i class="bi bi-file-pdf-fill"></i> Export to PDF
+        </a>
+    </div>
+</div>
+{% endblock %}

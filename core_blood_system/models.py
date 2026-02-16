@@ -31,6 +31,13 @@ USER_ROLE_CHOICES = [
     ('donor', 'Blood Donor'),
 ]
 
+# Gender choices
+GENDER_CHOICES = [
+    ('male', 'Male'),
+    ('female', 'Female'),
+    ('other', 'Other'),
+]
+
 
 # Custom User Model
 class CustomUser(AbstractUser):
@@ -51,6 +58,7 @@ class Donor(models.Model):
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')
     blood_type = models.CharField(max_length=3, choices=BLOOD_TYPE_CHOICES)
     date_of_birth = models.DateField()
     address = models.TextField()
@@ -86,6 +94,8 @@ class BloodRequest(models.Model):
     
     requester = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='blood_requests')
     patient_name = models.CharField(max_length=200)
+    patient_gender = models.CharField(max_length=10, choices=GENDER_CHOICES, default='male')
+    patient_age = models.IntegerField(null=True, blank=True, help_text="Patient age in years")
     blood_type = models.CharField(max_length=3, choices=BLOOD_TYPE_CHOICES)
     units_needed = models.IntegerField()
     purpose = models.CharField(max_length=50, choices=PURPOSE_CHOICES)

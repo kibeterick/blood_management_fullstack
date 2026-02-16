@@ -801,3 +801,283 @@ def edit_donor(request, donor_id):
         'donor': donor,
     }
     return render(request, 'donors/edit_donor.html', context)
+
+
+@login_required
+def patient_list(request):
+    """View all patients (blood request recipients)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can view patient list.')
+        return redirect('user_dashboard')
+    
+    # Get all blood requests (each represents a patient)
+    patients = BloodRequest.objects.all().select_related('requester').order_by('-created_at')
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        patients = patients.filter(
+            Q(patient_name__icontains=search_query) |
+            Q(blood_type__icontains=search_query) |
+            Q(hospital_name__icontains=search_query) |
+            Q(purpose__icontains=search_query)
+        )
+    
+    context = {
+        'patients': patients,
+        'search_query': search_query,
+    }
+    return render(request, 'patients/patient_list.html', context)
+
+
+@login_required
+def edit_patient(request, request_id):
+    """Edit patient/blood request information (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can edit patient information.')
+        return redirect('patient_list')
+    
+    blood_request = get_object_or_404(BloodRequest, id=request_id)
+    
+    if request.method == 'POST':
+        # Update patient/request information
+        blood_request.patient_name = request.POST.get('patient_name')
+        blood_request.blood_type = request.POST.get('blood_type')
+        blood_request.units_needed = request.POST.get('units_needed')
+        blood_request.purpose = request.POST.get('purpose')
+        blood_request.purpose_details = request.POST.get('purpose_details')
+        blood_request.urgency = request.POST.get('urgency')
+        blood_request.hospital_name = request.POST.get('hospital_name')
+        blood_request.hospital_address = request.POST.get('hospital_address')
+        blood_request.contact_number = request.POST.get('contact_number')
+        blood_request.required_date = request.POST.get('required_date')
+        blood_request.notes = request.POST.get('notes')
+        
+        blood_request.save()
+        messages.success(request, f'Patient {blood_request.patient_name} information updated successfully!')
+        return redirect('patient_list')
+    
+    context = {
+        'blood_request': blood_request,
+    }
+    return render(request, 'patients/edit_patient.html', context)
+
+
+@login_required
+def delete_patient(request, request_id):
+    """Delete patient/blood request (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can delete patient records.')
+        return redirect('patient_list')
+    
+    blood_request = get_object_or_404(BloodRequest, id=request_id)
+    patient_name = blood_request.patient_name
+    blood_request.delete()
+    
+    messages.success(request, f'Patient record for {patient_name} has been deleted.')
+    return redirect('patient_list')
+
+
+@login_required
+def donation_request_list(request):
+    """View all blood donation requests for admin approval/rejection"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can manage donation requests.')
+        return redirect('user_dashboard')
+    
+    # Get all blood donations
+    donations = BloodDonation.objects.all().select_related('donor', 'donor__user').order_by('-donation_date')
+    
+    # Filter by status if provided
+    status_filter = request.GET.get('status', '')
+    if status_filter:
+        donations = donations.filter(status=status_filter)
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        donations = donations.filter(
+            Q(donor__first_name__icontains=search_query) |
+            Q(donor__last_name__icontains=search_query) |
+            Q(blood_type__icontains=search_query) |
+            Q(hospital_name__icontains=search_query)
+        )
+    
+    context = {
+        'donations': donations,
+        'search_query': search_query,
+        'status_filter': status_filter,
+    }
+    return render(request, 'donations/donation_request_list.html', context)
+
+
+@login_required
+def approve_donation(request, donation_id):
+    """Approve a blood donation request and add to inventory"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can approve donations.')
+        return redirect('user_dashboard')
+    
+    donation = get_object_or_404(BloodDonation, id=donation_id)
+    
+    if donation.status == 'approved':
+        messages.warning(request, 'This donation has already been approved.')
+        return redirect('donation_request_list')
+    
+    # Update donation status
+    donation.status = 'approved'
+    donation.approved_by = request.user
+    donation.approved_at = timezone.now()
+    donation.save()
+    
+    # Add units to blood inventory
+    inventory, created = BloodInventory.objects.get_or_create(
+        blood_type=donation.blood_type,
+        defaults={'units_available': 0}
+    )
+    inventory.units_available += donation.units_donated
+    inventory.save()
+    
+    messages.success(request, f'Donation approved! {donation.units_donated} unit(s) of {donation.blood_type} added to inventory.')
+    return redirect('donation_request_list')
+
+
+@login_required
+def reject_donation(request, donation_id):
+    """Reject a blood donation request"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can reject donations.')
+        return redirect('user_dashboard')
+    
+    donation = get_object_or_404(BloodDonation, id=donation_id)
+    
+    if request.method == 'POST':
+        rejection_reason = request.POST.get('rejection_reason', '')
+        
+        donation.status = 'rejected'
+        donation.rejection_reason = rejection_reason
+        donation.approved_by = request.user
+        donation.approved_at = timezone.now()
+        donation.save()
+        
+        messages.success(request, f'Donation rejected. No units added to inventory.')
+        return redirect('donation_request_list')
+    
+    context = {
+        'donation': donation,
+    }
+    return render(request, 'donations/reject_donation.html', context)
+
+
+
+# ==========================================
+# PASSWORD RESET VIEWS
+# ==========================================
+
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+def password_reset_request(request):
+    """Password reset request view"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        
+        try:
+            user = CustomUser.objects.get(email=email)
+            
+            # Generate token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            # Build reset URL
+            reset_url = request.build_absolute_uri(
+                f'/password-reset-confirm/{uid}/{token}/'
+            )
+            
+            # Send email (in production, configure email settings)
+            # For now, just show success message
+            messages.success(
+                request, 
+                f'Password reset instructions have been sent to {email}. '
+                'Please check your email and follow the instructions. '
+                'If you don\'t receive an email, contact support at +254 700 123 456'
+            )
+            
+            # In production, uncomment this to send actual email:
+            # subject = 'Password Reset Request - Blood Management System'
+            # message = f'Click the link below to reset your password:\n\n{reset_url}\n\nThis link expires in 24 hours.'
+            # send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+            
+            return redirect('password_reset_done')
+            
+        except CustomUser.DoesNotExist:
+            # Don't reveal that the email doesn't exist for security
+            messages.success(
+                request, 
+                'If an account exists with that email, password reset instructions have been sent. '
+                'If you don\'t receive an email, contact support at +254 700 123 456'
+            )
+            return redirect('password_reset_done')
+    
+    return render(request, 'registration/password_reset_form.html')
+
+
+def password_reset_done(request):
+    """Password reset email sent confirmation"""
+    return render(request, 'registration/password_reset_done.html')
+
+
+def password_reset_confirm(request, uidb64, token):
+    """Password reset confirmation view"""
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = CustomUser.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        user = None
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password1 = request.POST.get('new_password1')
+            password2 = request.POST.get('new_password2')
+            
+            if password1 and password2:
+                if password1 == password2:
+                    if len(password1) >= 8:
+                        user.set_password(password1)
+                        user.save()
+                        messages.success(request, 'Your password has been reset successfully!')
+                        return redirect('password_reset_complete')
+                    else:
+                        messages.error(request, 'Password must be at least 8 characters long.')
+                else:
+                    messages.error(request, 'Passwords do not match.')
+            else:
+                messages.error(request, 'Please fill in both password fields.')
+        
+        return render(request, 'registration/password_reset_confirm.html', {
+            'validlink': True,
+            'form': {'new_password1': '', 'new_password2': ''}
+        })
+    else:
+        return render(request, 'registration/password_reset_confirm.html', {
+            'validlink': False
+        })
+
+
+def password_reset_complete(request):
+    """Password reset complete view"""
+    return render(request, 'registration/password_reset_complete.html')
+
+
+# ==========================================
+# CONTACT US VIEW
+# ==========================================
+
+def contact_us(request):
+    """Contact us page"""
+    return render(request, 'contact_us.html')

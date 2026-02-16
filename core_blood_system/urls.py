@@ -12,6 +12,15 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     
+    # Password Reset
+    path('password-reset/', views.password_reset_request, name='password_reset'),
+    path('password-reset/done/', views.password_reset_done, name='password_reset_done'),
+    path('password-reset-confirm/<uidb64>/<token>/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('password-reset-complete/', views.password_reset_complete, name='password_reset_complete'),
+    
+    # Contact Us
+    path('contact/', views.contact_us, name='contact_us'),
+    
     # Dashboards
     path('dashboard/', views.user_dashboard, name='user_dashboard'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
@@ -29,6 +38,11 @@ urlpatterns = [
     path('all-requests/', views.all_requests, name='all_requests'),
     path('request/delete/<int:request_id>/', views.delete_request, name='delete_request'),
     
+    # Patient Management
+    path('patient-list/', views.patient_list, name='patient_list'),
+    path('patient/edit/<int:request_id>/', views.edit_patient, name='edit_patient'),
+    path('patient/delete/<int:request_id>/', views.delete_patient, name='delete_patient'),
+    
     # Reports
     path('stock-report/', views.stock_report_print, name='stock_report_print'),
     
@@ -44,6 +58,11 @@ urlpatterns = [
     # CERTIFICATES
     path('certificate/download/<int:donation_id>/', views.download_certificate, name='download_certificate'),
     path('my-donations/', views.my_donations, name='my_donations'),
+    
+    # DONATION APPROVAL/REJECTION
+    path('donation-requests/', views.donation_request_list, name='donation_request_list'),
+    path('donation/approve/<int:donation_id>/', views.approve_donation, name='approve_donation'),
+    path('donation/reject/<int:donation_id>/', views.reject_donation, name='reject_donation'),
     
     # API ENDPOINTS FOR AJAX
     path('api/donors/search/', api_views.donor_search_api, name='api_donor_search'),
