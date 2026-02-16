@@ -96,10 +96,12 @@ class BloodRequest(models.Model):
     contact_number = models.CharField(max_length=15)
     required_date = models.DateField()
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(blank=True, null=True, help_text="Reason for rejection")
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     fulfilled_date = models.DateTimeField(null=True, blank=True)
+    approved_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_requests')
     
     def __str__(self):
         return f"Request for {self.blood_type} - {self.patient_name} ({self.get_purpose_display()})"
@@ -110,17 +112,27 @@ class BloodRequest(models.Model):
 
 # Blood Donation Model
 class BloodDonation(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE, related_name='donations')
     blood_request = models.ForeignKey(BloodRequest, on_delete=models.SET_NULL, null=True, blank=True, related_name='donations')
     donation_date = models.DateField()
     units_donated = models.IntegerField()
     blood_type = models.CharField(max_length=3, choices=BLOOD_TYPE_CHOICES)
     hospital_name = models.CharField(max_length=200)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    rejection_reason = models.TextField(blank=True, null=True, help_text="Reason for rejection (e.g., disease)")
     notes = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    approved_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_donations')
+    approved_at = models.DateTimeField(null=True, blank=True)
     
     def __str__(self):
-        return f"{self.donor} - {self.blood_type} on {self.donation_date}"
+        return f"{self.donor} - {self.blood_type} on {self.donation_date} ({self.status})"
     
     class Meta:
         ordering = ['-donation_date']

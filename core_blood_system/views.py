@@ -769,3 +769,35 @@ def my_donations(request):
     }
     
     return render(request, 'donations/my_donations.html', context)
+
+
+@login_required
+def edit_donor(request, donor_id):
+    """Edit donor information (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can edit donor information.')
+        return redirect('donor_list')
+    
+    donor = get_object_or_404(Donor, id=donor_id)
+    
+    if request.method == 'POST':
+        # Update donor information
+        donor.first_name = request.POST.get('first_name')
+        donor.last_name = request.POST.get('last_name')
+        donor.email = request.POST.get('email')
+        donor.phone_number = request.POST.get('phone_number')
+        donor.blood_type = request.POST.get('blood_type')
+        donor.date_of_birth = request.POST.get('date_of_birth')
+        donor.address = request.POST.get('address')
+        donor.city = request.POST.get('city')
+        donor.state = request.POST.get('state')
+        donor.is_available = request.POST.get('is_available') == 'on'
+        
+        donor.save()
+        messages.success(request, f'Donor {donor.first_name} {donor.last_name} updated successfully!')
+        return redirect('donor_list')
+    
+    context = {
+        'donor': donor,
+    }
+    return render(request, 'donors/edit_donor.html', context)

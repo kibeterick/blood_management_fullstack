@@ -19,6 +19,7 @@ urlpatterns = [
     # Donor Management
     path('register-donor/', views.register_donor, name='register_donor'),
     path('donor-list/', views.donor_list, name='donor_list'),
+    path('donor/edit/<int:donor_id>/', views.edit_donor, name='edit_donor'),
     path('donor/delete/<int:pk>/', views.delete_donor, name='delete_donor'),
     path('donor-search/', views.donor_search_view, name='donor_search'),
     
