@@ -57,12 +57,35 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 import dj_database_url
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
-        conn_max_age=600
-    )
-}
+# Choose database: SQLite (default) or MySQL
+# To use MySQL, set environment variable: USE_MYSQL=True
+USE_MYSQL = os.environ.get('USE_MYSQL', 'False') == 'True'
+
+if USE_MYSQL:
+    # MySQL Configuration
+    # Make sure to install: pip install mysqlclient (or pymysql)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.environ.get('MYSQL_DATABASE', 'blood_management_db'),
+            'USER': os.environ.get('MYSQL_USER', 'root'),
+            'PASSWORD': os.environ.get('MYSQL_PASSWORD', ''),
+            'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+            'PORT': os.environ.get('MYSQL_PORT', '3306'),
+            'OPTIONS': {
+                'charset': 'utf8mb4',
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            },
+        }
+    }
+else:
+    # SQLite Configuration (default)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+            conn_max_age=600
+        )
+    }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
