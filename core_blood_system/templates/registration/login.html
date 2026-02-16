@@ -171,6 +171,13 @@
                         {% endif %}
                     </div>
                     
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe" name="remember_me">
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me on this device
+                        </label>
+                    </div>
+                    
                     <div class="mb-3 text-end">
                         <a href="{% url 'password_reset' %}" class="text-decoration-none" style="color: #667eea; font-weight: 600;">
                             Forgot Password?

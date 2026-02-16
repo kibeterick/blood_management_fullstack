@@ -85,9 +85,20 @@ def user_login(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            remember_me = request.POST.get('remember_me')
+            
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+                
+                # Handle "Remember Me" functionality
+                if remember_me:
+                    # Session expires in 30 days
+                    request.session.set_expiry(2592000)  # 30 days in seconds
+                else:
+                    # Session expires when browser closes
+                    request.session.set_expiry(0)
+                
                 messages.success(request, f'Welcome back, {user.first_name}!')
                 
                 # Redirect based on user role
