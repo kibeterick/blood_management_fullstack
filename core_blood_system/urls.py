@@ -20,6 +20,7 @@ urlpatterns = [
     
     # Contact Us
     path('contact/', views.contact_us, name='contact_us'),
+    path('contact-for-blood/', views.contact_for_blood, name='contact_for_blood'),
     
     # Dashboards
     path('dashboard/', views.user_dashboard, name='user_dashboard'),

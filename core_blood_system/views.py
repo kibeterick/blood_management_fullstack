@@ -1081,3 +1081,54 @@ def password_reset_complete(request):
 def contact_us(request):
     """Contact us page"""
     return render(request, 'contact_us.html')
+
+
+
+# ==========================================
+# CONTACT FOR BLOOD VIEW
+# ==========================================
+
+def contact_for_blood(request):
+    """Contact for blood - emergency blood request form"""
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        email = request.POST.get('email')
+        blood_type = request.POST.get('blood_type')
+        units = request.POST.get('units')
+        relation = request.POST.get('relation')
+        urgency = request.POST.get('urgency')
+        message = request.POST.get('message')
+        
+        # In production, this would send an email/SMS to admin or create a blood request
+        # For now, show success message
+        messages.success(
+            request,
+            f'Your blood request has been received! We will contact you at {phone} shortly. '
+            f'For urgent requests, please also call +254 700 123 456'
+        )
+        
+        # If user is logged in, create a blood request automatically
+        if request.user.is_authenticated:
+            try:
+                blood_request = BloodRequest.objects.create(
+                    requester=request.user,
+                    patient_name=name,
+                    blood_type=blood_type,
+                    units_needed=int(units),
+                    purpose='emergency',
+                    purpose_details=f"{relation} - {message}",
+                    urgency='critical' if urgency in ['urgent', 'urgently'] else 'high',
+                    hospital_name='To be determined',
+                    hospital_address='To be determined',
+                    contact_number=phone,
+                    required_date=timezone.now().date(),
+                    notes=f'Contact for Blood Form Submission - Urgency: {urgency}'
+                )
+                messages.info(request, 'A blood request has been created in your account. You can track it from your dashboard.')
+            except Exception as e:
+                pass
+        
+        return redirect('contact_for_blood')
+    
+    return render(request, 'contact_for_blood.html')

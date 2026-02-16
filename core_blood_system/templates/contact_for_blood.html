@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact for Blood{% endblock %}
+
+{% block extra_css %}
+<style>
+    body {
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        min-height: 100vh;
+    }
+    
+    .contact-blood-container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+    }
+    
+    .contact-blood-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 600px;
+    }
+    
+    .form-section {
+        padding: 50px;
+    }
+    
+    .image-section {
+        background: url('https://images.unsplash.com/photo-1631217868264-e5b90bb7e133?w=800') center/cover;
+        position: relative;
+    }
+    
+    .image-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(78, 205, 196, 0.3);
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-weight: 700;
+    }
+    
+    .page-subtitle {
+        color: #7f8c8d;
+        margin-bottom: 40px;
+        font-size: 1.1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: all 0.3s;
+        background: white;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #4ecdc4;
+        box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    
+    .urgency-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .urgency-btn {
+        padding: 10px 20px;
+        border: 2px solid #e0e0e0;
+        background: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: 600;
+    }
+    
+    .urgency-btn:hover {
+        border-color: #4ecdc4;
+        background: #f0fffe;
+    }
+    
+    .urgency-btn.active {
+        background: #4ecdc4;
+        color: white;
+        border-color: #4ecdc4;
+    }
+    
+    .btn-send {
+        width: 100%;
+        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        color: white;
+        padding: 16px;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .btn-send:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+    }
+    
+    @media (max-width: 968px) {
+        .contact-blood-card {
+            grid-template-columns: 1fr;
+        }
+        
+        .image-section {
+            min-height: 300px;
+        }
+        
+        .form-section {
+            padding: 30px;
+        }
+        
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="contact-blood-container">
+    <div class="contact-blood-card">
+        <div class="form-section">
+            <h1 class="page-title">CONTACT FOR BLOOD</h1>
+            <p class="page-subtitle">Fill Following form for Blood</p>
+            
+            <form method="POST" action="{% url 'contact_for_blood' %}">
+                {% csrf_token %}
+                
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            name="name" 
+                            placeholder="Full Name" 
+                            required
+                        >
+                    </div>
+                    
+                    <div class="form-group">
+                        <input 
+                            type="tel" 
+                            name="phone" 
+                            placeholder="Phone Number" 
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        placeholder="Email Address" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <select name="blood_type" required>
+                            <option value="">Select Blood Type</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input 
+                            type="number" 
+                            name="units" 
+                            placeholder="Units Needed" 
+                            min="1"
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        name="relation" 
+                        placeholder="Relation (e.g., Father, Mother, Self)" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label>Urgency Level</label>
+                    <div class="urgency-buttons">
+                        <button type="button" class="urgency-btn" data-urgency="low">Low</button>
+                        <button type="button" class="urgency-btn" data-urgency="medium">Medium</button>
+                        <button type="button" class="urgency-btn active" data-urgency="urgent">Urgent</button>
+                        <button type="button" class="urgency-btn" data-urgency="urgently">Urgently</button>
+                    </div>
+                    <input type="hidden" name="urgency" id="urgency-input" value="urgent">
+                </div>
+                
+                <div class="form-group">
+                    <textarea 
+                        name="message" 
+                        rows="4" 
+                        placeholder="Additional Message (e.g., My Father need the blood urgently)"
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" class="btn-send">
+                    SEND
+                </button>
+            </form>
+        </div>
+        
+        <div class="image-section">
+            <!-- Background image -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Urgency button selection
+    document.querySelectorAll('.urgency-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.urgency-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById('urgency-input').value = this.dataset.urgency;
+        });
+    });
+</script>
+{% endblock %}
