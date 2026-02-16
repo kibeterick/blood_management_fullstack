@@ -1143,3 +1143,103 @@ def contact_for_blood(request):
         return redirect('contact_for_blood')
     
     return render(request, 'contact_for_blood.html')
+
+
+
+# ==========================================
+# ADVANCED SEARCH FUNCTIONALITY
+# ==========================================
+
+@login_required
+def advanced_search(request):
+    """Advanced search with date range and multiple filters"""
+    # Get all filter parameters
+    search_query = request.GET.get('search', '')
+    blood_type = request.GET.get('blood_type', '')
+    status = request.GET.get('status', '')
+    urgency = request.GET.get('urgency', '')
+    purpose = request.GET.get('purpose', '')
+    date_from = request.GET.get('date_from', '')
+    date_to = request.GET.get('date_to', '')
+    search_type = request.GET.get('search_type', 'requests')  # requests or donors
+    
+    results = []
+    result_count = 0
+    
+    if search_type == 'donors':
+        # Search donors
+        donors = Donor.objects.all()
+        
+        if search_query:
+            donors = donors.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(email__icontains=search_query) |
+                Q(phone_number__icontains=search_query) |
+                Q(city__icontains=search_query) |
+                Q(state__icontains=search_query)
+            )
+        
+        if blood_type:
+            donors = donors.filter(blood_type=blood_type)
+        
+        if date_from:
+            donors = donors.filter(created_at__gte=date_from)
+        
+        if date_to:
+            donors = donors.filter(created_at__lte=date_to)
+        
+        results = donors
+        result_count = donors.count()
+        
+    else:
+        # Search blood requests
+        requests = BloodRequest.objects.all()
+        
+        if request.user.role != 'admin':
+            requests = requests.filter(requester=request.user)
+        
+        if search_query:
+            requests = requests.filter(
+                Q(patient_name__icontains=search_query) |
+                Q(hospital_name__icontains=search_query) |
+                Q(hospital_address__icontains=search_query) |
+                Q(contact_number__icontains=search_query) |
+                Q(notes__icontains=search_query)
+            )
+        
+        if blood_type:
+            requests = requests.filter(blood_type=blood_type)
+        
+        if status:
+            requests = requests.filter(status=status)
+        
+        if urgency:
+            requests = requests.filter(urgency=urgency)
+        
+        if purpose:
+            requests = requests.filter(purpose=purpose)
+        
+        if date_from:
+            requests = requests.filter(created_at__gte=date_from)
+        
+        if date_to:
+            requests = requests.filter(created_at__lte=date_to)
+        
+        results = requests
+        result_count = requests.count()
+    
+    context = {
+        'results': results,
+        'result_count': result_count,
+        'search_query': search_query,
+        'blood_type': blood_type,
+        'status': status,
+        'urgency': urgency,
+        'purpose': purpose,
+        'date_from': date_from,
+        'date_to': date_to,
+        'search_type': search_type,
+    }
+    
+    return render(request, 'advanced_search.html', context)

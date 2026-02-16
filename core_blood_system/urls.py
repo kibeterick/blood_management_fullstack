@@ -56,6 +56,9 @@ urlpatterns = [
     # BLOOD COMPATIBILITY CHECKER
     path('compatibility/', views.blood_compatibility_checker, name='blood_compatibility_checker'),
     
+    # ADVANCED SEARCH
+    path('advanced-search/', views.advanced_search, name='advanced_search'),
+    
     # CERTIFICATES
     path('certificate/download/<int:donation_id>/', views.download_certificate, name='download_certificate'),
     path('my-donations/', views.my_donations, name='my_donations'),

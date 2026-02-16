@@ -144,6 +144,7 @@
     <!-- Mobile Responsive CSS -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/mobile-responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/print-styles.css' %}">
     
     {% block extra_css %}{% endblock %}
 </head>
@@ -209,6 +210,11 @@
                                     <i class="bi bi-clipboard2-pulse-fill me-1"></i> Compatibility
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href="{% url 'advanced_search' %}">
+                                    <i class="bi bi-search me-1"></i> Advanced Search
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-shield-fill-check me-1"></i> Admin
@@ -243,6 +249,7 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{% url 'request_blood' %}"><i class="bi bi-droplet-fill me-2"></i>Request Blood</a></li>
                                     <li><a class="dropdown-item" href="{% url 'blood_compatibility_checker' %}"><i class="bi bi-clipboard2-pulse-fill me-2"></i>Check Compatibility</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'advanced_search' %}"><i class="bi bi-search me-2"></i>Advanced Search</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a class="dropdown-item" href="{% url 'my_donations' %}"><i class="bi bi-award-fill me-2"></i>My Certificates</a></li>
                                 </ul>
