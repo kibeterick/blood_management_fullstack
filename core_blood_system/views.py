@@ -745,18 +745,27 @@ def download_certificate(request, donation_id):
 @login_required
 def my_donations(request):
     """View user's donation history and download certificates"""
-    # Get donations for the logged-in user's donor profile
-    try:
-        donor = Donor.objects.get(user=request.user)
-        donations = BloodDonation.objects.filter(donor=donor).order_by('-donation_date')
+    # Admins can see all donations, regular users see only their own
+    if request.user.role == 'admin':
+        # Admin sees all donations
+        donations = BloodDonation.objects.all().select_related('donor', 'donor__user').order_by('-donation_date')
         total_units = sum(d.units_donated for d in donations)
-    except Donor.DoesNotExist:
-        donations = []
-        total_units = 0
+        is_admin_view = True
+    else:
+        # Regular users see only their donations
+        try:
+            donor = Donor.objects.get(user=request.user)
+            donations = BloodDonation.objects.filter(donor=donor).order_by('-donation_date')
+            total_units = sum(d.units_donated for d in donations)
+        except Donor.DoesNotExist:
+            donations = []
+            total_units = 0
+        is_admin_view = False
     
     context = {
         'donations': donations,
         'total_units': total_units,
+        'is_admin_view': is_admin_view,
     }
     
     return render(request, 'donations/my_donations.html', context)
