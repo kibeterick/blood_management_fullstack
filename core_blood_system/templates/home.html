@@ -103,7 +103,7 @@
         /* Hero Section */
         .hero-section {
             position: relative;
-            min-height: 80vh;
+            min-height: 85vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -124,6 +124,7 @@
             margin-bottom: 20px;
             text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
             animation: fadeInDown 1s ease-out;
+            line-height: 1.2;
         }
 
         .hero-subtitle {
@@ -368,25 +369,25 @@
                               clip-path="inset(40% 0 0 0)"/>
                     </svg>
                 </div>
-                <h1 class="hero-title">Save Lives Through Blood Donation</h1>
-                <p class="hero-subtitle">Connect donors with those in need • Make a difference today</p>
+                <h1 class="hero-title">💝 Save Lives Through Blood Donation</h1>
+                <p class="hero-subtitle">Join thousands of heroes making a difference • Every donation counts</p>
                 
                 {% if user.is_authenticated %}
                     <div>
                         <a href="{% url 'register_donor' %}" class="btn btn-hero btn-primary-custom">
-                            <i class="bi bi-person-plus-fill"></i> Become a Donor
+                            <i class="bi bi-heart-fill"></i> Become a Hero Today
                         </a>
                         <a href="{% url 'request_blood' %}" class="btn btn-hero btn-secondary-custom">
-                            <i class="bi bi-droplet-fill"></i> Request Blood
+                            <i class="bi bi-droplet-fill"></i> Find Blood Now
                         </a>
                     </div>
                 {% else %}
                     <div>
                         <a href="{% url 'user_register' %}" class="btn btn-hero btn-primary-custom">
-                            <i class="bi bi-person-plus-fill"></i> Get Started
+                            <i class="bi bi-rocket-takeoff-fill"></i> Join Our Community
                         </a>
                         <a href="{% url 'login' %}" class="btn btn-hero btn-secondary-custom">
-                            <i class="bi bi-box-arrow-in-right"></i> Login
+                            <i class="bi bi-box-arrow-in-right"></i> Sign In
                         </a>
                     </div>
                 {% endif %}
@@ -403,8 +404,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-people-fill"></i>
                         </div>
-                        <h3 class="feature-title">Register as Donor</h3>
-                        <p class="feature-text">Join our community of life-savers. Register with your blood type and help those in need.</p>
+                        <h3 class="feature-title">🩸 Become a Life-Saver</h3>
+                        <p class="feature-text">Join our community of heroes. Register with your blood type and be ready to save lives when the call comes.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -412,8 +413,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-droplet-fill"></i>
                         </div>
-                        <h3 class="feature-title">Request Blood</h3>
-                        <p class="feature-text">Submit urgent blood requests and connect with compatible donors instantly.</p>
+                        <h3 class="feature-title">🆘 Find Blood Fast</h3>
+                        <p class="feature-text">Submit urgent blood requests and connect with compatible donors in your area instantly.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -421,8 +422,8 @@
                         <div class="feature-icon">
                             <i class="bi bi-award-fill"></i>
                         </div>
-                        <h3 class="feature-title">Get Certificates</h3>
-                        <p class="feature-text">Receive official donation certificates and track your life-saving contributions.</p>
+                        <h3 class="feature-title">🏆 Earn Recognition</h3>
+                        <p class="feature-text">Receive official donation certificates and track your life-saving journey with pride.</p>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-wrapper fade-in">
+    <div class="page-header mb-4">
+        <h1 class="page-title">
+            {% block page_icon %}
+            <i class="bi bi-heart-pulse-fill icon-pulse"></i>
+            {% endblock %}
+            {% block page_title %}Page Title{% endblock %}
+        </h1>
+        {% block page_subtitle %}
+        <p class="page-subtitle">{% block subtitle_text %}Welcome to your portal{% endblock %}</p>
+        {% endblock %}
+    </div>
+    
+    {% if messages %}
+    <div class="messages-container mb-4">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-{% if message.tags == 'success' %}check-circle-fill{% elif message.tags == 'error' %}exclamation-triangle-fill{% elif message.tags == 'warning' %}exclamation-circle-fill{% else %}info-circle-fill{% endif %} me-2"></i>
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% block portal_content %}
+    <!-- Page specific content goes here -->
+    {% endblock %}
+</div>
+{% endblock %}

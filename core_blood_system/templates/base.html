@@ -18,13 +18,15 @@
         }
         
         body { 
-            background-color: #f5f7fa; 
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 25%, #ff9a9e 75%, #fecfef 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
         }
         
         .navbar { 
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             padding: 0.75rem 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
         }
         
         .navbar-brand { 
@@ -87,44 +89,80 @@
         
         .btn-light {
             background-color: white;
-            color: #dc3545;
-            font-weight: 600;
+            color: #667eea;
+            font-weight: 700;
             border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255,255,255,0.2);
         }
         
         .btn-light:hover {
             background-color: #f8f9fa;
+            color: #764ba2;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 15px rgba(255,255,255,0.3);
         }
         
         .card { 
             border: none; 
-            border-radius: 15px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08); 
-            margin-bottom: 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12); 
+            margin-bottom: 30px;
+            background: white;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.18);
         }
         
         .card-header { 
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             color: white; 
-            padding: 20px; 
-            font-weight: 600; 
-            border: none; 
+            padding: 25px; 
+            font-weight: 700; 
+            border: none;
+            font-size: 1.25rem;
         }
         
         .btn-primary { 
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             border: none; 
-            padding: 12px 30px; 
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
         
         .table thead { 
-            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
             color: white; 
+        }
+        
+        .table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+            transform: scale(1.01);
         }
 
         /* Prevent horizontal scroll on mobile */
@@ -138,6 +176,170 @@
                 padding-left: 10px;
                 padding-right: 10px;
             }
+        }
+        
+        /* Portal-style page wrapper */
+        .page-wrapper {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            margin: 30px auto;
+            max-width: 1200px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .page-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        /* Form styling */
+        .form-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        }
+        
+        /* Badge styling */
+        .badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        /* Alert styling */
+        .alert {
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        /* Button group styling */
+        .btn-group .btn {
+            border-radius: 12px;
+            margin: 0 5px;
+        }
+        
+        /* Stats cards */
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+    
+    <!-- Portal Enhancement Styles -->
+    <style>
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Loading animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Icon animations */
+        .icon-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Success checkmark animation */
+        @keyframes checkmark {
+            0% { transform: scale(0) rotate(45deg); }
+            50% { transform: scale(1.2) rotate(45deg); }
+            100% { transform: scale(1) rotate(45deg); }
+        }
+        
+        .success-checkmark {
+            animation: checkmark 0.5s ease-out;
+        }
+        
+        /* Footer link hover */
+        .hover-opacity-100:hover {
+            opacity: 1 !important;
+            text-decoration: underline !important;
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        a, button, .btn, .card, .nav-link {
+            transition: all 0.3s ease;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
     </style>
     
@@ -303,10 +505,44 @@
     </div>
 
     <!-- Footer -->
-    <footer class="mt-5 py-4 text-center" style="background-color: #f8f9fa;">
+    <footer class="mt-5 py-5 text-center" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
         <div class="container">
-            <p class="mb-0 text-muted">&copy; 2026 Blood Management System. All rights reserved.</p>
-            <small class="text-muted">Saving lives through blood donation</small>
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-heart-pulse-fill me-2"></i>
+                        Blood Management
+                    </h5>
+                    <p class="small opacity-75">Connecting donors with those in need. Every donation saves lives.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold mb-3">Quick Links</h6>
+                    <div class="d-flex flex-column gap-2">
+                        <a href="{% url 'home' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Home</a>
+                        <a href="{% url 'donor_list' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Find Donors</a>
+                        <a href="{% url 'contact_us' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Contact Us</a>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 class="fw-bold mb-3">Get Started</h6>
+                    <div class="d-flex flex-column gap-2">
+                        {% if not user.is_authenticated %}
+                        <a href="{% url 'user_register' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Register</a>
+                        <a href="{% url 'login' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Login</a>
+                        {% else %}
+                        <a href="{% url 'user_dashboard' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">My Dashboard</a>
+                        <a href="{% url 'register_donor' %}" class="text-white text-decoration-none opacity-75 hover-opacity-100">Become a Donor</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <hr class="border-white opacity-25 my-4">
+            <p class="mb-2 fw-bold">&copy; 2026 Blood Management System. All rights reserved.</p>
+            <p class="small opacity-75 mb-0">
+                <i class="bi bi-heart-fill me-1"></i>
+                Saving lives through blood donation
+                <i class="bi bi-heart-fill ms-1"></i>
+            </p>
         </div>
     </footer>
 
