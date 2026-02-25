@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit User - {{ user_to_edit.username }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <a href="{% url 'view_user' user_to_edit.id %}" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left"></i> Back to User Details
+            </a>
+            <h2>Edit User: {{ user_to_edit.username }}</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">User Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input type="text" name="first_name" class="form-control" value="{{ user_to_edit.first_name }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" name="last_name" class="form-control" value="{{ user_to_edit.last_name }}" required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" value="{{ user_to_edit.email }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" class="form-control" value="{{ user_to_edit.phone_number }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Blood Type</label>
+                                <select name="blood_type" class="form-select">
+                                    <option value="">Select Blood Type</option>
+                                    <option value="A+" {% if user_to_edit.blood_type == 'A+' %}selected{% endif %}>A+</option>
+                                    <option value="A-" {% if user_to_edit.blood_type == 'A-' %}selected{% endif %}>A-</option>
+                                    <option value="B+" {% if user_to_edit.blood_type == 'B+' %}selected{% endif %}>B+</option>
+                                    <option value="B-" {% if user_to_edit.blood_type == 'B-' %}selected{% endif %}>B-</option>
+                                    <option value="AB+" {% if user_to_edit.blood_type == 'AB+' %}selected{% endif %}>AB+</option>
+                                    <option value="AB-" {% if user_to_edit.blood_type == 'AB-' %}selected{% endif %}>AB-</option>
+                                    <option value="O+" {% if user_to_edit.blood_type == 'O+' %}selected{% endif %}>O+</option>
+                                    <option value="O-" {% if user_to_edit.blood_type == 'O-' %}selected{% endif %}>O-</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" name="date_of_birth" class="form-control" value="{{ user_to_edit.date_of_birth|date:'Y-m-d' }}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea name="address" class="form-control" rows="3">{{ user_to_edit.address }}</textarea>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Role <span class="text-danger">*</span></label>
+                                <select name="role" class="form-select" required>
+                                    <option value="user" {% if user_to_edit.role == 'user' %}selected{% endif %}>User</option>
+                                    <option value="admin" {% if user_to_edit.role == 'admin' %}selected{% endif %}>Admin</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Account Status</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" name="is_active" id="is_active" {% if user_to_edit.is_active %}checked{% endif %}>
+                                    <label class="form-check-label" for="is_active">
+                                        Active Account
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'view_user' user_to_edit.id %}" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -380,9 +380,53 @@
 
 {% block content %}
 <div class="dashboard-container">
+    <!-- Welcome Modal -->
+    {% if request.session.show_welcome %}
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-gradient text-white border-0" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);">
+                    <h5 class="modal-title">
+                        <i class="bi bi-hand-thumbs-up-fill me-2"></i>
+                        {{ request.session.welcome_greeting }}!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <div class="rounded-circle bg-danger bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="bi bi-person-circle text-danger" style="font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                    <h4 class="mb-2">Welcome Back, {{ request.session.welcome_name }}!</h4>
+                    <p class="text-muted mb-3">
+                        {% if request.session.user_role == 'admin' %}
+                        <span class="badge bg-danger">Administrator</span>
+                        {% else %}
+                        <span class="badge bg-primary">User</span>
+                        {% endif %}
+                    </p>
+                    <div class="alert alert-light border">
+                        <small class="text-muted">
+                            <i class="bi bi-clock-history me-1"></i>
+                            Last login: {{ request.session.last_login }}
+                        </small>
+                    </div>
+                    <p class="mb-0">You're now logged into the Blood Management System. Ready to save lives today?</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-check-circle me-1"></i> Let's Get Started
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Welcome Banner -->
     <div class="welcome-banner animate-in">
-        <h1>🩸 Welcome Back, Admin {{ user.first_name|default:user.username }}!</h1>
+        <h1>🩸 {{ request.session.welcome_greeting|default:"Welcome" }}, {{ user.first_name|default:user.username }}!</h1>
         <p>Manage your blood management system with powerful tools and real-time insights</p>
     </div>
     
@@ -454,6 +498,12 @@
                 <div class="action-icon">🏥</div>
                 <div class="action-title">Patients</div>
                 <div class="action-desc">Manage patients</div>
+            </a>
+            
+            <a href="{% url 'user_list' %}" class="action-btn">
+                <div class="action-icon">👥</div>
+                <div class="action-title">User Management</div>
+                <div class="action-desc">View all users</div>
             </a>
             
             <a href="{% url 'blood_compatibility_checker' %}" class="action-btn">
@@ -555,4 +605,25 @@
         {% endif %}
     </div>
 </div>
+
+{% block extra_js %}
+<script>
+    // Show welcome modal on login
+    {% if request.session.show_welcome %}
+    document.addEventListener('DOMContentLoaded', function() {
+        var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+        welcomeModal.show();
+        
+        // Clear the session flag after showing modal
+        fetch('{% url "clear_welcome_flag" %}', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        });
+    });
+    {% endif %}
+</script>
+{% endblock %}
 {% endblock %}

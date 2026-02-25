@@ -83,7 +83,7 @@ def admin_register(request):
 
 # Login View
 def user_login(request):
-    """User login"""
+    """User login with personalized welcome message"""
     if request.method == 'POST':
         form = CustomLoginForm(request, data=request.POST)
         if form.is_valid():
@@ -103,7 +103,28 @@ def user_login(request):
                     # Session expires when browser closes
                     request.session.set_expiry(0)
                 
-                messages.success(request, f'Welcome back, {user.first_name}!')
+                # Get time-based greeting
+                from datetime import datetime
+                current_hour = datetime.now().hour
+                if current_hour < 12:
+                    greeting = "Good morning"
+                elif current_hour < 17:
+                    greeting = "Good afternoon"
+                else:
+                    greeting = "Good evening"
+                
+                # Personalized welcome message
+                full_name = f"{user.first_name} {user.last_name}" if user.first_name else user.username
+                
+                # Set welcome message in session for modal display
+                request.session['show_welcome'] = True
+                request.session['welcome_greeting'] = greeting
+                request.session['welcome_name'] = full_name
+                request.session['user_role'] = user.role
+                request.session['last_login'] = user.last_login.strftime('%B %d, %Y at %I:%M %p') if user.last_login else 'First time login'
+                
+                # Success message
+                messages.success(request, f'{greeting}, {full_name}! Welcome back to Blood Management System.')
                 
                 # Redirect based on user role
                 if user.role == 'admin':
@@ -1247,3 +1268,142 @@ def advanced_search(request):
     }
     
     return render(request, 'advanced_search.html', context)
+
+
+
+# ==========================================
+# USER MANAGEMENT VIEWS
+# ==========================================
+
+@login_required
+def user_list(request):
+    """View all registered users (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can view user list.')
+        return redirect('user_dashboard')
+    
+    # Get all users
+    users = CustomUser.objects.all().order_by('-date_joined')
+    
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        users = users.filter(
+            Q(username__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query) |
+            Q(phone_number__icontains=search_query)
+        )
+    
+    # Filter by role
+    role_filter = request.GET.get('role', '')
+    if role_filter:
+        users = users.filter(role=role_filter)
+    
+    # Filter by status
+    status_filter = request.GET.get('status', '')
+    if status_filter == 'active':
+        users = users.filter(is_active=True)
+    elif status_filter == 'inactive':
+        users = users.filter(is_active=False)
+    
+    # Statistics
+    total_users = CustomUser.objects.count()
+    admin_count = CustomUser.objects.filter(role='admin').count()
+    user_count = CustomUser.objects.filter(role='user').count()
+    active_today = CustomUser.objects.filter(last_login__date=timezone.now().date()).count()
+    
+    context = {
+        'users': users,
+        'search_query': search_query,
+        'role_filter': role_filter,
+        'status_filter': status_filter,
+        'total_users': total_users,
+        'admin_count': admin_count,
+        'user_count': user_count,
+        'active_today': active_today,
+    }
+    
+    return render(request, 'users/user_list.html', context)
+
+
+@login_required
+def view_user(request, user_id):
+    """View user details (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can view user details.')
+        return redirect('user_dashboard')
+    
+    viewed_user = get_object_or_404(CustomUser, id=user_id)
+    
+    # Get user activity
+    blood_requests_count = BloodRequest.objects.filter(requester=viewed_user).count()
+    
+    # Check if user is a donor
+    is_donor = Donor.objects.filter(user=viewed_user).exists()
+    donations_count = 0
+    if is_donor:
+        donor = Donor.objects.get(user=viewed_user)
+        donations_count = BloodDonation.objects.filter(donor=donor).count()
+    
+    context = {
+        'viewed_user': viewed_user,
+        'blood_requests_count': blood_requests_count,
+        'donations_count': donations_count,
+        'is_donor': is_donor,
+    }
+    
+    return render(request, 'users/user_detail.html', context)
+
+
+@login_required
+def edit_user(request, user_id):
+    """Edit user information (Admin only)"""
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can edit user information.')
+        return redirect('user_dashboard')
+    
+    user_to_edit = get_object_or_404(CustomUser, id=user_id)
+    
+    if request.method == 'POST':
+        # Update user information
+        user_to_edit.first_name = request.POST.get('first_name')
+        user_to_edit.last_name = request.POST.get('last_name')
+        user_to_edit.email = request.POST.get('email')
+        user_to_edit.phone_number = request.POST.get('phone_number')
+        user_to_edit.blood_type = request.POST.get('blood_type')
+        user_to_edit.address = request.POST.get('address')
+        user_to_edit.role = request.POST.get('role')
+        user_to_edit.is_active = request.POST.get('is_active') == 'on'
+        
+        # Update date of birth if provided
+        dob = request.POST.get('date_of_birth')
+        if dob:
+            user_to_edit.date_of_birth = dob
+        
+        user_to_edit.save()
+        messages.success(request, f'User {user_to_edit.username} updated successfully!')
+        return redirect('view_user', user_id=user_id)
+    
+    context = {
+        'user_to_edit': user_to_edit,
+    }
+    return render(request, 'users/edit_user.html', context)
+
+
+
+@login_required
+def clear_welcome_flag(request):
+    """Clear the welcome modal flag from session"""
+    if 'show_welcome' in request.session:
+        del request.session['show_welcome']
+    if 'welcome_greeting' in request.session:
+        del request.session['welcome_greeting']
+    if 'welcome_name' in request.session:
+        del request.session['welcome_name']
+    if 'user_role' in request.session:
+        del request.session['user_role']
+    if 'last_login' in request.session:
+        del request.session['last_login']
+    return JsonResponse({'status': 'success'})

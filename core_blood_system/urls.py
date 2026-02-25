@@ -68,6 +68,14 @@ urlpatterns = [
     path('donation/approve/<int:donation_id>/', views.approve_donation, name='approve_donation'),
     path('donation/reject/<int:donation_id>/', views.reject_donation, name='reject_donation'),
     
+    # USER MANAGEMENT (Admin only)
+    path('users/', views.user_list, name='user_list'),
+    path('users/<int:user_id>/', views.view_user, name='view_user'),
+    path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),
+    
+    # CLEAR WELCOME FLAG
+    path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),
+    
     # API ENDPOINTS FOR AJAX
     path('api/donors/search/', api_views.donor_search_api, name='api_donor_search'),
     path('api/donor/<int:donor_id>/eligibility/', api_views.check_donor_eligibility_api, name='api_donor_eligibility'),
