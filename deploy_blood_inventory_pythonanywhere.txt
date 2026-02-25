@@ -1,0 +1,39 @@
+PYTHONANYWHERE DEPLOYMENT INSTRUCTIONS
+========================================
+
+Run these commands in the PythonAnywhere Bash console:
+
+1. Navigate to project directory:
+   cd ~/blood_management_fullstack
+
+2. Pull latest changes:
+   git pull origin main
+
+3. Activate virtual environment:
+   source venv/bin/activate
+
+4. Populate blood inventory:
+   python populate_blood_inventory.py
+
+5. Collect static files (if needed):
+   python manage.py collectstatic --noinput
+
+6. Reload web app:
+   touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+7. Verify deployment:
+   - Visit: https://kibeterick.pythonanywhere.com
+   - Login as admin (username: admin, password: E38736434k)
+   - Check admin dashboard for blood bag visualizations
+
+WHAT TO EXPECT:
+- Blood inventory section will show 8 blood types
+- Each card displays an animated blood bag icon
+- Blood level fills from bottom based on available units
+- Low stock items show pulsing red warning badge
+- Adequate stock shows green checkmark badge
+
+TROUBLESHOOTING:
+- If blood bags don't show: Clear browser cache (Ctrl+Shift+R)
+- If inventory is empty: Run populate_blood_inventory.py again
+- If styles are missing: Run collectstatic command again
