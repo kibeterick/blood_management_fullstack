@@ -112,10 +112,72 @@
         }
 
         .hero-content {
-            text-align: center;
             color: white;
             z-index: 2;
             position: relative;
+        }
+
+        .hero-image-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: fadeInRight 1s ease-out;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+            transition: transform 0.5s;
+        }
+
+        .hero-image-container:hover .hero-image {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(255,107,107,0.9), transparent);
+            padding: 30px;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .hero-image-container:hover .image-overlay {
+            transform: translateY(0);
+        }
+
+        .overlay-text {
+            color: white;
+            text-align: center;
+        }
+
+        .overlay-text i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .overlay-text p {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         .hero-title {
@@ -299,6 +361,13 @@
                 left: 20px;
                 bottom: 20px;
             }
+            .hero-content {
+                text-align: center !important;
+                margin-bottom: 30px;
+            }
+            .hero-image-container {
+                margin-top: 30px;
+            }
         }
     </style>
 </head>
@@ -350,47 +419,46 @@
     <!-- Hero Section -->
     <div class="hero-section">
         <div class="container">
-            <div class="hero-content">
-                <div class="blood-heart">
-                    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" style="stop-color:rgba(255,255,255,0.9);stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:rgba(255,107,107,0.9);stop-opacity:1" />
-                            </linearGradient>
-                        </defs>
-                        <path d="M100,170 C100,170 30,120 30,80 C30,50 50,30 70,30 C85,30 95,40 100,50 C105,40 115,30 130,30 C150,30 170,50 170,80 C170,120 100,170 100,170 Z" 
-                              fill="url(#heartGradient)" 
-                              stroke="white" 
-                              stroke-width="3"/>
-                        <!-- Blood level -->
-                        <path d="M100,170 C100,170 30,120 30,80 C30,50 50,30 70,30 C85,30 95,40 100,50 C105,40 115,30 130,30 C150,30 170,50 170,80 C170,120 100,170 100,170 Z" 
-                              fill="rgba(255,50,50,0.8)" 
-                              clip-path="inset(40% 0 0 0)"/>
-                    </svg>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="hero-content" style="text-align: left;">
+                        <h1 class="hero-title">💝 Save Lives Through Blood Donation</h1>
+                        <p class="hero-subtitle">Join thousands of heroes making a difference • Every donation counts</p>
+                        
+                        {% if user.is_authenticated %}
+                            <div>
+                                <a href="{% url 'register_donor' %}" class="btn btn-hero btn-primary-custom">
+                                    <i class="bi bi-heart-fill"></i> Become a Hero Today
+                                </a>
+                                <a href="{% url 'request_blood' %}" class="btn btn-hero btn-secondary-custom">
+                                    <i class="bi bi-droplet-fill"></i> Find Blood Now
+                                </a>
+                            </div>
+                        {% else %}
+                            <div>
+                                <a href="{% url 'user_register' %}" class="btn btn-hero btn-primary-custom">
+                                    <i class="bi bi-rocket-takeoff-fill"></i> Join Our Community
+                                </a>
+                                <a href="{% url 'login' %}" class="btn btn-hero btn-secondary-custom">
+                                    <i class="bi bi-box-arrow-in-right"></i> Sign In
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-                <h1 class="hero-title">💝 Save Lives Through Blood Donation</h1>
-                <p class="hero-subtitle">Join thousands of heroes making a difference • Every donation counts</p>
-                
-                {% if user.is_authenticated %}
-                    <div>
-                        <a href="{% url 'register_donor' %}" class="btn btn-hero btn-primary-custom">
-                            <i class="bi bi-heart-fill"></i> Become a Hero Today
-                        </a>
-                        <a href="{% url 'request_blood' %}" class="btn btn-hero btn-secondary-custom">
-                            <i class="bi bi-droplet-fill"></i> Find Blood Now
-                        </a>
+                <div class="col-md-6">
+                    <div class="hero-image-container">
+                        <img src="https://images.unsplash.com/photo-1615461066841-6116e61058f4?auto=format&fit=crop&w=800&q=80" 
+                             alt="Blood Donation - Saving Lives Together" 
+                             class="hero-image">
+                        <div class="image-overlay">
+                            <div class="overlay-text">
+                                <i class="bi bi-heart-pulse-fill"></i>
+                                <p>Every Drop Counts</p>
+                            </div>
+                        </div>
                     </div>
-                {% else %}
-                    <div>
-                        <a href="{% url 'user_register' %}" class="btn btn-hero btn-primary-custom">
-                            <i class="bi bi-rocket-takeoff-fill"></i> Join Our Community
-                        </a>
-                        <a href="{% url 'login' %}" class="btn btn-hero btn-secondary-custom">
-                            <i class="bi bi-box-arrow-in-right"></i> Sign In
-                        </a>
-                    </div>
-                {% endif %}
+                </div>
             </div>
         </div>
     </div>
