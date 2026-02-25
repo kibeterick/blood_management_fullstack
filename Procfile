@@ -1,1 +1,1 @@
-web: python manage.py migrate && python manage.py collectstatic --noinput && python manage.py create_admin && gunicorn backend.wsgi --bind 0.0.0.0:$PORT --log-file - --access-logfile - --error-logfile -
+web: gunicorn backend.wsgi --log-file -
