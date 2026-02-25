@@ -61,20 +61,18 @@ def user_register(request):
 
 # Admin Registration
 def admin_register(request):
-    """Admin registration - restricted after first admin is created"""
-    # Check if an admin already exists
-    admin_exists = CustomUser.objects.filter(role='admin').exists()
-    
-    if admin_exists:
-        messages.error(request, 'Admin registration is disabled. An administrator already exists. Please contact the existing admin for access.')
+    """Admin registration - only accessible by existing admins"""
+    # Only allow logged-in admins to create new admin accounts
+    if not request.user.is_authenticated or request.user.role != 'admin':
+        messages.error(request, 'Admin registration is restricted. Only existing administrators can create new admin accounts.')
         return redirect('login')
     
     if request.method == 'POST':
         form = AdminRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            messages.success(request, 'Admin account created successfully! Please log in.')
-            return redirect('login')
+            messages.success(request, f'Admin account for {user.username} created successfully!')
+            return redirect('user_dashboard')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
