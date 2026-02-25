@@ -29,6 +29,12 @@ def home(request):
     return render(request, 'home.html')
 
 
+# CSRF Failure Handler
+def csrf_failure(request, reason=""):
+    """Custom CSRF failure view that redirects to a friendly error page"""
+    return render(request, '403_csrf.html', status=403)
+
+
 def home_portal(request):
     """Home portal - redirect to home"""
     return render(request, 'home.html')

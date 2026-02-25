@@ -1,0 +1,304 @@
+/* 
+ * Print-Friendly Styles for Blood Management System
+ * Optimized layouts for printing reports, donor lists, and requests
+ */
+
+@media print {
+    /* Hide unnecessary elements when printing */
+    nav,
+    .navbar,
+    .navbar-custom,
+    footer,
+    .btn,
+    button,
+    .action-buttons,
+    .quick-actions,
+    .filters-section,
+    .search-bar,
+    .pagination,
+    .alert,
+    .messages,
+    .sidebar,
+    .no-print {
+        display: none !important;
+    }
+    
+    /* Reset page styles for printing */
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+        line-height: 1.5;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    /* Page setup */
+    @page {
+        size: A4;
+        margin: 2cm;
+    }
+    
+    /* Prevent page breaks inside elements */
+    .stat-card,
+    .request-item,
+    .donor-card,
+    .blood-type-card,
+    tr,
+    .card {
+        page-break-inside: avoid;
+    }
+    
+    /* Headers and titles */
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+        page-break-after: avoid;
+    }
+    
+    h1 {
+        font-size: 24pt;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 10px;
+    }
+    
+    h2 {
+        font-size: 18pt;
+        margin-top: 20px;
+        margin-bottom: 15px;
+    }
+    
+    /* Tables */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        page-break-inside: auto;
+    }
+    
+    thead {
+        display: table-header-group;
+        background: #f0f0f0 !important;
+    }
+    
+    tbody {
+        display: table-row-group;
+    }
+    
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+    
+    th, td {
+        border: 1px solid #333 !important;
+        padding: 8px !important;
+        text-align: left;
+        background: white !important;
+        color: black !important;
+    }
+    
+    th {
+        font-weight: bold;
+        background: #e0e0e0 !important;
+    }
+    
+    /* Remove table hover effects */
+    tbody tr:hover {
+        background: white !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* Cards and containers */
+    .card,
+    .stat-card,
+    .request-item,
+    .donor-card {
+        border: 1px solid #333 !important;
+        box-shadow: none !important;
+        background: white !important;
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+    
+    /* Badges and labels */
+    .badge,
+    .badge-modern,
+    .status-badge,
+    .blood-type-badge {
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+        padding: 3px 8px;
+        display: inline-block;
+    }
+    
+    /* Statistics display */
+    .stats-grid,
+    .inventory-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin: 20px 0;
+    }
+    
+    .stat-value,
+    .blood-type-units {
+        font-size: 18pt !important;
+        font-weight: bold;
+        color: black !important;
+    }
+    
+    /* Links */
+    a {
+        color: black !important;
+        text-decoration: none !important;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        color: #666;
+    }
+    
+    /* Remove link URLs for internal links */
+    a[href^="/"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+    
+    /* Print header */
+    .print-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #333;
+        padding-bottom: 15px;
+    }
+    
+    .print-header h1 {
+        margin: 0;
+        border: none;
+    }
+    
+    .print-date {
+        font-size: 10pt;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    /* Print footer */
+    .print-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 9pt;
+        color: #666;
+        border-top: 1px solid #333;
+        padding-top: 10px;
+    }
+    
+    /* Page numbers */
+    .page-number:after {
+        content: counter(page);
+    }
+    
+    /* Donor list specific */
+    .donor-info,
+    .donor-avatar {
+        display: inline-block !important;
+    }
+    
+    .donor-avatar {
+        width: 30px !important;
+        height: 30px !important;
+        border: 1px solid #333 !important;
+        background: white !important;
+        color: black !important;
+    }
+    
+    /* Blood inventory */
+    .blood-type-card {
+        border: 2px solid #333 !important;
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .blood-type-label {
+        font-size: 16pt !important;
+        font-weight: bold;
+    }
+    
+    /* Request details */
+    .request-details {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 10px;
+    }
+    
+    /* Remove animations and transitions */
+    * {
+        animation: none !important;
+        transition: none !important;
+        transform: none !important;
+    }
+    
+    /* Ensure images print */
+    img {
+        max-width: 100%;
+        page-break-inside: avoid;
+    }
+    
+    /* Summary boxes */
+    .summary-box {
+        border: 2px solid #333;
+        padding: 15px;
+        margin: 20px 0;
+        background: #f9f9f9 !important;
+    }
+    
+    /* Signature line */
+    .signature-line {
+        margin-top: 50px;
+        border-top: 1px solid #333;
+        width: 200px;
+        padding-top: 5px;
+        text-align: center;
+    }
+}
+
+/* Print button styling (visible on screen, hidden in print) */
+.print-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.print-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+}
+
+.print-button i {
+    margin-right: 8px;
+}
+
+@media print {
+    .print-button {
+        display: none !important;
+    }
+}

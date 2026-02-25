@@ -212,9 +212,12 @@ SESSION_COOKIE_AGE = 3600  # 1 hour session timeout
 SESSION_SAVE_EVERY_REQUEST = True  # Refresh session on every request
 
 # CSRF Protection
-CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False  # Allow JavaScript to read CSRF token if needed
 CSRF_COOKIE_SAMESITE = 'Lax'
-CSRF_USE_SESSIONS = True
+CSRF_USE_SESSIONS = False  # Use cookie-based CSRF tokens instead of session
+CSRF_COOKIE_AGE = 31449600  # 1 year
+CSRF_TRUSTED_ORIGINS = ['https://kibeterick.pythonanywhere.com', 'http://127.0.0.1:8000', 'http://localhost:8000']
+CSRF_FAILURE_VIEW = 'core_blood_system.views.csrf_failure'
 
 # Password Hashing (Use strong hashers)
 PASSWORD_HASHERS = [
