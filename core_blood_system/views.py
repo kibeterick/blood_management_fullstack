@@ -154,6 +154,10 @@ def user_logout(request):
 @login_required
 def user_dashboard(request):
     """Dashboard for regular users - Enhanced version"""
+    # Redirect admins to admin dashboard
+    if request.user.is_authenticated and request.user.role == 'admin':
+        return redirect('admin_dashboard')
+    
     user_requests = BloodRequest.objects.filter(requester=request.user)
     return render(request, 'dashboard/user_dashboard_enhanced.html', {
         'user_requests': user_requests
@@ -1314,6 +1318,9 @@ def user_list(request):
     user_count = CustomUser.objects.filter(role='user').count()
     active_today = CustomUser.objects.filter(last_login__date=timezone.now().date()).count()
     
+    # Blood inventory
+    inventory = BloodInventory.objects.all().order_by('blood_type')
+    
     context = {
         'users': users,
         'search_query': search_query,
@@ -1323,6 +1330,7 @@ def user_list(request):
         'admin_count': admin_count,
         'user_count': user_count,
         'active_today': active_today,
+        'inventory': inventory,
     }
     
     return render(request, 'users/user_list.html', context)

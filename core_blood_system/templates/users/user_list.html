@@ -85,6 +85,55 @@
         </div>
     </div>
 
+    <!-- Blood Inventory Section -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-danger text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-droplet-fill"></i> Blood Inventory - All Blood Types
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        {% for item in inventory %}
+                        <div class="col-md-3 col-sm-6">
+                            <div class="card border-0 shadow-sm h-100">
+                                <div class="card-body text-center">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h3 class="mb-0 text-danger">{{ item.blood_type }}</h3>
+                                        {% if item.units_available < 10 %}
+                                        <span class="badge bg-danger">Low</span>
+                                        {% elif item.units_available < 20 %}
+                                        <span class="badge bg-warning text-dark">Adequate</span>
+                                        {% else %}
+                                        <span class="badge bg-success">Good</span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Blood Bag Visualization -->
+                                    <div class="blood-bag-container mx-auto mb-3">
+                                        <div class="blood-bag">
+                                            <div class="blood-level" style="height: {% widthratio item.units_available 25 100 %}%;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h4 class="mb-0">{{ item.units_available }} <small class="text-muted">units</small></h4>
+                                    <p class="text-muted small mb-0">Last updated: {{ item.last_updated|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center py-4">
+                            <p class="text-muted">No blood inventory data available</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Filters -->
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-body">
@@ -218,6 +267,52 @@
     }
     .card:hover {
         transform: translateY(-2px);
+    }
+    
+    /* Blood Bag Visualization */
+    .blood-bag-container {
+        height: 100px;
+        position: relative;
+        width: 60px;
+        margin: 0 auto;
+    }
+    
+    .blood-bag {
+        background: linear-gradient(to bottom, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.2) 100%);
+        border: 3px solid #dc3545;
+        border-radius: 0 0 30px 30px;
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .blood-bag::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 15px;
+        background: #dc3545;
+        border-radius: 5px 5px 0 0;
+    }
+    
+    .blood-level {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, #dc3545 0%, #e74c3c 50%, #c0392b 100%);
+        transition: height 0.5s ease;
+        animation: wave 2s ease-in-out infinite;
+    }
+    
+    @keyframes wave {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
     }
 </style>
 {% endblock %}
