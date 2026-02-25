@@ -1,0 +1,79 @@
+═══════════════════════════════════════════════════════════════
+    DEPLOY TO PYTHONANYWHERE - SIMPLE STEPS
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open PythonAnywhere
+→ Go to: https://www.pythonanywhere.com
+→ Login with your account
+→ Click "Consoles" tab
+→ Click "Bash" (or open existing bash console)
+
+───────────────────────────────────────────────────────────────
+
+STEP 2: Copy and Paste These Commands
+
+cd ~/blood_management_fullstack
+git pull origin main
+source venv/bin/activate
+python populate_blood_inventory.py
+python manage.py collectstatic --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+STEP 3: Wait for Commands to Complete
+
+You should see:
+✓ "Already up to date" or files being updated
+✓ Blood inventory populated (8 blood types)
+✓ Static files collected
+✓ WSGI file touched
+
+───────────────────────────────────────────────────────────────
+
+STEP 4: Wait 1 Minute
+The server needs time to reload with new changes.
+
+───────────────────────────────────────────────────────────────
+
+STEP 5: Open Your Website
+→ https://kibeterick.pythonanywhere.com
+→ Login: admin / E38736434k
+
+───────────────────────────────────────────────────────────────
+
+STEP 6: Check New Features
+
+1. BLOOD INVENTORY:
+   - Go to Admin Dashboard
+   - Scroll down to "Blood Inventory" section
+   - You should see 8 blood bags with animations
+
+2. USER LIST:
+   - Click "Manage" in top menu
+   - Click "All Users"
+   - You should see list of 6 users
+
+═══════════════════════════════════════════════════════════════
+
+WHAT IF COMMANDS FAIL?
+
+If "git pull" says "uncommitted changes":
+→ Run: git stash
+→ Then run: git pull origin main
+
+If "disk quota exceeded":
+→ Run: find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+→ Then try again
+
+═══════════════════════════════════════════════════════════════
+
+TOTAL TIME: 3-5 minutes
+
+After deployment, your live site will have:
+✓ Animated blood bag visualization
+✓ User management in navigation
+✓ All 8 blood types with inventory
+✓ All bug fixes applied
+
+═══════════════════════════════════════════════════════════════
