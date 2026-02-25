@@ -389,6 +389,9 @@
                                     <i class="bi bi-gear-fill me-1"></i> Manage
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="manageDropdown">
+                                    <li><h6 class="dropdown-header">User Management</h6></li>
+                                    <li><a class="dropdown-item" href="{% url 'user_list' %}"><i class="bi bi-people-fill me-2"></i>All Users</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                     <li><h6 class="dropdown-header">Donor Management</h6></li>
                                     <li><a class="dropdown-item" href="{% url 'register_donor' %}"><i class="bi bi-person-plus-fill me-2"></i>Add New Donor</a></li>
                                     <li><a class="dropdown-item" href="{% url 'donor_list' %}"><i class="bi bi-people-fill me-2"></i>All Donors</a></li>
