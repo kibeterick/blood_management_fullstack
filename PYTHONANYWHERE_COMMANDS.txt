@@ -1,0 +1,55 @@
+╔════════════════════════════════════════════════════════════════╗
+║           PYTHONANYWHERE DEPLOYMENT COMMANDS                   ║
+║                  Copy & Paste These                            ║
+╚════════════════════════════════════════════════════════════════╝
+
+STEP 1: Open Bash Console
+→ https://www.pythonanywhere.com/user/kibeterick/consoles/
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: Run These Commands (copy all at once):
+
+cd ~/blood_management_fullstack
+git pull origin main
+source venv/bin/activate
+python populate_blood_inventory.py
+python manage.py collectstatic --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: Wait & Verify
+→ Wait 30-60 seconds
+→ Visit: https://kibeterick.pythonanywhere.com
+→ Login: admin / E38736434k
+→ Check blood bags in admin dashboard
+→ Check "Manage" → "All Users" in navigation
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+IF PROBLEMS OCCUR:
+
+Problem: "uncommitted changes" error
+Fix: git stash && git pull origin main
+
+Problem: Static files not updating
+Fix: python manage.py collectstatic --noinput --clear
+
+Problem: Changes don't appear
+Fix: Hard refresh browser (Ctrl+Shift+R)
+
+Problem: Disk quota exceeded
+Fix: find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+WHAT'S NEW:
+✓ Animated blood bag visualization
+✓ Blood inventory with 8 blood types
+✓ User Management in navigation menu
+✓ All bug fixes applied
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DEPLOYMENT TIME: ~2-3 minutes
