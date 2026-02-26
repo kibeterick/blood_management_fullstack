@@ -126,8 +126,11 @@ def user_login(request):
                 # Success message
                 messages.success(request, f'{greeting}, {full_name}! Welcome back to Blood Management System.')
                 
-                # Redirect based on user role
-                if user.role == 'admin':
+                # Redirect based on user role - EXPLICIT CHECK
+                # Check multiple conditions to ensure proper routing
+                if hasattr(user, 'role') and user.role == 'admin':
+                    return redirect('admin_dashboard')
+                elif user.is_staff or user.is_superuser:
                     return redirect('admin_dashboard')
                 else:
                     return redirect('user_dashboard')
@@ -154,9 +157,15 @@ def user_logout(request):
 @login_required
 def user_dashboard(request):
     """Dashboard for regular users - Enhanced version"""
-    # Redirect admins to admin dashboard
-    if request.user.is_authenticated and request.user.role == 'admin':
-        return redirect('admin_dashboard')
+    # CRITICAL: Redirect admins to admin dashboard
+    # Check multiple conditions to ensure admins see the right dashboard
+    if request.user.is_authenticated:
+        # Check if user is admin by role
+        if hasattr(request.user, 'role') and request.user.role == 'admin':
+            return redirect('admin_dashboard')
+        # Also check if user is staff/superuser
+        if request.user.is_staff or request.user.is_superuser:
+            return redirect('admin_dashboard')
     
     user_requests = BloodRequest.objects.filter(requester=request.user)
     
