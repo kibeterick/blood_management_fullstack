@@ -159,8 +159,13 @@ def user_dashboard(request):
         return redirect('admin_dashboard')
     
     user_requests = BloodRequest.objects.filter(requester=request.user)
+    
+    # Get blood inventory for display
+    inventory = BloodInventory.objects.all().order_by('blood_type')
+    
     return render(request, 'dashboard/user_dashboard_enhanced.html', {
-        'user_requests': user_requests
+        'user_requests': user_requests,
+        'inventory': inventory,
     })
 
 
