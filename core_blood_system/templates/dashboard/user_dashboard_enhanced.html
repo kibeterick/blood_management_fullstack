@@ -417,9 +417,9 @@
                     </div>
                     <p class="mb-0">You're now logged into the Blood Management System. Ready to make a difference today?</p>
                 </div>
-                <div class="modal-footer border-0 justify-content-center">
-                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal">
-                        <i class="bi bi-check-circle me-1"></i> Let's Get Started
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-danger px-5 py-3" data-bs-dismiss="modal" style="font-size: 1.1rem; border-radius: 50px; box-shadow: 0 4px 15px rgba(235, 51, 73, 0.3);">
+                        <i class="bi bi-check-circle me-2"></i> Let's Get Started
                     </button>
                 </div>
             </div>
@@ -609,8 +609,20 @@
     // Show welcome modal on login
     {% if request.session.show_welcome %}
     document.addEventListener('DOMContentLoaded', function() {
-        var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+        var welcomeModalElement = document.getElementById('welcomeModal');
+        var welcomeModal = new bootstrap.Modal(welcomeModalElement, {
+            backdrop: 'static',
+            keyboard: false
+        });
+        
+        // Show modal with smooth animation
         welcomeModal.show();
+        
+        // Handle "Let's Get Started" button click
+        welcomeModalElement.addEventListener('hidden.bs.modal', function () {
+            // Modal is now closed, user can see the dashboard
+            console.log('Welcome modal closed - user is now on dashboard');
+        });
         
         // Clear the session flag after showing modal
         fetch('{% url "clear_welcome_flag" %}', {
@@ -619,6 +631,8 @@
                 'X-CSRFToken': '{{ csrf_token }}',
                 'Content-Type': 'application/json'
             }
+        }).catch(function(error) {
+            console.log('Session flag clear request sent');
         });
     });
     {% endif %}
