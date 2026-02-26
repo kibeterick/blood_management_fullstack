@@ -1,0 +1,55 @@
+========================================
+DEPLOY WELCOME MODAL ENHANCEMENT
+========================================
+
+WHAT WAS CHANGED:
+✅ Enhanced "Let's Get Started" button styling
+✅ Added smooth modal close animation
+✅ Modal closes WITHOUT page refresh
+✅ Dashboard content is already loaded behind modal
+✅ Improved button appearance with shadow and larger size
+
+CHANGES MADE:
+1. User Dashboard (user_dashboard_enhanced.html)
+   - Enhanced button styling (larger, rounded, with shadow)
+   - Improved JavaScript for smooth modal handling
+   - Added event listener for modal close
+
+2. Admin Dashboard (admin_dashboard_enhanced.html)
+   - Same enhancements as user dashboard
+   - Consistent experience for all users
+
+HOW IT WORKS:
+1. User logs in
+2. Welcome modal appears over the dashboard
+3. Dashboard content is already loaded in background
+4. User clicks "Let's Get Started"
+5. Modal smoothly fades away (no refresh!)
+6. User sees their dashboard immediately
+
+DEPLOYMENT COMMANDS:
+Run these commands on PythonAnywhere bash console:
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python manage.py collectstatic --noinput --clear
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+TESTING:
+1. Logout from your account
+2. Login again (as admin or regular user)
+3. Welcome modal should appear
+4. Click "Let's Get Started"
+5. Modal should close smoothly WITHOUT page refresh
+6. You should see your dashboard immediately
+
+TECHNICAL DETAILS:
+- Uses Bootstrap 5 modal with data-bs-dismiss="modal"
+- No page reload or navigation
+- Dashboard is pre-loaded behind modal
+- Smooth fade animation (Bootstrap default)
+- Session flag cleared via AJAX (no page impact)
+
+COMMIT: ef3683f
+DATE: February 26, 2026

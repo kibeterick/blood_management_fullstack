@@ -1,0 +1,32 @@
+========================================
+COPY AND PASTE THESE COMMANDS
+========================================
+
+Open PythonAnywhere Bash Console and run:
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python manage.py collectstatic --noinput --clear
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+AFTER RUNNING COMMANDS:
+========================================
+
+1. Go to your website: https://kibeterick.pythonanywhere.com
+2. Logout if you're logged in
+3. Login again (as admin or user)
+4. The welcome modal will appear
+5. Click "Let's Get Started"
+6. Modal should close smoothly WITHOUT page refresh!
+
+========================================
+WHY IT'S NOT WORKING NOW:
+========================================
+
+The changes are on GitHub but NOT on your live server yet.
+You must run the commands above to update your live site.
+
+The grayed-out screen you see is the OLD version.
+After deployment, it will work perfectly!
