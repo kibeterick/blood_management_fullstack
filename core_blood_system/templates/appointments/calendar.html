@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Appointments Calendar{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">
+        <i class="bi bi-calendar3"></i> Appointments Calendar - {{ month_name }} {{ year }}
+    </h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <div class="d-flex justify-content-between mb-3">
+                <a href="?month={{ month|add:'-1' }}&year={{ year }}" class="btn btn-outline-primary">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </a>
+                <h4>{{ month_name }} {{ year }}</h4>
+                <a href="?month={{ month|add:'1' }}&year={{ year }}" class="btn btn-outline-primary">
+                    Next <i class="bi bi-chevron-right"></i>
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Calendar grid will be generated here -->
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <p class="text-muted">Calendar view coming soon</p>
+                                <p>Total appointments this month: {{ appointments_by_date|length }}</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

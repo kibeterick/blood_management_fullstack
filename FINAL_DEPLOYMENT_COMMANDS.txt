@@ -1,0 +1,34 @@
+========================================
+RUN THESE COMMANDS ON PYTHONANYWHERE
+========================================
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python manage.py collectstatic --noinput --clear
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+AFTER DEPLOYMENT - IMPORTANT!
+========================================
+
+1. CLEAR YOUR BROWSER CACHE or use Incognito/Private mode
+2. Go to: https://kibeterick.pythonanywhere.com
+3. Logout if logged in
+4. Login again
+5. Click "Let's Get Started"
+6. Modal will close WITHOUT page refresh!
+
+========================================
+WHY THIS FIX WORKS:
+========================================
+
+The new code has a closeWelcomeModal() function that:
+- Closes the modal using Bootstrap API
+- Manually removes the backdrop
+- Removes modal-open class from body
+- Resets body overflow and padding
+- NO PAGE REFRESH NEEDED!
+
+Latest commit: 1b012e3
+"Add manual modal close function to fix backdrop issue"

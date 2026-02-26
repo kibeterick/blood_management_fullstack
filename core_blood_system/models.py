@@ -164,3 +164,149 @@ class BloodInventory(models.Model):
     class Meta:
         verbose_name_plural = "Blood Inventories"
         ordering = ['blood_type']
+
+
+
+# ============================================
+# ENHANCEMENT MODELS - TOP 5 FEATURES
+# ============================================
+
+# 1. APPOINTMENT SCHEDULING SYSTEM
+class DonationAppointment(models.Model):
+    """Blood donation appointment scheduling"""
+    STATUS_CHOICES = [
+        ('scheduled', 'Scheduled'),
+        ('confirmed', 'Confirmed'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
+        ('no_show', 'No Show'),
+    ]
+    
+    TIME_SLOT_CHOICES = [
+        ('09:00', '9:00 AM'),
+        ('10:00', '10:00 AM'),
+        ('11:00', '11:00 AM'),
+        ('12:00', '12:00 PM'),
+        ('13:00', '1:00 PM'),
+        ('14:00', '2:00 PM'),
+        ('15:00', '3:00 PM'),
+        ('16:00', '4:00 PM'),
+    ]
+    
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, related_name='appointments')
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_appointments', null=True, blank=True)
+    appointment_date = models.DateField()
+    time_slot = models.CharField(max_length=5, choices=TIME_SLOT_CHOICES)
+    location = models.CharField(max_length=200, help_text="Hospital or donation center")
+    address = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='scheduled')
+    notes = models.TextField(blank=True, null=True)
+    reminder_sent = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['appointment_date', 'time_slot']
+        indexes = [
+            models.Index(fields=['appointment_date', 'status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.donor} - {self.appointment_date} at {self.get_time_slot_display()}"
+
+
+# 2. REAL-TIME NOTIFICATIONS SYSTEM
+class Notification(models.Model):
+    """In-app notification system"""
+    TYPE_CHOICES = [
+        ('appointment', 'Appointment'),
+        ('blood_request', 'Blood Request'),
+        ('donation', 'Donation'),
+        ('match', 'Donor Match'),
+        ('system', 'System'),
+        ('urgent', 'Urgent Request'),
+    ]
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
+    notification_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    link = models.CharField(max_length=500, blank=True, null=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'is_read']),
+        ]
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.title}"
+
+
+# 3. BLOOD REQUEST MATCHING ALGORITHM
+class MatchedDonor(models.Model):
+    """Track matched donors for blood requests"""
+    STATUS_CHOICES = [
+        ('matched', 'Matched'),
+        ('notified', 'Notified'),
+        ('accepted', 'Accepted'),
+        ('declined', 'Declined'),
+        ('completed', 'Completed'),
+    ]
+    
+    blood_request = models.ForeignKey(BloodRequest, on_delete=models.CASCADE, related_name='matched_donors')
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, related_name='matched_requests')
+    match_score = models.IntegerField(help_text="Matching score based on compatibility, distance, etc.")
+    distance_km = models.FloatField(null=True, blank=True, help_text="Distance from donor to hospital")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='matched')
+    notified_at = models.DateTimeField(null=True, blank=True)
+    responded_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-match_score', 'distance_km']
+        unique_together = ['blood_request', 'donor']
+        indexes = [
+            models.Index(fields=['blood_request', 'status']),
+        ]
+    
+    def __str__(self):
+        return f"{self.donor} matched to {self.blood_request} (Score: {self.match_score})"
+
+
+# 4. ANALYTICS DATA (Calculated on-the-fly, no model needed)
+# Analytics will be computed in views using aggregation
+
+
+# 5. QR CODE SYSTEM
+class QRCode(models.Model):
+    """QR codes for donors, certificates, and blood bags"""
+    TYPE_CHOICES = [
+        ('donor', 'Donor ID'),
+        ('certificate', 'Donation Certificate'),
+        ('blood_bag', 'Blood Bag'),
+        ('appointment', 'Appointment'),
+    ]
+    
+    qr_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    code = models.CharField(max_length=100, unique=True, help_text="Unique QR code string")
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, null=True, blank=True, related_name='qr_codes')
+    donation = models.ForeignKey(BloodDonation, on_delete=models.CASCADE, null=True, blank=True, related_name='qr_codes')
+    appointment = models.ForeignKey(DonationAppointment, on_delete=models.CASCADE, null=True, blank=True, related_name='qr_codes')
+    qr_image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    data = models.JSONField(help_text="Additional data encoded in QR", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    scanned_count = models.IntegerField(default=0)
+    last_scanned = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['code']),
+            models.Index(fields=['qr_type']),
+        ]
+    
+    def __str__(self):
+        return f"{self.get_qr_type_display()} - {self.code}"

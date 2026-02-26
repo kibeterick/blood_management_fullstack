@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api_views
+from . import views, api_views, views_appointments
 
 urlpatterns = [
     # Home
@@ -72,6 +72,15 @@ urlpatterns = [
     path('users/', views.user_list, name='user_list'),
     path('users/<int:user_id>/', views.view_user, name='view_user'),
     path('users/<int:user_id>/edit/', views.edit_user, name='edit_user'),
+    
+    # APPOINTMENT SCHEDULING SYSTEM (Feature 1)
+    path('appointments/book/', views_appointments.book_appointment, name='book_appointment'),
+    path('appointments/my/', views_appointments.my_appointments, name='my_appointments'),
+    path('appointments/cancel/<int:appointment_id>/', views_appointments.cancel_appointment, name='cancel_appointment'),
+    path('appointments/reschedule/<int:appointment_id>/', views_appointments.reschedule_appointment, name='reschedule_appointment'),
+    path('appointments/admin/', views_appointments.admin_appointments_list, name='admin_appointments_list'),
+    path('appointments/admin/<int:appointment_id>/', views_appointments.admin_appointment_detail, name='admin_appointment_detail'),
+    path('appointments/calendar/', views_appointments.appointments_calendar, name='appointments_calendar'),
     
     # CLEAR WELCOME FLAG
     path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),

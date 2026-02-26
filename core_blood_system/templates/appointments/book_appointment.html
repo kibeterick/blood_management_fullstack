@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Book Appointment - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card shadow-lg border-0">
+                <div class="card-header" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+                    <h4 class="mb-0">
+                        <i class="bi bi-calendar-plus me-2"></i>
+                        Book Blood Donation Appointment
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Important:</strong> Please arrive 10 minutes early. Bring a valid ID and ensure you've eaten a healthy meal.
+                    </div>
+
+                    <form method="post" id="appointmentForm">
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-hospital me-1"></i> Select Location
+                            </label>
+                            <select name="location" id="locationSelect" class="form-select" required>
+                                <option value="">Choose a location...</option>
+                                {% for loc in locations %}
+                                <option value="{{ loc.name }}" data-address="{{ loc.address }}">
+                                    {{ loc.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <input type="hidden" name="address" id="addressInput">
+                            <small class="text-muted" id="locationAddress"></small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-calendar-event me-1"></i> Select Date
+                            </label>
+                            <input type="date" name="appointment_date" id="dateInput" 
+                                   class="form-control" min="{{ min_date|date:'Y-m-d' }}" required>
+                            <small class="text-muted">Appointments available from tomorrow onwards</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-clock me-1"></i> Select Time Slot
+                            </label>
+                            <div class="row g-2" id="timeSlotsContainer">
+                                <div class="col-12 text-center text-muted py-3">
+                                    <i class="bi bi-arrow-up"></i> Please select a date and location first
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="bi bi-chat-left-text me-1"></i> Additional Notes (Optional)
+                            </label>
+                            <textarea name="notes" class="form-control" rows="3" 
+                                      placeholder="Any special requirements or medical conditions we should know about..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Book Appointment
+                            </button>
+                            <a href="{% url 'my_appointments' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                View My Appointments
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Preparation Tips -->
+            <div class="card mt-4 border-0 shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">
+                        <i class="bi bi-heart-pulse me-2"></i>
+                        Preparation Tips
+                    </h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Eat a healthy meal before donating</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Stay well hydrated (drink plenty of water)</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success me-2"></i> Get adequate rest the night before</li>
+                        <li class="mb-2"><i class="bi bi-x-circle text-danger me-2"></i> Avoid alcohol 24 hours before donation</li>
+                        <li class="mb-2"><i class="bi bi-x-circle text-danger me-2"></i> Avoid fatty foods before donation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Update address when location changes
+document.getElementById('locationSelect').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const address = selectedOption.getAttribute('data-address');
+    document.getElementById('addressInput').value = address || '';
+    document.getElementById('locationAddress').textContent = address || '';
+    
+    // Reload time slots
+    loadTimeSlots();
+});
+
+// Load time slots when date changes
+document.getElementById('dateInput').addEventListener('change', function() {
+    loadTimeSlots();
+});
+
+function loadTimeSlots() {
+    const date = document.getElementById('dateInput').value;
+    const location = document.getElementById('locationSelect').value;
+    const container = document.getElementById('timeSlotsContainer');
+    
+    if (!date || !location) {
+        container.innerHTML = '<div class="col-12 text-center text-muted py-3"><i class="bi bi-arrow-up"></i> Please select a date and location first</div>';
+        return;
+    }
+    
+    // Show loading
+    container.innerHTML = '<div class="col-12 text-center py-3"><div class="spinner-border text-primary" role="status"></div></div>';
+    
+    // Fetch available slots (you can implement AJAX here)
+    // For now, show all slots
+    const timeSlots = [
+        {% for slot in time_slots %}
+        {value: '{{ slot.0 }}', label: '{{ slot.1 }}'},
+        {% endfor %}
+    ];
+    
+    let html = '';
+    timeSlots.forEach(slot => {
+        html += `
+            <div class="col-md-3 col-6">
+                <input type="radio" class="btn-check" name="time_slot" id="slot_${slot.value}" value="${slot.value}" required>
+                <label class="btn btn-outline-primary w-100" for="slot_${slot.value}">
+                    <i class="bi bi-clock me-1"></i> ${slot.label}
+                </label>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+</script>
+{% endblock %}
