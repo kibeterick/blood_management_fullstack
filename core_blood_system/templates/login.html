@@ -34,7 +34,10 @@
         <img src="https://images.unsplash.com/photo-1595385126296-fd5c811775f?auto=format&fit=crop&w=1200&q=80" alt="Man donating blood" class="hero-image"> 
         <div class="forms-wrapper"> 
             <div class="card"> 
-                <h3>Existing User? Login</h3> 
+                <div class="welcome-header">
+                    <h2 style="color: #4a90e2; font-size: 2em; margin: 0 0 5px 0;">Hi, welcome back</h2>
+                    <p style="color: #6c757d; font-size: 1.1em; margin: 0 0 25px 0;">Please fill in your details to log in</p>
+                </div>
                 <form method="POST"> 
                     {% csrf_token %} 
                     <div class="radio-group"> 
