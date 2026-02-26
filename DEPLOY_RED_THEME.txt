@@ -1,0 +1,33 @@
+========================================
+DEPLOY CONSISTENT RED THEME TO PYTHONANYWHERE
+========================================
+
+Run these commands on PythonAnywhere Bash Console:
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python manage.py collectstatic --noinput --clear
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+AFTER DEPLOYMENT:
+========================================
+
+1. Clear browser cache (Ctrl+Shift+Delete)
+2. Hard refresh the page (Ctrl+F5)
+3. Close all tabs and reopen
+
+========================================
+WHAT WAS CHANGED:
+========================================
+
+Updated all pages to use consistent blood red theme:
+- Advanced Search page: Purple → Red
+- Password Reset pages: Purple → Red  
+- User Registration: Purple → Red
+- All gradients now use: #dc3545 to #c82333
+
+The entire system now has a consistent blood/red color scheme!
+
+========================================
