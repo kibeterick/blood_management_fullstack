@@ -73,6 +73,8 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             border-radius: 8px;
             padding: 0.5rem 0;
+            max-height: 80vh;
+            overflow-y: auto;
         }
         
         .dropdown-item {
@@ -408,8 +410,8 @@
                                     <li><a class="dropdown-item" href="{% url 'donation_request_list' %}"><i class="bi bi-heart-pulse-fill me-2"></i>Donation Requests</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li><h6 class="dropdown-header">Certificates</h6></li>
-                                    <li><a class="dropdown-item" href="{% url 'blood_request_list' %}"><i class="bi bi-award-fill me-2"></i>Issue Certificates</a></li>
                                     <li><a class="dropdown-item" href="{% url 'my_donations' %}"><i class="bi bi-file-earmark-text-fill me-2"></i>View All Certificates</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'blood_request_list' %}"><i class="bi bi-award-fill me-2"></i>Issue Certificates</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
