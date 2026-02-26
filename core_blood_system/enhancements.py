@@ -2,7 +2,8 @@
 Top 5 Enhancements - Core Logic
 Blood Management System
 """
-from django.db.models import Count, Q, Sum, Avg
+from django.db import models
+from django.db.models import Count, Q, Sum, Avg, F
 from django.utils import timezone
 from datetime import datetime, timedelta
 import qrcode
@@ -309,7 +310,7 @@ def get_dashboard_analytics():
         # Inventory Status
         'inventory_status': list(BloodInventory.objects.all()),
         'low_stock_items': BloodInventory.objects.filter(
-            units_available__lt=models.F('minimum_threshold')
+            units_available__lt=F('minimum_threshold')
         ).count(),
         
         # Monthly Trends (last 6 months)
