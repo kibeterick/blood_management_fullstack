@@ -182,6 +182,7 @@ def admin_dashboard(request):
     total_requests = BloodRequest.objects.count()
     pending_requests = BloodRequest.objects.filter(status='pending').count()
     total_donations = BloodDonation.objects.count()
+    total_users = CustomUser.objects.count()
     
     # Get recent requests
     recent_requests = BloodRequest.objects.all()[:10]
@@ -194,6 +195,7 @@ def admin_dashboard(request):
         'total_requests': total_requests,
         'pending_requests': pending_requests,
         'total_donations': total_donations,
+        'total_users': total_users,
         'recent_requests': recent_requests,
         'inventory': inventory,
     }

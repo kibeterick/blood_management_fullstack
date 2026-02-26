@@ -533,6 +533,15 @@
                 View Donations <i class="bi bi-arrow-right"></i>
             </a>
         </div>
+        
+        <div class="stat-card primary animate-in animate-delay-5">
+            <div class="stat-icon">👤</div>
+            <div class="stat-label">Registered Users</div>
+            <div class="stat-value">{{ total_users }}</div>
+            <a href="{% url 'user_list' %}" class="stat-link">
+                View All Users <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
     </div>
     
     <!-- Quick Actions -->
