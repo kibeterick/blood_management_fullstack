@@ -462,23 +462,6 @@
                                     <i class="bi bi-search me-1"></i> Advanced Search
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-shield-fill-check me-1"></i> Admin
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
-                                    <li><h6 class="dropdown-header">{{ user.username }}</h6></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><span class="dropdown-item-text small text-success"><i class="bi bi-shield-fill-check me-2"></i>Administrator</span></li>
-                                    {% if user.blood_type %}
-                                    <li><span class="dropdown-item-text small"><i class="bi bi-droplet-fill me-2"></i>{{ user.blood_type }}</span></li>
-                                    {% endif %}
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/admin/"><i class="bi bi-database-fill me-2"></i>Django Admin</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
-                                </ul>
-                            </li>
                         {% else %}
                             <!-- Regular User Navigation -->
                             <li class="nav-item">
@@ -558,6 +541,28 @@
                         </li>
                     {% endif %}
                 </ul>
+                <!-- Admin Dropdown (Right Side) -->
+                {% if user.is_authenticated and user.role == 'admin' %}
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-shield-fill-check me-1"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminDropdown">
+                            <li><h6 class="dropdown-header">{{ user.username }}</h6></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><span class="dropdown-item-text small text-success"><i class="bi bi-shield-fill-check me-2"></i>Administrator</span></li>
+                            {% if user.blood_type %}
+                            <li><span class="dropdown-item-text small"><i class="bi bi-droplet-fill me-2"></i>{{ user.blood_type }}</span></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/admin/"><i class="bi bi-database-fill me-2"></i>Django Admin</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                {% endif %}
             </div>
         </div>
     </nav>
