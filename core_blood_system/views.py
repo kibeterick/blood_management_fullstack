@@ -388,7 +388,12 @@ def delete_request(request, request_id):
 # Export Donors to Excel
 @login_required
 def export_donors_excel(request):
-    """Export donor list to Excel"""
+    """Export donor list to Excel - Admin Only"""
+    # Check if user is admin
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can export donor lists.')
+        return redirect('donor_list')
+    
     # Create workbook
     wb = Workbook()
     ws = wb.active
@@ -451,7 +456,12 @@ def export_donors_excel(request):
 # Export Donors to PDF
 @login_required
 def export_donors_pdf(request):
-    """Export donor list to PDF"""
+    """Export donor list to PDF - Admin Only"""
+    # Check if user is admin
+    if request.user.role != 'admin':
+        messages.error(request, 'Only administrators can export donor lists.')
+        return redirect('donor_list')
+    
     # Create response
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename=donors_list.pdf'

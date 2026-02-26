@@ -6,6 +6,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">🩸 Donor List</h4>
                 <div>
+                    {% if user.role == 'admin' %}
                     <div class="btn-group me-2" role="group">
                         <a href="{% url 'export_donors_excel' %}" class="btn btn-light btn-sm">
                             📊 Export Excel
@@ -14,6 +15,7 @@
                             📄 Export PDF
                         </a>
                     </div>
+                    {% endif %}
                     <a href="{% url 'register_donor' %}" class="btn btn-warning">+ Register New Donor</a>
                 </div>
             </div>
