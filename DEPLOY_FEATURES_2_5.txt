@@ -1,0 +1,60 @@
+# ========================================
+# DEPLOY FEATURES 2-5 TO PYTHONANYWHERE
+# ========================================
+
+# Step 1: Test Locally First (Windows)
+# ========================================
+cd C:\Users\HP\blood_management_fullstack
+venv\Scripts\activate
+
+# Check for syntax errors
+python -m py_compile core_blood_system/views_notifications.py
+python -m py_compile core_blood_system/views_matching.py
+python -m py_compile core_blood_system/views_analytics.py
+python -m py_compile core_blood_system/views_qrcode.py
+
+# Test locally
+python manage.py runserver
+# Visit http://127.0.0.1:8000 and test features
+
+# Step 2: Commit and Push
+# ========================================
+git add .
+git commit -m "feat: Implement Features 2-5 (Notifications, Matching, Analytics, QR Codes) - Complete UI and backend"
+git push origin main
+
+# Step 3: Deploy to PythonAnywhere
+# ========================================
+# Open PythonAnywhere Bash Console and run:
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python manage.py collectstatic --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+# Step 4: Test on PythonAnywhere
+# ========================================
+# Visit: https://kibeterick.pythonanywhere.com
+
+# Test these URLs:
+# - /notifications/ (Notification Center)
+# - /analytics/ (Analytics Dashboard - Admin only)
+# - /matching/admin/ (Matching Dashboard - Admin only)
+# - /qr/scanner/ (QR Scanner - Admin only)
+# - /matching/my-matches/ (My Matches - Users)
+# - /qr/my-codes/ (My QR Codes - Users)
+
+# Step 5: Verify Navigation
+# ========================================
+# Check that these appear in navigation:
+# - Notification bell with badge (both admin and users)
+# - Analytics link (admin only)
+# - Matching System in Manage dropdown (admin)
+# - QR Scanner in Manage dropdown (admin)
+# - My Matches in Actions dropdown (users)
+# - My QR Codes in Actions dropdown (users)
+
+# ========================================
+# DONE! All 5 Features Are Live! 🎉
+# ========================================

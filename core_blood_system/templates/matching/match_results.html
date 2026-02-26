@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Matched Donors - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-wrapper">
+        <div class="page-title">
+            <i class="bi bi-heart-pulse-fill text-danger"></i>
+            Matched Donors
+        </div>
+        <p class="page-subtitle">Compatible donors for blood request</p>
+
+        <!-- Request Details -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="bi bi-file-medical"></i> Blood Request Details
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Patient:</strong> {{ blood_request.patient_name }}</p>
+                        <p><strong>Blood Type:</strong> <span class="badge bg-danger">{{ blood_request.blood_type }}</span></p>
+                        <p><strong>Units Needed:</strong> {{ blood_request.units_needed }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Urgency:</strong> <span class="badge bg-warning">{{ blood_request.get_urgency_display }}</span></p>
+                        <p><strong>Hospital:</strong> {{ blood_request.hospital_name }}</p>
+                        <p><strong>Required Date:</strong> {{ blood_request.required_date }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matched Donors -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-people-fill"></i> Matched Donors ({{ matches.count }})</span>
+                {% if user.role == 'admin' %}
+                    <a href="{% url 'trigger_matching' blood_request.id %}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-arrow-repeat"></i> Re-run Matching
+                    </a>
+                {% endif %}
+            </div>
+            <div class="card-body">
+                {% if matches %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Donor</th>
+                                    <th>Blood Type</th>
+                                    <th>Contact</th>
+                                    <th>Location</th>
+                                    <th>Match Score</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in matches %}
+                                <tr>
+                                    <td>{{ match.donor.first_name }} {{ match.donor.last_name }}</td>
+                                    <td><span class="badge bg-danger">{{ match.donor.blood_type }}</span></td>
+                                    <td>
+                                        <small>{{ match.donor.phone_number }}</small><br>
+                                        <small>{{ match.donor.email }}</small>
+                                    </td>
+                                    <td>{{ match.donor.city }}, {{ match.donor.state }}</td>
+                                    <td>
+                                        <div class="progress" style="height: 25px;">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ match.match_score }}%">
+                                                {{ match.match_score }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if match.status == 'accepted' %}
+                                            <span class="badge bg-success">Accepted</span>
+                                        {% elif match.status == 'declined' %}
+                                            <span class="badge bg-secondary">Declined</span>
+                                        {% elif match.status == 'notified' %}
+                                            <span class="badge bg-info">Notified</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Matched</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="tel:{{ match.donor.phone_number }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-telephone"></i> Call
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-search" style="font-size: 4rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">No matched donors found</p>
+                        {% if user.role == 'admin' %}
+                            <a href="{% url 'trigger_matching' blood_request.id %}" class="btn btn-primary mt-3">
+                                <i class="bi bi-arrow-repeat"></i> Run Matching Algorithm
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

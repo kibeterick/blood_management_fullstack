@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block title %}QR Code Scanner - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-wrapper">
+        <div class="page-title">
+            <i class="bi bi-qr-code-scan text-primary"></i>
+            QR Code Scanner
+        </div>
+        <p class="page-subtitle">Scan and verify QR codes</p>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-upc-scan"></i> Manual Entry
+                    </div>
+                    <div class="card-body">
+                        <form id="qrVerifyForm">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="qrCode" class="form-label">Enter QR Code</label>
+                                <input type="text" class="form-control" id="qrCode" name="code" placeholder="CERT-ABC123DEF456" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-search"></i> Verify Code
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-info-circle"></i> Instructions
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Enter the QR code manually in the form</li>
+                            <li>QR codes start with type prefix (DONOR-, CERT-, APPT-)</li>
+                            <li>Verification shows donor/donation details</li>
+                            <li>Scan count is tracked for security</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Verification Result -->
+        <div id="verificationResult" class="card d-none">
+            <div class="card-header bg-success text-white">
+                <i class="bi bi-check-circle"></i> Verification Result
+            </div>
+            <div class="card-body">
+                <div id="resultContent"></div>
+            </div>
+        </div>
+
+        <!-- Error Result -->
+        <div id="errorResult" class="alert alert-danger d-none">
+            <i class="bi bi-x-circle"></i> <span id="errorMessage"></span>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('qrVerifyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const code = document.getElementById('qrCode').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Hide previous results
+    document.getElementById('verificationResult').classList.add('d-none');
+    document.getElementById('errorResult').classList.add('d-none');
+    
+    // Send verification request
+    fetch('{% url "verify_qr" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken
+        },
+        body: `code=${encodeURIComponent(code)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.valid) {
+            // Show success result
+            const resultDiv = document.getElementById('resultContent');
+            resultDiv.innerHTML = `
+                <h4>✓ Valid QR Code</h4>
+                <p><strong>Type:</strong> ${data.type.toUpperCase()}</p>
+                <p><strong>Scanned:</strong> ${data.scanned_count} times</p>
+                <p><strong>Last Scanned:</strong> ${data.last_scanned || 'Never'}</p>
+                <hr>
+                <h5>Details:</h5>
+                <pre>${JSON.stringify(data.data, null, 2)}</pre>
+            `;
+            document.getElementById('verificationResult').classList.remove('d-none');
+        } else {
+            // Show error
+            document.getElementById('errorMessage').textContent = data.error;
+            document.getElementById('errorResult').classList.remove('d-none');
+        }
+    })
+    .catch(error => {
+        document.getElementById('errorMessage').textContent = 'Verification failed. Please try again.';
+        document.getElementById('errorResult').classList.remove('d-none');
+    });
+});
+</script>
+{% endblock %}

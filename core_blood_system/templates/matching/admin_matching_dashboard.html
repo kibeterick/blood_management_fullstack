@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Matching Dashboard - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="page-wrapper" style="max-width: 1400px;">
+        <div class="page-title">
+            <i class="bi bi-heart-pulse-fill text-danger"></i>
+            Donor Matching Dashboard
+        </div>
+        <p class="page-subtitle">Manage donor-request matching</p>
+
+        <!-- Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-people-fill text-primary" style="font-size: 2.5rem;"></i>
+                        <h2 class="mt-2">{{ total_matches }}</h2>
+                        <p class="text-muted mb-0">Total Matches</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-check-circle text-success" style="font-size: 2.5rem;"></i>
+                        <h2 class="mt-2">{{ accepted_matches }}</h2>
+                        <p class="text-muted mb-0">Accepted</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="bi bi-clock text-warning" style="font-size: 2.5rem;"></i>
+                        <h2 class="mt-2">{{ pending_matches }}</h2>
+                        <p class="text-muted mb-0">Pending Response</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">Filter by Status</label>
+                        <select name="status" id="status" class="form-select">
+                            <option value="">All Statuses</option>
+                            <option value="matched" {% if status_filter == 'matched' %}selected{% endif %}>Matched</option>
+                            <option value="notified" {% if status_filter == 'notified' %}selected{% endif %}>Notified</option>
+                            <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>Accepted</option>
+                            <option value="declined" {% if status_filter == 'declined' %}selected{% endif %}>Declined</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-funnel"></i> Apply Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Matches Table -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-list-ul"></i> All Matches
+            </div>
+            <div class="card-body">
+                {% if matches %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Blood Request</th>
+                                    <th>Donor</th>
+                                    <th>Blood Type</th>
+                                    <th>Match Score</th>
+                                    <th>Status</th>
+                                    <th>Notified</th>
+                                    <th>Responded</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for match in matches %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ match.blood_request.patient_name }}</strong><br>
+                                        <small class="text-muted">{{ match.blood_request.hospital_name }}</small>
+                                    </td>
+                                    <td>
+                                        {{ match.donor.first_name }} {{ match.donor.last_name }}<br>
+                                        <small class="text-muted">{{ match.donor.phone_number }}</small>
+                                    </td>
+                                    <td><span class="badge bg-danger">{{ match.donor.blood_type }}</span></td>
+                                    <td>
+                                        <div class="progress" style="height: 25px; width: 100px;">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ match.match_score }}%">
+                                                {{ match.match_score }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if match.status == 'accepted' %}
+                                            <span class="badge bg-success">Accepted</span>
+                                        {% elif match.status == 'declined' %}
+                                            <span class="badge bg-secondary">Declined</span>
+                                        {% elif match.status == 'notified' %}
+                                            <span class="badge bg-info">Notified</span>
+                                        {% else %}
+                                            <span class="badge bg-warning">Matched</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if match.notified_at %}
+                                            <small>{{ match.notified_at|date:"M d, Y" }}</small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if match.responded_at %}
+                                            <small>{{ match.responded_at|date:"M d, Y" }}</small>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'match_results' match.blood_request.id %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-search" style="font-size: 4rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">No matches found</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

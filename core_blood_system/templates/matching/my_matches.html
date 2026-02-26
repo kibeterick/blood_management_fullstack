@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}My Matches - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-wrapper">
+        <div class="page-title">
+            <i class="bi bi-heart-pulse-fill text-danger"></i>
+            My Blood Request Matches
+        </div>
+        <p class="page-subtitle">Blood requests that match your profile</p>
+
+        {% if matches %}
+            <div class="row">
+                {% for match in matches %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span><i class="bi bi-file-medical"></i> Blood Request</span>
+                            {% if match.status == 'accepted' %}
+                                <span class="badge bg-success">Accepted</span>
+                            {% elif match.status == 'declined' %}
+                                <span class="badge bg-secondary">Declined</span>
+                            {% elif match.status == 'notified' %}
+                                <span class="badge bg-info">Notified</span>
+                            {% else %}
+                                <span class="badge bg-warning">New Match</span>
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ match.blood_request.patient_name }}</h5>
+                            <p class="mb-2"><strong>Blood Type:</strong> <span class="badge bg-danger">{{ match.blood_request.blood_type }}</span></p>
+                            <p class="mb-2"><strong>Units Needed:</strong> {{ match.blood_request.units_needed }}</p>
+                            <p class="mb-2"><strong>Urgency:</strong> <span class="badge bg-warning">{{ match.blood_request.get_urgency_display }}</span></p>
+                            <p class="mb-2"><strong>Hospital:</strong> {{ match.blood_request.hospital_name }}</p>
+                            <p class="mb-2"><strong>Required Date:</strong> {{ match.blood_request.required_date }}</p>
+                            <p class="mb-2"><strong>Match Score:</strong> 
+                                <div class="progress" style="height: 20px;">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ match.match_score }}%">
+                                        {{ match.match_score }}%
+                                    </div>
+                                </div>
+                            </p>
+                            <p class="mb-2"><strong>Contact:</strong> {{ match.blood_request.contact_number }}</p>
+                            
+                            {% if match.status not in 'accepted,declined' %}
+                                <div class="mt-3">
+                                    <form method="post" action="{% url 'donor_response' match.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="response" value="accept">
+                                        <button type="submit" class="btn btn-success">
+                                            <i class="bi bi-check-circle"></i> Accept
+                                        </button>
+                                    </form>
+                                    <form method="post" action="{% url 'donor_response' match.id %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="response" value="decline">
+                                        <button type="submit" class="btn btn-secondary">
+                                            <i class="bi bi-x-circle"></i> Decline
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small><i class="bi bi-clock"></i> Matched {{ match.created_at|date:"F d, Y" }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-search" style="font-size: 4rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">No blood request matches yet</p>
+                    <p class="small text-muted">You'll be notified when a blood request matches your profile</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

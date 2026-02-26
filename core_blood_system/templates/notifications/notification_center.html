@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notifications - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-wrapper">
+        <div class="page-title">
+            <i class="bi bi-bell-fill text-danger"></i>
+            Notification Center
+        </div>
+        <p class="page-subtitle">Stay updated with all your notifications</p>
+
+        <!-- Statistics Cards -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="text-danger">{{ unread_count }}</h3>
+                        <p class="text-muted mb-0">Unread Notifications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h3 class="text-primary">{{ notifications.count }}</h3>
+                        <p class="text-muted mb-0">Total Notifications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mb-3">
+            <a href="{% url 'mark_all_read' %}" class="btn btn-primary">
+                <i class="bi bi-check-all"></i> Mark All as Read
+            </a>
+        </div>
+
+        <!-- Notifications List -->
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-list-ul"></i> All Notifications
+            </div>
+            <div class="card-body p-0">
+                {% if notifications %}
+                    <div class="list-group list-group-flush">
+                        {% for notification in notifications %}
+                        <div class="list-group-item {% if not notification.is_read %}bg-light{% endif %}">
+                            <div class="d-flex w-100 justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center mb-2">
+                                        {% if notification.notification_type == 'appointment' %}
+                                            <i class="bi bi-calendar-check text-primary me-2" style="font-size: 1.5rem;"></i>
+                                        {% elif notification.notification_type == 'match' %}
+                                            <i class="bi bi-heart-pulse text-danger me-2" style="font-size: 1.5rem;"></i>
+                                        {% elif notification.notification_type == 'urgent' %}
+                                            <i class="bi bi-exclamation-triangle text-warning me-2" style="font-size: 1.5rem;"></i>
+                                        {% elif notification.notification_type == 'donation' %}
+                                            <i class="bi bi-droplet text-success me-2" style="font-size: 1.5rem;"></i>
+                                        {% else %}
+                                            <i class="bi bi-info-circle text-info me-2" style="font-size: 1.5rem;"></i>
+                                        {% endif %}
+                                        <h5 class="mb-0">{{ notification.title }}</h5>
+                                        {% if not notification.is_read %}
+                                            <span class="badge bg-danger ms-2">New</span>
+                                        {% endif %}
+                                    </div>
+                                    <p class="mb-2">{{ notification.message }}</p>
+                                    <small class="text-muted">
+                                        <i class="bi bi-clock"></i> {{ notification.created_at|date:"F d, Y - g:i A" }}
+                                    </small>
+                                </div>
+                                <div class="ms-3">
+                                    {% if notification.link %}
+                                        <a href="{{ notification.link }}" class="btn btn-sm btn-outline-primary mb-2">
+                                            <i class="bi bi-box-arrow-up-right"></i> View
+                                        </a>
+                                    {% endif %}
+                                    {% if not notification.is_read %}
+                                        <a href="{% url 'mark_as_read' notification.id %}" class="btn btn-sm btn-outline-success mb-2">
+                                            <i class="bi bi-check"></i> Mark Read
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'delete_notification' notification.id %}" class="btn btn-sm btn-outline-danger mb-2" onclick="return confirm('Delete this notification?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-bell-slash" style="font-size: 4rem; color: #ccc;"></i>
+                        <p class="text-muted mt-3">No notifications yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

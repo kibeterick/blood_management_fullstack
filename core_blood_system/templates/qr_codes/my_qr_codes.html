@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}My QR Codes - Blood Management System{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="page-wrapper">
+        <div class="page-title">
+            <i class="bi bi-qr-code text-primary"></i>
+            My QR Codes
+        </div>
+        <p class="page-subtitle">Your digital identification codes</p>
+
+        {% if qr_codes %}
+            <div class="row">
+                {% for qr in qr_codes %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 text-center">
+                        <div class="card-header">
+                            <i class="bi bi-qr-code"></i> {{ qr.get_qr_type_display }}
+                        </div>
+                        <div class="card-body">
+                            {% if qr.qr_image %}
+                                <img src="{{ qr.qr_image.url }}" alt="QR Code" class="img-fluid mb-3" style="max-width: 200px;">
+                            {% endif %}
+                            <p class="mb-2"><strong>Code:</strong> <code>{{ qr.code }}</code></p>
+                            <p class="mb-2"><strong>Scanned:</strong> {{ qr.scanned_count }} times</p>
+                            {% if qr.last_scanned %}
+                                <p class="mb-2"><small class="text-muted">Last scanned: {{ qr.last_scanned|date:"F d, Y" }}</small></p>
+                            {% endif %}
+                        </div>
+                        <div class="card-footer">
+                            <a href="{% url 'download_qr_image' qr.id %}" class="btn btn-primary btn-sm">
+                                <i class="bi bi-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="bi bi-qr-code" style="font-size: 4rem; color: #ccc;"></i>
+                    <p class="text-muted mt-3">No QR codes generated yet</p>
+                    <p class="small text-muted">QR codes will be automatically generated for your donations and certificates</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api_views, views_appointments
+from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode
 
 urlpatterns = [
     # Home
@@ -81,6 +81,34 @@ urlpatterns = [
     path('appointments/admin/', views_appointments.admin_appointments_list, name='admin_appointments_list'),
     path('appointments/admin/<int:appointment_id>/', views_appointments.admin_appointment_detail, name='admin_appointment_detail'),
     path('appointments/calendar/', views_appointments.appointments_calendar, name='appointments_calendar'),
+    
+    # NOTIFICATIONS SYSTEM (Feature 2)
+    path('notifications/', views_notifications.notification_center, name='notification_center'),
+    path('notifications/mark-read/<int:notification_id>/', views_notifications.mark_as_read, name='mark_as_read'),
+    path('notifications/mark-all-read/', views_notifications.mark_all_read, name='mark_all_read'),
+    path('notifications/delete/<int:notification_id>/', views_notifications.delete_notification, name='delete_notification'),
+    path('api/notifications/unread-count/', views_notifications.get_unread_count, name='api_unread_count'),
+    path('api/notifications/recent/', views_notifications.get_recent_notifications, name='api_recent_notifications'),
+    
+    # MATCHING SYSTEM (Feature 3)
+    path('matching/results/<int:request_id>/', views_matching.match_results, name='match_results'),
+    path('matching/trigger/<int:request_id>/', views_matching.trigger_matching, name='trigger_matching'),
+    path('matching/respond/<int:match_id>/', views_matching.donor_response, name='donor_response'),
+    path('matching/my-matches/', views_matching.my_matches, name='my_matches'),
+    path('matching/admin/', views_matching.admin_matching_dashboard, name='admin_matching_dashboard'),
+    
+    # ANALYTICS SYSTEM (Feature 4)
+    path('analytics/', views_analytics.analytics_dashboard, name='analytics_dashboard'),
+    path('analytics/chart-data/', views_analytics.get_chart_data, name='get_chart_data'),
+    path('analytics/export/', views_analytics.export_analytics_report, name='export_analytics_report'),
+    
+    # QR CODE SYSTEM (Feature 5)
+    path('qr/donor/<int:donor_id>/', views_qrcode.generate_donor_qr, name='generate_donor_qr'),
+    path('qr/certificate/<int:donation_id>/', views_qrcode.generate_certificate_qr, name='generate_certificate_qr'),
+    path('qr/scanner/', views_qrcode.qr_scanner, name='qr_scanner'),
+    path('qr/verify/', views_qrcode.verify_qr, name='verify_qr'),
+    path('qr/download/<int:qr_id>/', views_qrcode.download_qr_image, name='download_qr_image'),
+    path('qr/my-codes/', views_qrcode.my_qr_codes, name='my_qr_codes'),
     
     # CLEAR WELCOME FLAG
     path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),
