@@ -1,0 +1,52 @@
+========================================
+COPY AND PASTE THESE COMMANDS ON PYTHONANYWHERE BASH CONSOLE
+========================================
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+git pull origin main
+python fix_admin_dashboard_redirect.py
+python manage.py collectstatic --noinput --clear
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+AFTER RUNNING THE COMMANDS ABOVE:
+========================================
+
+1. IMPORTANT: Log out from the website completely
+2. Clear your browser cache (Press Ctrl+Shift+Delete)
+3. Close ALL browser tabs
+4. Open a NEW browser window (or try incognito mode)
+5. Go to: https://kibeterick.pythonanywhere.com
+6. Log in with:
+   Username: admin
+   Password: E38736434k
+
+7. After login, you should be automatically redirected to the admin dashboard
+
+8. If you still see "My Blood Requests" (user dashboard):
+   - Manually type this URL in your browser:
+     https://kibeterick.pythonanywhere.com/admin-dashboard/
+   
+   - If that works, the issue is browser cache
+   - Try a different browser (Chrome, Firefox, Edge)
+   - Try incognito/private browsing mode
+
+========================================
+WHAT WAS FIXED:
+========================================
+
+1. Enhanced the redirect logic in user_dashboard view to check:
+   - user.role == 'admin'
+   - user.is_staff == True
+   - user.is_superuser == True
+
+2. Enhanced the login redirect to check multiple conditions
+
+3. Created fix_admin_dashboard_redirect.py script that:
+   - Verifies admin user exists
+   - Forces role to 'admin'
+   - Sets is_staff and is_superuser to True
+   - Saves and verifies the changes
+
+========================================
