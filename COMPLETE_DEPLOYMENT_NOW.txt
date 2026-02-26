@@ -1,0 +1,49 @@
+========================================
+YOU'VE COMPLETED STEP 1 (collectstatic)
+NOW RUN THE REMAINING COMMANDS:
+========================================
+
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+THEN IMMEDIATELY DO THIS:
+========================================
+
+1. Log out from https://kibeterick.pythonanywhere.com
+2. Press Ctrl+Shift+Delete to clear browser cache
+3. Close ALL browser tabs
+4. Open a NEW browser window (or incognito mode)
+5. Go to https://kibeterick.pythonanywhere.com
+6. Log in:
+   Username: admin
+   Password: E38736434k
+
+========================================
+YOU SHOULD NOW SEE:
+========================================
+
+✓ Admin Dashboard (NOT user dashboard)
+✓ Blood Inventory with animated blood bags
+✓ Registered Users table
+✓ Statistics cards
+✓ "Manage" menu with "All Users" link
+
+========================================
+IF YOU STILL SEE "My Blood Requests":
+========================================
+
+That means you're seeing the USER dashboard.
+
+Try this:
+1. Type this URL directly in browser:
+   https://kibeterick.pythonanywhere.com/admin-dashboard/
+
+2. If that works, the redirect is being cached
+   - Use a different browser
+   - Use incognito/private mode
+   - Clear cache again
+
+3. Run the diagnostic script:
+   python diagnose_admin_dashboard.py
+
+========================================
