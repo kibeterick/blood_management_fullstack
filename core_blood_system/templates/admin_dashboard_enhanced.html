@@ -691,6 +691,72 @@
         </div>
         {% endif %}
     </div>
+    
+    <!-- Registered Users Section -->
+    <div class="requests-table animate-in mt-4">
+        <h2 class="section-title">
+            <i class="bi bi-people-fill"></i>
+            Registered Users
+        </h2>
+        {% if recent_users %}
+        <div class="table-responsive">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Blood Type</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in recent_users %}
+                    <tr>
+                        <td><strong>{{ user.username }}</strong></td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.phone_number|default:"N/A" }}</td>
+                        <td>
+                            {% if user.blood_type %}
+                            <span class="badge-modern bg-danger">{{ user.blood_type }}</span>
+                            {% else %}
+                            <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.role == 'admin' %}
+                            <span class="badge-modern bg-danger">Admin</span>
+                            {% else %}
+                            <span class="badge-modern bg-primary">User</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if user.is_active %}
+                            <span class="badge-modern bg-success">Active</span>
+                            {% else %}
+                            <span class="badge-modern bg-secondary">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center mt-3">
+            <a href="{% url 'user_list' %}" class="btn btn-primary">View All Users</a>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="bi bi-inbox me-2"></i>
+            No registered users yet.
+        </div>
+        {% endif %}
+    </div>
 </div>
 
 {% block extra_js %}

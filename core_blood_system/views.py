@@ -190,6 +190,9 @@ def admin_dashboard(request):
     # Get blood inventory
     inventory = BloodInventory.objects.all()
     
+    # Get recent users (last 10 registered)
+    recent_users = CustomUser.objects.all().order_by('-date_joined')[:10]
+    
     context = {
         'total_donors': total_donors,
         'total_requests': total_requests,
@@ -198,6 +201,7 @@ def admin_dashboard(request):
         'total_users': total_users,
         'recent_requests': recent_requests,
         'inventory': inventory,
+        'recent_users': recent_users,
     }
     
     return render(request, 'admin_dashboard_enhanced.html', context)
