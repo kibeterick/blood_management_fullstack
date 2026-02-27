@@ -1,0 +1,87 @@
+═══════════════════════════════════════════════════════════════
+  FINAL FIX - RUN THESE COMMANDS ON PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════
+
+The problem: Regular users (Kemei) can still see Actions column with 
+Edit/Delete buttons. This should ONLY be visible to admin.
+
+The solution: The code is correct on GitHub but NOT deployed to 
+PythonAnywhere yet.
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: Open PythonAnywhere Console
+───────────────────────────────────────────────────────────────
+Go to: https://www.pythonanywhere.com
+Click: "Consoles" tab
+Click: "Bash" to open a new console
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: Run These Commands (Copy ALL at once)
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+STEP 3: Reload Web App
+───────────────────────────────────────────────────────────────
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click the green "Reload kibeterick.pythonanywhere.com" button
+3. Wait 10 seconds
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: Clear Browser Cache and Test
+───────────────────────────────────────────────────────────────
+1. Close ALL browser tabs with your site
+2. Open NEW incognito/private window
+3. Go to: https://kibeterick.pythonanywhere.com
+4. Login as Kemei (regular user)
+5. Go to "View Donors"
+6. Actions column should be GONE!
+
+═══════════════════════════════════════════════════════════════
+
+WHY USE git reset --hard?
+───────────────────────────────────────────────────────────────
+This forces PythonAnywhere to use EXACTLY what's on GitHub,
+overwriting any local changes that might be causing issues.
+
+═══════════════════════════════════════════════════════════════
+
+WHAT YOU SHOULD SEE AFTER:
+───────────────────────────────────────────────────────────────
+
+As KEMEI (regular user):
+┌──────────────────────────────────────────────────┐
+│ Name | Profile | Blood | Address | Mobile        │
+├──────────────────────────────────────────────────┤
+│ John | JD      | O+    | Kisumu  | 0720..        │
+└──────────────────────────────────────────────────┘
+NO Actions column! ✅
+
+As ADMIN:
+┌─────────────────────────────────────────────────────┐
+│ Name | Profile | Blood | Address | Mobile | Actions │
+├─────────────────────────────────────────────────────┤
+│ John | JD      | O+    | Kisumu  | 0720.. | EDIT    │
+│      |         |       |         |        | DELETE  │
+└─────────────────────────────────────────────────────┘
+Actions column visible! ✅
+
+═══════════════════════════════════════════════════════════════
+
+IF STILL NOT WORKING:
+───────────────────────────────────────────────────────────────
+Run this command on PythonAnywhere to verify:
+
+grep -A 5 "{% if user.role == 'admin' %}" /home/kibeterick/blood_management_fullstack/core_blood_system/templates/donors_list.html
+
+You should see the admin check in the file.
+
+═══════════════════════════════════════════════════════════════

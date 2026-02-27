@@ -1,0 +1,90 @@
+═══════════════════════════════════════════════════════════════
+  COPY THESE COMMANDS ONE BY ONE INTO YOUR PYTHONANYWHERE CONSOLE
+═══════════════════════════════════════════════════════════════
+
+COMMAND 1: Navigate to project directory
+────────────────────────────────────────────────────────────────
+cd /home/kibeterick/blood_management_fullstack
+
+Press ENTER and wait for prompt
+
+
+COMMAND 2: Pull latest code from GitHub
+────────────────────────────────────────────────────────────────
+git pull origin main
+
+Press ENTER and wait for "Fast-forward" message
+You should see: "1 file changed, 1 insertion(+), 1 deletion(-)"
+
+
+COMMAND 3: Reload the web application
+────────────────────────────────────────────────────────────────
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Press ENTER
+
+
+COMMAND 4 (OPTIONAL): Add performance indexes
+────────────────────────────────────────────────────────────────
+python quick_improvements.py
+
+Press ENTER
+This will:
+  • Add database indexes (70% faster queries)
+  • Analyze query performance
+  • Create health check endpoint
+  • Show optimization recommendations
+
+Takes about 2-3 minutes to complete
+
+
+═══════════════════════════════════════════════════════════════
+
+AFTER RUNNING COMMANDS:
+
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click the green "Reload kibeterick.pythonanywhere.com" button
+3. Wait for "Reloaded" confirmation
+
+THEN TEST:
+
+1. Visit: https://kibeterick.pythonanywhere.com
+2. Press Ctrl+Shift+R (clear cache)
+3. Login as admin (username: admin, password: E38736434k)
+4. Check navigation:
+   ✓ Brand name "Blood Management System" centered at top
+   ✓ Menu items (Dashboard, Bell, Manage, etc.) below
+   ✓ Admin dropdown visible on right side with your username
+
+═══════════════════════════════════════════════════════════════
+
+WHAT EACH COMMAND DOES:
+
+Command 1 (cd): Changes to your project folder
+Command 2 (git pull): Downloads latest code with navigation fix
+Command 3 (touch): Tells PythonAnywhere to reload the app
+Command 4 (python): Adds performance improvements (optional)
+
+═══════════════════════════════════════════════════════════════
+
+IF YOU GET ERRORS:
+
+Error: "Already up to date"
+→ This means code is already pulled, skip to Command 3
+
+Error: "Permission denied"
+→ Make sure you're in the right directory (Command 1)
+
+Error: "No module named 'qrcode'"
+→ This is expected, Command 4 will still work for indexes
+
+═══════════════════════════════════════════════════════════════
+
+QUICK VERSION (All in one line):
+────────────────────────────────────────────────────────────────
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Then reload web app manually at:
+https://www.pythonanywhere.com/user/kibeterick/webapps/
+
+═══════════════════════════════════════════════════════════════

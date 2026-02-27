@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Security Settings{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="bi bi-shield-lock"></i> Security Settings
+            </h2>
+        </div>
+    </div>
+
+    <!-- Two-Factor Authentication -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-phone-fill"></i> Two-Factor Authentication (2FA)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if has_2fa %}
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill"></i> 2FA is <strong>ENABLED</strong>
+                        </div>
+                        <p>Your account is protected with two-factor authentication.</p>
+                        <form method="POST" action="{% url 'disable_2fa' %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Enter your password to disable:</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-x-circle"></i> Disable 2FA
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i> 2FA is <strong>DISABLED</strong>
+                        </div>
+                        <p>Enable two-factor authentication for extra security.</p>
+                        <a href="{% url 'setup_2fa' %}" class="btn btn-success">
+                            <i class="bi bi-shield-check"></i> Enable 2FA
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Email Verification -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-envelope-fill"></i> Email Verification
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if email_verified %}
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill"></i> Email is <strong>VERIFIED</strong>
+                        </div>
+                        <p>Your email address has been verified.</p>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Email is <strong>NOT VERIFIED</strong>
+                        </div>
+                        <p>Please verify your email address.</p>
+                        <a href="{% url 'resend_verification' %}" class="btn btn-primary">
+                            <i class="bi bi-envelope"></i> Resend Verification Email
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Recent Activity
+                    </h5>
+                    <a href="{% url 'activity_log' %}" class="btn btn-sm btn-light">View All</a>
+                </div>
+                <div class="card-body">
+                    {% if recent_activity %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date/Time</th>
+                                        <th>Action</th>
+                                        <th>Device</th>
+                                        <th>IP Address</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for activity in recent_activity %}
+                                    <tr>
+                                        <td>{{ activity.timestamp|date:"M d, Y H:i" }}</td>
+                                        <td>
+                                            <span class="badge bg-primary">{{ activity.get_action_display }}</span>
+                                        </td>
+                                        <td>{{ activity.device_info }}</td>
+                                        <td>{{ activity.ip_address }}</td>
+                                        <td>
+                                            {% if activity.success %}
+                                                <span class="badge bg-success">✓ Success</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">✗ Failed</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No recent activity.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Sessions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-phone"></i> Active Sessions ({{ active_sessions.count }})
+                    </h5>
+                    <a href="{% url 'active_sessions' %}" class="btn btn-sm btn-dark">Manage Sessions</a>
+                </div>
+                <div class="card-body">
+                    {% if active_sessions %}
+                        <div class="list-group">
+                            {% for session in active_sessions|slice:":3" %}
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">
+                                            <i class="bi bi-laptop"></i> {{ session.device_info }}
+                                            {% if session.session_key == current_session_key %}
+                                                <span class="badge bg-success">Current</span>
+                                            {% endif %}
+                                        </h6>
+                                        <small class="text-muted">
+                                            IP: {{ session.ip_address }} | 
+                                            Last Active: {{ session.last_activity|timesince }} ago
+                                        </small>
+                                    </div>
+                                    {% if session.session_key != current_session_key %}
+                                    <form method="POST" action="{% url 'terminate_session' session.session_key %}" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">Logout</button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if active_sessions.count > 3 %}
+                        <div class="mt-3 text-center">
+                            <a href="{% url 'active_sessions' %}" class="btn btn-primary">View All Sessions</a>
+                        </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">No active sessions.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Audit Trail (Admin Only) -->
+    {% if user.role == 'admin' %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-journal-text"></i> Admin Audit Trail
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p>View all administrative actions and changes made to the system.</p>
+                    <a href="{% url 'admin_audit_trail' %}" class="btn btn-danger">
+                        <i class="bi bi-eye"></i> View Audit Trail
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -500,6 +500,11 @@
                                     <i class="bi bi-search me-1"></i> Advanced Search
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link d-flex align-items-center" href="{% url 'security_dashboard' %}">
+                                    <i class="bi bi-shield-lock me-1"></i> Security
+                                </a>
+                            </li>
                         {% else %}
                             <!-- Regular User Navigation -->
                             <li class="nav-item">
@@ -538,6 +543,11 @@
                                     <li><h6 class="dropdown-header">My Records</h6></li>
                                     <li><a class="dropdown-item" href="{% url 'my_donations' %}"><i class="bi bi-award-fill me-2"></i>My Certificates</a></li>
                                     <li><a class="dropdown-item" href="{% url 'my_qr_codes' %}"><i class="bi bi-qr-code me-2"></i>My QR Codes</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><h6 class="dropdown-header">Security</h6></li>
+                                    <li><a class="dropdown-item" href="{% url 'security_dashboard' %}"><i class="bi bi-shield-lock me-2"></i>Security Settings</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'activity_log' %}"><i class="bi bi-clock-history me-2"></i>Activity Log</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'active_sessions' %}"><i class="bi bi-phone me-2"></i>Active Sessions</a></li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">

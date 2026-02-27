@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode
+from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode, views_security
 
 urlpatterns = [
     # Home
@@ -109,6 +109,20 @@ urlpatterns = [
     path('qr/verify/', views_qrcode.verify_qr, name='verify_qr'),
     path('qr/download/<int:qr_id>/', views_qrcode.download_qr_image, name='download_qr_image'),
     path('qr/my-codes/', views_qrcode.my_qr_codes, name='my_qr_codes'),
+    
+    # SECURITY FEATURES (2FA, Activity Logs, Session Management)
+    path('security/', views_security.security_dashboard, name='security_dashboard'),
+    path('security/setup-2fa/', views_security.setup_2fa, name='setup_2fa'),
+    path('security/disable-2fa/', views_security.disable_2fa, name='disable_2fa'),
+    path('security/activity-log/', views_security.activity_log, name='activity_log'),
+    path('security/active-sessions/', views_security.active_sessions, name='active_sessions'),
+    path('security/terminate-session/<str:session_key>/', views_security.terminate_session, name='terminate_session'),
+    path('security/terminate-all-sessions/', views_security.terminate_all_sessions, name='terminate_all_sessions'),
+    path('verify-email/<str:token>/', views_security.verify_email, name='verify_email'),
+    path('security/resend-verification/', views_security.resend_verification_email, name='resend_verification'),
+    path('admin/audit-trail/', views_security.admin_audit_trail, name='admin_audit_trail'),
+    path('api/security/2fa-status/', views_security.check_2fa_status, name='check_2fa_status'),
+    path('api/security/activity-stats/', views_security.get_activity_stats, name='get_activity_stats'),
     
     # CLEAR WELCOME FLAG
     path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),

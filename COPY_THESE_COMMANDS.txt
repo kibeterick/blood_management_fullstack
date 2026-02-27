@@ -1,0 +1,37 @@
+═══════════════════════════════════════════════════════════════
+  COPY THESE COMMANDS - PASTE INTO PYTHONANYWHERE CONSOLE
+═══════════════════════════════════════════════════════════════
+
+COMMAND 1 - Go to project folder:
+───────────────────────────────────────────────────────────────
+cd /home/kibeterick/blood_management_fullstack
+───────────────────────────────────────────────────────────────
+
+COMMAND 2 - Pull latest code from GitHub:
+───────────────────────────────────────────────────────────────
+git pull origin main
+───────────────────────────────────────────────────────────────
+
+COMMAND 3 - Tell PythonAnywhere to reload:
+───────────────────────────────────────────────────────────────
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+───────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════
+
+OR COPY ALL 3 COMMANDS AT ONCE (ONE LINE):
+───────────────────────────────────────────────────────────────
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+───────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════
+
+AFTER RUNNING COMMANDS:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click the green "Reload kibeterick.pythonanywhere.com" button
+3. Wait 5-10 seconds
+4. Visit: https://kibeterick.pythonanywhere.com
+5. Press Ctrl+Shift+R to clear cache
+6. Test with Kemei's account - Actions should be GONE!
+
+═══════════════════════════════════════════════════════════════

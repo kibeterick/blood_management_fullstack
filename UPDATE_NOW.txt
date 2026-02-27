@@ -1,0 +1,26 @@
+═══════════════════════════════════════════════════════════════
+  COPY THIS COMMAND TO UPDATE YOUR SITE NOW
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click the green "Reload" button
+3. Visit: https://kibeterick.pythonanywhere.com
+4. Press Ctrl+Shift+R to clear cache
+
+DONE! ✅
+
+═══════════════════════════════════════════════════════════════
+
+WHAT'S NEW:
+✓ "Blood Management System" is now at the very top
+✓ Separate red header bar above navigation
+✓ Admin dropdown shows your username
+✓ Cleaner, more professional layout
+✓ Better mobile experience
+
+═══════════════════════════════════════════════════════════════
