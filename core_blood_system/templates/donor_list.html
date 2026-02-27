@@ -65,7 +65,9 @@
                                 <th>City</th>
                                 <th>Last Donation</th>
                                 <th>Status</th>
+                                {% if user.role == 'admin' %}
                                 <th>Actions</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -95,9 +97,11 @@
                                         <span class="badge bg-warning">Unavailable</span>
                                     {% endif %}
                                 </td>
+                                {% if user.role == 'admin' %}
                                 <td>
                                     <a href="{% url 'delete_donor' donor.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this donor?')">Delete</a>
                                 </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>
