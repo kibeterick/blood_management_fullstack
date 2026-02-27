@@ -10,13 +10,14 @@ from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
 from django.contrib.auth import logout
 from django.contrib.sessions.models import Session
-from core_blood_system.advanced_security import (
+from core_blood_system.models import (
     TwoFactorAuth,
     EmailVerification,
     UserActivityLog,
     UserSession,
     AdminAuditLog
 )
+from core_blood_system import advanced_security
 from core_blood_system.security import get_client_ip, log_user_action
 import json
 
@@ -72,9 +73,9 @@ def setup_2fa(request):
         
         if action == 'generate':
             # Generate new 2FA secret
-            two_factor = TwoFactorAuth.generate_secret(user)
-            qr_code = two_factor.get_qr_code()
-            backup_codes = two_factor.get_backup_codes_list()
+            two_factor = advanced_security.generate_2fa_secret(user)
+            qr_code = advanced_security.generate_qr_code(two_factor)
+            backup_codes = advanced_security.get_backup_codes_list(two_factor)
             
             request.session['2fa_setup_secret'] = two_factor.secret_key
             
@@ -97,12 +98,12 @@ def setup_2fa(request):
             try:
                 two_factor = TwoFactorAuth.objects.get(user=user, secret_key=secret_key)
                 
-                if two_factor.verify_token(token):
+                if advanced_security.verify_2fa_token(two_factor, token):
                     two_factor.is_enabled = True
                     two_factor.save()
                     
                     # Log activity
-                    UserActivityLog.log_activity(user, '2fa_enabled', request)
+                    advanced_security.log_user_activity(user, '2fa_enabled', request)
                     
                     del request.session['2fa_setup_secret']
                     messages.success(request, '2FA enabled successfully!')
@@ -143,7 +144,7 @@ def disable_2fa(request):
             two_factor.save()
             
             # Log activity
-            UserActivityLog.log_activity(user, '2fa_disabled', request)
+            advanced_security.log_user_activity(user, '2fa_disabled', request)
             
             messages.success(request, '2FA disabled successfully.')
         except TwoFactorAuth.DoesNotExist:
@@ -202,7 +203,7 @@ def active_sessions(request):
     current_session_key = request.session.session_key
     
     # Update current session
-    UserSession.create_session(user, request)
+    advanced_security.create_user_session(user, request)
     
     # Get all active sessions
     sessions = UserSession.objects.filter(user=user, is_active=True)
@@ -230,10 +231,10 @@ def terminate_session(request, session_key):
         # Terminate session
         try:
             session = UserSession.objects.get(session_key=session_key, user=user)
-            UserSession.terminate_session(session_key)
+            advanced_security.terminate_session(session_key)
             
             # Log activity
-            UserActivityLog.log_activity(
+            advanced_security.log_user_activity(
                 user, 'session_terminated', request,
                 details=f'Terminated session from {session.device_info}'
             )
@@ -252,10 +253,10 @@ def terminate_all_sessions(request):
         user = request.user
         current_session_key = request.session.session_key
         
-        count = UserSession.terminate_all_except_current(user, current_session_key)
+        count = advanced_security.terminate_all_sessions_except_current(user, current_session_key)
         
         # Log activity
-        UserActivityLog.log_activity(
+        advanced_security.log_user_activity(
             user, 'session_terminated', request,
             details=f'Terminated {count} other sessions'
         )
@@ -274,7 +275,7 @@ def verify_email(request, token):
     try:
         verification = EmailVerification.objects.get(token=token)
         
-        if not verification.is_valid():
+        if not advanced_security.is_verification_valid(verification):
             messages.error(request, 'Verification link has expired.')
             return redirect('login')
         
@@ -288,7 +289,7 @@ def verify_email(request, token):
         
         # Log activity
         if request.user.is_authenticated:
-            UserActivityLog.log_activity(user, 'email_verified', request)
+            advanced_security.log_user_activity(user, 'email_verified', request)
         
         messages.success(request, 'Email verified successfully! You can now login.')
         return redirect('login')
@@ -308,8 +309,8 @@ def resend_verification_email(request):
         return redirect('security_dashboard')
     
     # Create new verification token
-    verification = EmailVerification.create_token(user)
-    verification.send_verification_email(request)
+    verification = advanced_security.create_verification_token(user)
+    advanced_security.send_verification_email(verification, request)
     
     messages.success(request, 'Verification email sent! Please check your inbox.')
     return redirect('security_dashboard')

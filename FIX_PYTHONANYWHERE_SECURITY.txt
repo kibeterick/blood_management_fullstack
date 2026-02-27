@@ -1,0 +1,63 @@
+═══════════════════════════════════════════════════════════════
+  FIX: Security URLs Not Found on PythonAnywhere
+═══════════════════════════════════════════════════════════════
+
+PROBLEM: The security URLs are not on PythonAnywhere yet.
+
+SOLUTION: Run these commands on PythonAnywhere console:
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+pip install pyotp qrcode[pil] pillow whitenoise
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click green "Reload" button
+3. Wait 10 seconds
+4. Visit: https://kibeterick.pythonanywhere.com/security/
+
+═══════════════════════════════════════════════════════════════
+
+WHY git reset --hard?
+───────────────────────────────────────────────────────────────
+
+This forces PythonAnywhere to use EXACTLY what's on GitHub,
+overwriting any local changes that might be preventing the pull.
+
+═══════════════════════════════════════════════════════════════
+
+VERIFY IT WORKED:
+───────────────────────────────────────────────────────────────
+
+After reloading, check if these URLs work:
+
+✅ https://kibeterick.pythonanywhere.com/security/
+✅ https://kibeterick.pythonanywhere.com/security/activity-log/
+✅ https://kibeterick.pythonanywhere.com/security/active-sessions/
+
+If you see the Security Dashboard, it worked! 🎉
+
+═══════════════════════════════════════════════════════════════
+
+IF STILL NOT WORKING:
+───────────────────────────────────────────────────────────────
+
+Check if the files are there:
+
+cd /home/kibeterick/blood_management_fullstack
+ls -la core_blood_system/views_security.py
+ls -la core_blood_system/advanced_security.py
+grep "views_security" core_blood_system/urls.py
+
+If these files exist and grep shows results, then:
+- Reload web app again
+- Clear browser cache (Ctrl+Shift+R)
+- Try incognito window
+
+═══════════════════════════════════════════════════════════════
