@@ -1,0 +1,51 @@
+═══════════════════════════════════════════════════════════════
+  QUICK FIX - Install Missing Package
+═══════════════════════════════════════════════════════════════
+
+ERROR: ModuleNotFoundError: No module named 'pyotp'
+
+SOLUTION: Install the missing packages
+
+═══════════════════════════════════════════════════════════════
+
+COPY AND PASTE ON PYTHONANYWHERE CONSOLE:
+───────────────────────────────────────────────────────────────
+
+pip install --user pyotp qrcode pillow
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click green "Reload" button
+3. Wait 10 seconds
+4. Visit: https://kibeterick.pythonanywhere.com
+
+Your site will work again! ✅
+
+═══════════════════════════════════════════════════════════════
+
+WHY THIS HAPPENED:
+───────────────────────────────────────────────────────────────
+
+The security features need pyotp, qrcode, and pillow packages.
+These weren't installed on PythonAnywhere yet.
+
+The --user flag installs them in your user directory.
+
+═══════════════════════════════════════════════════════════════
+
+IF YOU WANT TO REMOVE SECURITY FEATURES INSTEAD:
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git reset --hard ccd2e21
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Then reload web app.
+
+This will restore your site to before security features.
+
+═══════════════════════════════════════════════════════════════

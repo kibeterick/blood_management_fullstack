@@ -1,0 +1,40 @@
+═══════════════════════════════════════════════════════════════
+  COPY & PASTE THESE COMMANDS
+═══════════════════════════════════════════════════════════════
+
+STEP 1: ON YOUR LOCAL COMPUTER (NEW TERMINAL)
+───────────────────────────────────────────────────────────────
+
+git add -A
+git commit -m "Remove security features to fix crashes"
+git push origin main
+
+───────────────────────────────────────────────────────────────
+
+STEP 2: ON PYTHONANYWHERE CONSOLE
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+STEP 3: RELOAD WEB APP
+───────────────────────────────────────────────────────────────
+
+Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+Click: "Reload" button
+
+───────────────────────────────────────────────────────────────
+
+STEP 4: TEST
+───────────────────────────────────────────────────────────────
+
+Visit: https://kibeterick.pythonanywhere.com
+
+✅ SITE WILL WORK!
+
+═══════════════════════════════════════════════════════════════
