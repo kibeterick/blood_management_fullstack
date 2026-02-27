@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Activity Log{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0"><i class="fas fa-history"></i> Activity Log</h4>
+        </div>
+        <div class="card-body">
+            <!-- Filters -->
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Action Type:</label>
+                        <select name="action" class="form-control">
+                            <option value="">All Actions</option>
+                            {% for value, label in action_choices %}
+                            <option value="{{ value }}" {% if selected_action == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>Time Period:</label>
+                        <select name="days" class="form-control">
+                            <option value="7" {% if selected_days == 7 %}selected{% endif %}>Last 7 days</option>
+                            <option value="30" {% if selected_days == 30 %}selected{% endif %}>Last 30 days</option>
+                            <option value="90" {% if selected_days == 90 %}selected{% endif %}>Last 90 days</option>
+                            <option value="0" {% if selected_days == 0 %}selected{% endif %}>All time</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label>&nbsp;</label>
+                        <button type="submit" class="btn btn-danger btn-block">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Activity List -->
+            {% if activities %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Action</th>
+                            <th>Device</th>
+                            <th>IP Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activity in activities %}
+                        <tr>
+                            <td>{{ activity.timestamp|date:"M d, Y H:i" }}</td>
+                            <td>
+                                <span class="badge badge-info">{{ activity.get_action_display }}</span>
+                            </td>
+                            <td>
+                                <small>{{ activity.device_info }}</small>
+                            </td>
+                            <td><code>{{ activity.ip_address }}</code></td>
+                            <td>
+                                {% if activity.success %}
+                                <span class="badge badge-success">Success</span>
+                                {% else %}
+                                <span class="badge badge-danger">Failed</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if activity.details %}
+                        <tr class="table-light">
+                            <td colspan="5">
+                                <small class="text-muted">{{ activity.details }}</small>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No activity found for the selected filters.
+            </div>
+            {% endif %}
+            
+            <a href="{% url 'security_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Security
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

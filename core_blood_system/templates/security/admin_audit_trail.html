@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Audit Trail{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0"><i class="fas fa-clipboard-list"></i> Admin Audit Trail</h4>
+        </div>
+        <div class="card-body">
+            <!-- Filters -->
+            <form method="get" class="mb-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Admin User:</label>
+                        <input type="text" name="admin" class="form-control" 
+                               value="{{ selected_admin }}" placeholder="Username">
+                    </div>
+                    <div class="col-md-3">
+                        <label>Action Type:</label>
+                        <select name="action" class="form-control">
+                            <option value="">All Actions</option>
+                            {% for action in action_types %}
+                            <option value="{{ action }}" {% if selected_action == action %}selected{% endif %}>
+                                {{ action|title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Model:</label>
+                        <select name="model" class="form-control">
+                            <option value="">All Models</option>
+                            {% for model in model_names %}
+                            <option value="{{ model }}" {% if selected_model == model %}selected{% endif %}>
+                                {{ model }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Time Period:</label>
+                        <select name="days" class="form-control">
+                            <option value="7" {% if selected_days == 7 %}selected{% endif %}>Last 7 days</option>
+                            <option value="30" {% if selected_days == 30 %}selected{% endif %}>Last 30 days</option>
+                            <option value="90" {% if selected_days == 90 %}selected{% endif %}>Last 90 days</option>
+                            <option value="0" {% if selected_days == 0 %}selected{% endif %}>All time</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-filter"></i> Apply Filters
+                        </button>
+                        <a href="{% url 'admin_audit_trail' %}" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Audit Log Table -->
+            {% if logs %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Admin</th>
+                            <th>Action</th>
+                            <th>Model</th>
+                            <th>Object</th>
+                            <th>IP Address</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td><small>{{ log.timestamp|date:"M d, Y H:i:s" }}</small></td>
+                            <td><strong>{{ log.admin_user.username }}</strong></td>
+                            <td>
+                                <span class="badge 
+                                    {% if log.action_type == 'create' %}badge-success
+                                    {% elif log.action_type == 'update' %}badge-info
+                                    {% elif log.action_type == 'delete' %}badge-danger
+                                    {% elif log.action_type == 'approve' %}badge-primary
+                                    {% elif log.action_type == 'reject' %}badge-warning
+                                    {% else %}badge-secondary{% endif %}">
+                                    {{ log.action_type|upper }}
+                                </span>
+                            </td>
+                            <td><code>{{ log.model_name }}</code></td>
+                            <td>
+                                <small>
+                                    #{{ log.object_id }}<br>
+                                    {{ log.object_repr|truncatewords:5 }}
+                                </small>
+                            </td>
+                            <td><code>{{ log.ip_address }}</code></td>
+                            <td>
+                                {% if log.changes %}
+                                <button class="btn btn-sm btn-outline-info" 
+                                        data-toggle="collapse" 
+                                        data-target="#changes-{{ log.id }}">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                {% endif %}
+                                {% if log.reason %}
+                                <small class="text-muted">{{ log.reason|truncatewords:10 }}</small>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if log.changes %}
+                        <tr class="collapse" id="changes-{{ log.id }}">
+                            <td colspan="7" class="bg-light">
+                                <strong>Changes:</strong>
+                                <pre class="mb-0">{{ log.changes|pprint }}</pre>
+                                {% if log.reason %}
+                                <strong>Reason:</strong> {{ log.reason }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-lock"></i>
+                <strong>Note:</strong> Audit logs are immutable and cannot be deleted or modified. 
+                Showing last {{ logs|length }} records.
+            </div>
+            
+            {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> No audit logs found for the selected filters.
+            </div>
+            {% endif %}
+            
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

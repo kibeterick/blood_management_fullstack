@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Setup Two-Factor Authentication{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="fas fa-shield-alt"></i> Setup Two-Factor Authentication</h4>
+                </div>
+                <div class="card-body">
+                    {% if step == 'start' %}
+                    <!-- Step 1: Introduction -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>What is 2FA?</strong><br>
+                        Two-Factor Authentication adds an extra layer of security to your account by requiring a code from your phone in addition to your password.
+                    </div>
+                    
+                    <h5>How it works:</h5>
+                    <ol>
+                        <li>Install Google Authenticator or similar app on your phone</li>
+                        <li>Scan the QR code we'll show you</li>
+                        <li>Enter the 6-digit code from the app</li>
+                        <li>Save backup codes for emergency access</li>
+                    </ol>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="generate">
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <i class="fas fa-qrcode"></i> Generate QR Code
+                        </button>
+                        <a href="{% url 'security_dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>
+                    </form>
+                    
+                    {% elif step == 'verify' %}
+                    <!-- Step 2: Scan QR Code -->
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Important:</strong> Save your backup codes! You'll need them if you lose access to your phone.
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>1. Scan this QR code:</h5>
+                            <div class="text-center mb-3">
+                                <img src="{{ qr_code }}" alt="2FA QR Code" class="img-fluid border p-2">
+                            </div>
+                            <p class="text-muted small">
+                                Or enter this key manually:<br>
+                                <code>{{ secret_key }}</code>
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h5>2. Backup Codes:</h5>
+                            <div class="alert alert-secondary">
+                                <p><strong>Save these codes!</strong> Each can be used once if you lose your phone.</p>
+                                <div class="backup-codes">
+                                    {% for code in backup_codes %}
+                                    <code class="d-block">{{ code }}</code>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="printBackupCodes()">
+                                <i class="fas fa-print"></i> Print Codes
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5>3. Enter verification code:</h5>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="verify">
+                        <div class="form-group">
+                            <label>Enter the 6-digit code from your authenticator app:</label>
+                            <input type="text" name="token" class="form-control form-control-lg text-center" 
+                                   maxlength="6" pattern="[0-9]{6}" required 
+                                   placeholder="000000" style="font-size: 2rem; letter-spacing: 0.5rem;">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-check"></i> Verify & Enable 2FA
+                        </button>
+                        <a href="{% url 'security_dashboard' %}" class="btn btn-secondary btn-lg">Cancel</a>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function printBackupCodes() {
+    window.print();
+}
+</script>
+
+<style>
+@media print {
+    .card-header, .btn, nav, footer { display: none; }
+    .backup-codes { font-size: 1.2rem; }
+}
+</style>
+{% endblock %}
