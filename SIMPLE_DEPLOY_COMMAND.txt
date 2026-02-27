@@ -1,0 +1,21 @@
+═══════════════════════════════════════════════════════════════
+  SINGLE COMMAND TO DEPLOY - COPY AND PASTE THIS
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+
+STEPS:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/consoles/
+2. Click your Bash console
+3. Press UP ARROW key until you see the command above
+4. Press ENTER
+5. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+6. Click green "Reload" button
+7. Visit: https://kibeterick.pythonanywhere.com
+8. Press Ctrl+Shift+R to clear cache
+
+DONE! ✅
+
+═══════════════════════════════════════════════════════════════

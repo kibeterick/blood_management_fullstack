@@ -1,0 +1,83 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration test
+  - **Property 1: Fault Condition** - Template Syntax Error on Line 611
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the template syntax error exists
+  - **Scoped PBT Approach**: Scope the property to the concrete failing case - line 611 contains `{% endif %} %}` causing TemplateSyntaxError
+  - Test that Django's template engine fails to parse base.html due to malformed tag on line 611
+  - Verify line 611 contains the buggy syntax `{% endif %} %}`
+  - Attempt to load/render base.html and capture the TemplateSyntaxError
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found: Django raises TemplateSyntaxError pointing to line 611, unexpected `%}` token
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 2.1, 2.2, 2.3_
+
+- [ ] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Navigation and Template Functionality
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for template elements that are NOT line 611
+  - Since the unfixed code has a syntax error that prevents rendering, we'll document the EXPECTED preserved behaviors based on the template structure
+  - Write property-based tests capturing expected behavior patterns from Preservation Requirements:
+    - Admin users should see all admin menu items (Dashboard, Donors, Patients, Donations, etc.)
+    - Regular users should see all user menu items
+    - Unauthenticated users should see public menu items (Home, Contact Us, Login, Register)
+    - Two-row navigation layout should render correctly (Row 1: centered brand, Row 2: left menu + right admin dropdown)
+    - Responsive navigation with hamburger menu should work on mobile
+    - Notification badge should display unread count
+    - All other template tags ({% if %}, {% url %}, {% static %}) should work correctly
+  - Property-based testing generates many test cases for stronger guarantees
+  - These tests will be run AFTER the fix to verify preservation
+  - **EXPECTED OUTCOME**: Tests will be written now, but can only pass after the syntax fix is applied
+  - Mark task complete when tests are written and ready to run
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
+
+- [ ] 3. Fix for Django template syntax error on line 611
+
+  - [ ] 3.1 Implement the fix
+    - Open `core_blood_system/templates/base.html`
+    - Navigate to line 611
+    - Change `{% endif %} %}` to `{% endif %}`
+    - Remove the extra closing brace `%}` that causes the syntax error
+    - Preserve the existing indentation (24 spaces)
+    - Do not modify any other lines or template logic
+    - _Bug_Condition: isBugCondition(input) where input.lineNumber == 611 AND input.content CONTAINS "{% endif %} %}"_
+    - _Expected_Behavior: Django template engine successfully parses the corrected `{% endif %}` tag without errors_
+    - _Preservation: All navigation functionality, authentication checks, responsive behavior, and other template rendering must remain unchanged_
+    - _Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
+
+  - [ ] 3.2 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Template Parses Successfully
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - Verify Django's template engine successfully parses base.html without TemplateSyntaxError
+    - Verify line 611 now contains the correct syntax `{% endif %}`
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - _Requirements: 2.1, 2.2, 2.3_
+
+  - [ ] 3.3 Verify preservation tests still pass
+    - **Property 2: Preservation** - Navigation and Template Functionality
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - Verify admin navigation renders correctly with all menu items
+    - Verify user navigation renders correctly
+    - Verify public navigation renders correctly for unauthenticated users
+    - Verify two-row navigation layout displays correctly
+    - Verify responsive navigation works on mobile viewports
+    - Verify notification badge displays correctly
+    - Verify all other template tags work correctly
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all tests still pass after fix (no regressions)
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
+
+- [ ] 4. Checkpoint - Ensure all tests pass
+  - Verify template syntax error is resolved
+  - Verify all navigation functionality is preserved
+  - Verify base.html can be successfully rendered
+  - Verify pages extending base.html render correctly
+  - Ask the user if questions arise

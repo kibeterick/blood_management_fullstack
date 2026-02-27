@@ -2,4 +2,4 @@
 cd /home/kibeterick/blood_management_fullstack
 git pull origin main
 touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
-echo "Deployment complete! Wait 10 seconds then refresh your browser."
+echo "Code updated successfully! Now reload your web app."
