@@ -209,7 +209,9 @@
                         <th>Blood Group</th>
                         <th>Address</th>
                         <th>Mobile</th>
+                        {% if user.role == 'admin' %}
                         <th>Action</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -238,24 +240,22 @@
                         <td>
                             <i class="bi bi-telephone-fill"></i> {{ donor.phone_number }}
                         </td>
+                        {% if user.role == 'admin' %}
                         <td>
-                            {% if user.role == 'admin' %}
-                                <a href="{% url 'edit_donor' donor.id %}" class="btn-action btn-edit">
-                                    EDIT
-                                </a>
-                                <a href="{% url 'delete_donor' donor.id %}" 
-                                   class="btn-action btn-delete"
-                                   onclick="return confirm('Are you sure you want to delete this donor?')">
-                                    DELETE
-                                </a>
-                            {% else %}
-                                <span class="text-muted">View Only</span>
-                            {% endif %}
+                            <a href="{% url 'edit_donor' donor.id %}" class="btn-action btn-edit">
+                                EDIT
+                            </a>
+                            <a href="{% url 'delete_donor' donor.id %}" 
+                               class="btn-action btn-delete"
+                               onclick="return confirm('Are you sure you want to delete this donor?')">
+                                DELETE
+                            </a>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="no-donors">
+                        <td colspan="{% if user.role == 'admin' %}6{% else %}5{% endif %}" class="no-donors">
                             <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
                             <p>No donors found.</p>
                             {% if user.role == 'admin' %}
