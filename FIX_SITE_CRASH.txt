@@ -1,0 +1,67 @@
+═══════════════════════════════════════════════════════════════
+  SITE CRASHED - FIX IT NOW
+═══════════════════════════════════════════════════════════════
+
+The site crashed because of an error. Let's check the error log.
+
+STEP 1: CHECK ERROR LOG ON PYTHONANYWHERE
+───────────────────────────────────────────────────────────────
+
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click on your web app: kibeterick.pythonanywhere.com
+3. Scroll down to "Log files" section
+4. Click on "Error log" link
+5. Look at the LAST error (bottom of the file)
+
+The error will tell us what's wrong.
+
+═══════════════════════════════════════════════════════════════
+
+MOST LIKELY ISSUE: Missing Package
+───────────────────────────────────────────────────────────────
+
+The crash is probably because pyotp, qrcode, or pillow didn't install.
+
+RUN THIS ON PYTHONANYWHERE CONSOLE:
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+pip install --upgrade pyotp qrcode pillow
+python manage.py check
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+Then reload web app at:
+https://www.pythonanywhere.com/user/kibeterick/webapps/
+
+═══════════════════════════════════════════════════════════════
+
+IF STILL BROKEN: ROLLBACK TO PREVIOUS VERSION
+───────────────────────────────────────────────────────────────
+
+This will restore the site to before security features:
+
+cd /home/kibeterick/blood_management_fullstack
+git reset --hard ccd2e21
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Then reload web app.
+
+Your site will work again (without security features).
+
+═══════════════════════════════════════════════════════════════
+
+TELL ME THE ERROR:
+───────────────────────────────────────────────────────────────
+
+Copy the last error from the error log and send it to me.
+I'll fix it immediately.
+
+The error will look something like:
+- ModuleNotFoundError: No module named 'pyotp'
+- ImportError: cannot import name 'TwoFactorAuth'
+- OperationalError: no such table: two_factor_auth
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,6 @@
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+pip install pyotp qrcode[pil] pillow whitenoise
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py

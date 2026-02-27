@@ -1,0 +1,103 @@
+═══════════════════════════════════════════════════════════════
+  EMERGENCY FIX - SITE CRASHED
+═══════════════════════════════════════════════════════════════
+
+OPTION 1: RESTORE SITE IMMEDIATELY (RECOMMENDED)
+───────────────────────────────────────────────────────────────
+
+This will restore your site to working condition:
+
+cd /home/kibeterick/blood_management_fullstack
+git reset --hard ccd2e21
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Then reload web app at:
+https://www.pythonanywhere.com/user/kibeterick/webapps/
+
+Your site will work again (without security features).
+
+═══════════════════════════════════════════════════════════════
+
+OPTION 2: FIX THE ERROR (IF YOU WANT SECURITY FEATURES)
+───────────────────────────────────────────────────────────────
+
+First, check what the error is:
+
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Scroll to "Log files" section
+3. Click "Error log"
+4. Look at the LAST error (bottom of file)
+
+Common errors and fixes:
+
+ERROR: "ModuleNotFoundError: No module named 'pyotp'"
+FIX:
+  pip install --user pyotp qrcode pillow
+  touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+  (then reload web app)
+
+ERROR: "OperationalError: no such table: two_factor_auth"
+FIX:
+  python manage.py migrate
+  touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+  (then reload web app)
+
+ERROR: "ImportError: cannot import name 'TwoFactorAuth'"
+FIX:
+  cd /home/kibeterick/blood_management_fullstack
+  git reset --hard origin/main
+  python manage.py migrate
+  pip install --user pyotp qrcode pillow
+  touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+  (then reload web app)
+
+═══════════════════════════════════════════════════════════════
+
+OPTION 3: COMPLETE FIX (TRY THIS IF OPTION 2 DOESN'T WORK)
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+pip install --user --upgrade pyotp qrcode pillow whitenoise
+python manage.py makemigrations
+python manage.py migrate
+python manage.py check
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Then reload web app.
+
+═══════════════════════════════════════════════════════════════
+
+WHAT TO SEND ME:
+───────────────────────────────────────────────────────────────
+
+Copy the LAST error from the error log and send it to me.
+
+The error will be at the bottom of the error log and will look like:
+
+  File "/home/kibeterick/blood_management_fullstack/...", line X
+  ModuleNotFoundError: No module named 'pyotp'
+
+OR
+
+  File "/home/kibeterick/blood_management_fullstack/...", line X
+  django.db.utils.OperationalError: no such table: two_factor_auth
+
+Send me the full error message and I'll fix it immediately.
+
+═══════════════════════════════════════════════════════════════
+
+SUMMARY:
+───────────────────────────────────────────────────────────────
+
+1. FIRST: Restore site using Option 1 (so your site works)
+2. THEN: Check error log
+3. SEND ME: The error message
+4. I'LL FIX: The issue properly
+5. DEPLOY: Security features correctly
+
+Your data is safe. Nothing is lost. We just need to fix the deployment.
+
+═══════════════════════════════════════════════════════════════

@@ -1,0 +1,50 @@
+═══════════════════════════════════════════════════════════════
+  RESTORE YOUR SITE IMMEDIATELY
+═══════════════════════════════════════════════════════════════
+
+Your site crashed. Let's restore it to the working version first.
+
+COPY AND PASTE THIS ON PYTHONANYWHERE CONSOLE:
+───────────────────────────────────────────────────────────────
+
+cd /home/kibeterick/blood_management_fullstack
+git reset --hard ccd2e21
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+───────────────────────────────────────────────────────────────
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click green "Reload" button
+3. Wait 10 seconds
+4. Visit: https://kibeterick.pythonanywhere.com
+
+Your site should work again! ✅
+
+═══════════════════════════════════════════════════════════════
+
+WHAT THIS DOES:
+───────────────────────────────────────────────────────────────
+
+This rolls back to commit ccd2e21 (before security features).
+Your site will work exactly as it did before.
+
+All your data is safe - nothing is deleted.
+
+═══════════════════════════════════════════════════════════════
+
+AFTER SITE IS RESTORED:
+───────────────────────────────────────────────────────────────
+
+Check the error log to see what went wrong:
+
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Scroll to "Log files"
+3. Click "Error log"
+4. Copy the LAST error (at the bottom)
+5. Send it to me
+
+I'll fix the issue and we'll deploy again properly.
+
+═══════════════════════════════════════════════════════════════
