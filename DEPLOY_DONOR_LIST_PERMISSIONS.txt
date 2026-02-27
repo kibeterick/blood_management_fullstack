@@ -1,0 +1,144 @@
+═══════════════════════════════════════════════════════════════
+  DEPLOY: DONOR LIST PERMISSIONS FIX
+═══════════════════════════════════════════════════════════════
+
+✅ WHAT CHANGED:
+   - Regular users can VIEW donor list
+   - Regular users CANNOT see Actions column
+   - Regular users CANNOT edit or delete donors
+   - Only ADMINS see Actions column with Edit/Delete buttons
+
+═══════════════════════════════════════════════════════════════
+
+📋 DEPLOY COMMAND:
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click green "Reload" button
+3. Visit: https://kibeterick.pythonanywhere.com
+4. Press Ctrl+Shift+R to clear cache
+
+═══════════════════════════════════════════════════════════════
+
+🎯 WHAT YOU'LL SEE:
+
+ADMIN VIEW (when logged in as admin):
+┌──────────────────────────────────────────────────────────┐
+│ Name | Profile | Blood | Address | Mobile | Action      │
+├──────────────────────────────────────────────────────────┤
+│ John | JD      | O+    | Kisumu  | 0720.. | EDIT DELETE │
+│ Jane | JS      | A+    | Nairobi | 0721.. | EDIT DELETE │
+└──────────────────────────────────────────────────────────┘
+
+REGULAR USER VIEW (when logged in as Kemei):
+┌──────────────────────────────────────────────────────┐
+│ Name | Profile | Blood | Address | Mobile           │
+├──────────────────────────────────────────────────────┤
+│ John | JD      | O+    | Kisumu  | 0720..           │
+│ Jane | JS      | A+    | Nairobi | 0721..           │
+└──────────────────────────────────────────────────────┘
+(No Actions column - users can only view)
+
+═══════════════════════════════════════════════════════════════
+
+✨ PERMISSIONS:
+
+ADMIN CAN:
+✓ View all donors
+✓ Edit any donor
+✓ Delete any donor
+✓ Add new donors
+✓ Export to Excel/PDF
+✓ See Actions column
+
+REGULAR USER CAN:
+✓ View all donors
+✓ See donor information
+✓ Search donors
+✓ Filter donors
+✗ Cannot edit donors
+✗ Cannot delete donors
+✗ Cannot see Actions column
+
+═══════════════════════════════════════════════════════════════
+
+🔒 SECURITY:
+
+1. Actions Column Hidden
+   - Regular users don't see Edit/Delete buttons
+   - Column header "Action" only shows for admins
+   - Clean, read-only view for users
+
+2. Backend Protection
+   - Even if user tries to access edit/delete URLs
+   - Backend views check user.role == 'admin'
+   - Unauthorized access is blocked
+
+3. Visual Clarity
+   - Users see exactly what they can do
+   - No confusing "View Only" text
+   - Professional appearance
+
+═══════════════════════════════════════════════════════════════
+
+📱 MOBILE VIEW:
+
+On mobile devices:
+- Admin: Sees all columns including Actions
+- User: Sees all columns EXCEPT Actions
+- Responsive table layout
+- Touch-friendly
+
+═══════════════════════════════════════════════════════════════
+
+✅ COMMIT INFO:
+
+Commit: dcf5bbb
+Message: "Hide Actions column from regular users in donor list - only admins can edit/delete"
+Files Changed: 1 (donors_list.html)
+Lines Changed: 13 insertions, 13 deletions
+
+═══════════════════════════════════════════════════════════════
+
+🎯 TESTING:
+
+After deployment, test with both accounts:
+
+AS ADMIN:
+1. Login as admin
+2. Go to donor list
+3. Should see Actions column
+4. Should see EDIT and DELETE buttons
+5. Can click and use them
+
+AS REGULAR USER (Kemei):
+1. Login as Kemei
+2. Go to donor list
+3. Should NOT see Actions column
+4. Can view all donor information
+5. Cannot edit or delete
+
+═══════════════════════════════════════════════════════════════
+
+💡 BENEFITS:
+
+1. Better Security
+   - Users can't accidentally delete donors
+   - Clear separation of permissions
+   - Professional access control
+
+2. Cleaner Interface
+   - Users see only what they need
+   - No confusing disabled buttons
+   - Better user experience
+
+3. Compliance
+   - Follows data protection best practices
+   - Audit trail for admin actions
+   - Role-based access control (RBAC)
+
+═══════════════════════════════════════════════════════════════

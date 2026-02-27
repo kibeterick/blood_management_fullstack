@@ -267,7 +267,9 @@
                     <th>Donation Date</th>
                     <th>Hospital</th>
                     <th>Status</th>
+                    {% if user.role == 'admin' %}
                     <th>Action</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -299,6 +301,7 @@
                         <br><small style="color: #dc3545;">{{ donation.rejection_reason }}</small>
                         {% endif %}
                     </td>
+                    {% if user.role == 'admin' %}
                     <td>
                         {% if donation.status == 'pending' %}
                         <div class="action-buttons">
@@ -320,6 +323,7 @@
                         </small>
                         {% endif %}
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
