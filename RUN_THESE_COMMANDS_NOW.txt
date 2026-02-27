@@ -1,0 +1,24 @@
+═══════════════════════════════════════════════════════════════
+  COPY AND PASTE THESE COMMANDS ON PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+pip install pyotp qrcode[pil] pillow whitenoise
+python manage.py migrate
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+
+THEN:
+1. Go to: https://www.pythonanywhere.com/user/kibeterick/webapps/
+2. Click green "Reload" button
+3. Wait 10 seconds
+
+TEST:
+Visit: https://kibeterick.pythonanywhere.com/security/
+
+If you see Security Dashboard, it worked! ✅
+
+═══════════════════════════════════════════════════════════════
