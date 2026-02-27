@@ -54,18 +54,33 @@
         }
         
         .nav-link { 
-            color: rgba(255,255,255,0.9) !important; 
+            color: #ffffff !important; 
             margin: 0 5px; 
             padding: 8px 12px !important;
             border-radius: 6px;
             transition: all 0.3s ease;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95rem;
         }
         
         .nav-link:hover { 
-            background-color: rgba(255,255,255,0.15); 
-            color: white !important;
+            background-color: rgba(255,255,255,0.2); 
+            color: #ffffff !important;
             transform: translateY(-1px);
+        }
+        
+        /* Notification bell - bright yellow/gold color */
+        .nav-link .bi-bell-fill {
+            color: #ffd700 !important;
+            font-size: 1.2rem;
+        }
+        
+        /* Notification badge - bright orange */
+        #notificationBadge {
+            background-color: #ff6b35 !important;
+            color: white !important;
+            font-weight: 700;
+            border: 2px solid white;
         }
         
         .dropdown-menu {
@@ -96,6 +111,23 @@
         /* User dropdown toggle - smaller font */
         #adminDropdown, #userDropdown {
             font-size: 0.9rem;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+        
+        /* Dropdown toggle arrows */
+        .dropdown-toggle::after {
+            color: #ffffff !important;
+        }
+        
+        /* Icons in navigation */
+        .nav-link i {
+            color: #ffffff !important;
+        }
+        
+        /* Make sure all navigation text is white */
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
         }
         
         .navbar-toggler {
