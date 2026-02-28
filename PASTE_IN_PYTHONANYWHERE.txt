@@ -1,0 +1,53 @@
+═══════════════════════════════════════════════════════════════════
+   📋 COPY AND PASTE THESE COMMANDS IN PYTHONANYWHERE CONSOLE
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+git pull origin main
+python manage.py collectstatic --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+═══════════════════════════════════════════════════════════════════
+   ✅ AFTER RUNNING COMMANDS ABOVE
+═══════════════════════════════════════════════════════════════════
+
+1. Go to: https://kibeterick.pythonanywhere.com/login/
+
+2. Hard refresh your browser:
+   • Press: Ctrl + Shift + R (Windows/Linux)
+   • Or: Cmd + Shift + R (Mac)
+   • Or: Clear browser cache
+
+3. Look for EYE ICON (👁️) in password field
+
+4. Login with: admin / E38736434k
+
+5. Look for RED HELP BUTTON (?) in bottom-right corner
+
+
+═══════════════════════════════════════════════════════════════════
+   🎯 WHAT YOU SHOULD SEE
+═══════════════════════════════════════════════════════════════════
+
+✅ Login page: Eye icon in password field
+✅ After login: Red help button in bottom-right corner
+✅ When submitting forms: Loading spinner
+✅ When deleting: Confirmation dialog
+✅ Success/error messages: Toast notifications
+
+
+═══════════════════════════════════════════════════════════════════
+   ⚠️ IF YOU DON'T SEE CHANGES
+═══════════════════════════════════════════════════════════════════
+
+The problem is BROWSER CACHE. Try:
+
+1. Hard refresh: Ctrl + Shift + R
+2. Clear browser cache completely
+3. Try incognito/private mode
+4. Try different browser (Chrome, Firefox, Edge)
+5. On mobile: Clear app cache or use "Request Desktop Site"
+
+
+═══════════════════════════════════════════════════════════════════
