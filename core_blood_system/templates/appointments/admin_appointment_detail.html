@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Appointment Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <a href="{% url 'admin_appointments_list' %}" class="btn btn-outline-secondary mb-3">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5>Appointment Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p><strong>Date:</strong> {{ appointment.appointment_date|date:"F d, Y" }}</p>
+                            <p><strong>Time:</strong> {{ appointment.get_time_slot_display }}</p>
+                            <p><strong>Location:</strong> {{ appointment.location }}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Donor:</strong> {{ appointment.donor.first_name }} {{ appointment.donor.last_name }}</p>
+                            <p><strong>Blood Type:</strong> {{ appointment.donor.blood_type }}</p>
+                            <p><strong>Status:</strong> <span class="badge bg-primary">{{ appointment.get_status_display }}</span></p>
+                        </div>
+                    </div>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        <div class="btn-group" role="group">
+                            {% if appointment.status == 'scheduled' %}
+                            <button type="submit" name="action" value="confirm" class="btn btn-success">Confirm</button>
+                            {% endif %}
+                            {% if appointment.status == 'confirmed' %}
+                            <button type="submit" name="action" value="complete" class="btn btn-primary">Complete</button>
+                            <button type="submit" name="action" value="no_show" class="btn btn-warning">No Show</button>
+                            {% endif %}
+                            <button type="submit" name="action" value="cancel" class="btn btn-danger">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

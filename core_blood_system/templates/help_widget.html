@@ -1,0 +1,239 @@
+<!-- Floating Help Widget -->
+<div class="help-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <!-- Help Button -->
+    <button class="btn btn-danger btn-lg rounded-circle shadow" 
+            data-bs-toggle="modal" data-bs-target="#helpModal"
+            data-bs-toggle="tooltip" data-bs-placement="left" title="Need help? Click here!">
+        <i class="bi bi-question-circle" style="font-size: 1.5rem;"></i>
+    </button>
+</div>
+
+<!-- Help Modal -->
+<div class="modal fade" id="helpModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-info-circle me-2"></i>Help & Quick Guide
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="accordion" id="helpAccordion">
+                    <!-- Getting Started -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#help1">
+                                <i class="bi bi-play-circle me-2"></i> Getting Started
+                            </button>
+                        </h2>
+                        <div id="help1" class="accordion-collapse collapse show" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Welcome to the Blood Management System!</h6>
+                                <ul>
+                                    <li><strong>Dashboard:</strong> View overview of blood requests and donations</li>
+                                    <li><strong>Register as Donor:</strong> Fill out the donor form to become a blood donor</li>
+                                    <li><strong>Request Blood:</strong> Submit a blood request for patients in need</li>
+                                    <li><strong>Appointments:</strong> Book donation appointments at convenient times</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Donors -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help2">
+                                <i class="bi bi-heart-pulse me-2"></i> For Blood Donors
+                            </button>
+                        </h2>
+                        <div id="help2" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>How to Donate Blood:</h6>
+                                <ol>
+                                    <li>Register as a donor (Actions → Register as Donor)</li>
+                                    <li>Book an appointment (Actions → Book Appointment)</li>
+                                    <li>Attend your appointment at the scheduled time</li>
+                                    <li>Receive your donation certificate after donation</li>
+                                </ol>
+                                <div class="alert alert-info mt-3">
+                                    <strong>Tip:</strong> You can donate blood every 3 months. Check "My Matches" to see if you match any urgent requests!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- For Blood Requesters -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help3">
+                                <i class="bi bi-droplet-fill me-2"></i> Requesting Blood
+                            </button>
+                        </h2>
+                        <div id="help3" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>How to Request Blood:</h6>
+                                <ol>
+                                    <li>Click "Request Blood" from the navigation</li>
+                                    <li>Fill in patient details and blood type needed</li>
+                                    <li>Specify urgency level and required date</li>
+                                    <li>Submit the request</li>
+                                    <li>System will automatically match compatible donors</li>
+                                    <li>Wait for admin approval</li>
+                                </ol>
+                                <div class="alert alert-warning mt-3">
+                                    <strong>Note:</strong> Mark requests as "Critical" only for life-threatening emergencies.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Appointments -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help4">
+                                <i class="bi bi-calendar-check me-2"></i> Appointments
+                            </button>
+                        </h2>
+                        <div id="help4" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Managing Appointments:</h6>
+                                <ul>
+                                    <li><strong>Book:</strong> Actions → Book Appointment</li>
+                                    <li><strong>View:</strong> Actions → My Appointments</li>
+                                    <li><strong>Reschedule:</strong> Click "Reschedule" on your appointment</li>
+                                    <li><strong>Cancel:</strong> Click "Cancel" if you can't attend</li>
+                                </ul>
+                                <div class="alert alert-success mt-3">
+                                    <strong>Reminder:</strong> You'll receive notifications before your appointment!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help5">
+                                <i class="bi bi-bell-fill me-2"></i> Notifications
+                            </button>
+                        </h2>
+                        <div id="help5" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Stay Updated:</h6>
+                                <ul>
+                                    <li>Click the bell icon to view notifications</li>
+                                    <li>Red badge shows unread notification count</li>
+                                    <li>Get notified about:
+                                        <ul>
+                                            <li>Blood request matches</li>
+                                            <li>Appointment reminders</li>
+                                            <li>Request approvals</li>
+                                            <li>Urgent blood needs</li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Codes -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help6">
+                                <i class="bi bi-qr-code me-2"></i> QR Codes
+                            </button>
+                        </h2>
+                        <div id="help6" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Using QR Codes:</h6>
+                                <ul>
+                                    <li><strong>View Your QR Codes:</strong> Actions → My QR Codes</li>
+                                    <li><strong>Download:</strong> Save QR codes to your phone</li>
+                                    <li><strong>Scan:</strong> Use QR Scanner to verify donors/certificates</li>
+                                    <li><strong>Purpose:</strong> Quick verification at donation centers</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keyboard Shortcuts -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help7">
+                                <i class="bi bi-keyboard me-2"></i> Keyboard Shortcuts
+                            </button>
+                        </h2>
+                        <div id="help7" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Work Faster:</h6>
+                                <ul>
+                                    <li><kbd>Ctrl</kbd> + <kbd>K</kbd> - Focus search box</li>
+                                    <li><kbd>Esc</kbd> - Close modals/dialogs</li>
+                                    <li><kbd>?</kbd> - Show this help (when not typing)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#help8">
+                                <i class="bi bi-headset me-2"></i> Need More Help?
+                            </button>
+                        </h2>
+                        <div id="help8" class="accordion-collapse collapse" data-bs-parent="#helpAccordion">
+                            <div class="accordion-body">
+                                <h6>Contact Us:</h6>
+                                <p>If you need additional assistance:</p>
+                                <ul>
+                                    <li>Click "Contact Us" in the navigation</li>
+                                    <li>Email: support@bloodsystem.com</li>
+                                    <li>Phone: +254 XXX XXX XXX</li>
+                                </ul>
+                                <div class="alert alert-info">
+                                    <strong>Emergency?</strong> For urgent blood needs, mark your request as "Critical" and contact the hospital directly.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.help-widget .btn {
+    width: 60px;
+    height: 60px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.help-widget .btn:hover {
+    transform: scale(1.1);
+    animation: none;
+}
+
+kbd {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    color: #333;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 0.85em;
+    padding: 2px 6px;
+    white-space: nowrap;
+}
+</style>
