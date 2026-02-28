@@ -1,0 +1,209 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                                                                   ║
+║   🚨 YOU CAN'T SEE ANYTHING - LET'S FIX THIS NOW! 🚨             ║
+║                                                                   ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+
+STEP 1: RUN DEBUG SCRIPT ON PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+python DEBUG_WHATS_WRONG.py
+
+
+This will tell us EXACTLY what's missing. Copy the output and show me.
+
+
+STEP 2: IF DEBUG SHOWS FILES ARE MISSING
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+python manage.py collectstatic --clear --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+STEP 3: VERIFY FILES EXIST
+═══════════════════════════════════════════════════════════════════
+
+ls -la core_blood_system/static/js/usability.js
+ls -la core_blood_system/static/css/password-toggle.css
+ls -la core_blood_system/templates/help_widget.html
+
+
+If these commands show "No such file", the git pull didn't work.
+
+
+STEP 4: CHECK WHAT COMMIT YOU'RE ON
+═══════════════════════════════════════════════════════════════════
+
+git log --oneline -1
+
+
+You should see: 4afdd0e or fb9a736 or d62f3f7
+
+If you see 81c2af0 or older, you need to pull again.
+
+
+STEP 5: FORCE PULL LATEST CODE
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+git log --oneline -5
+
+
+This FORCES your PythonAnywhere to match GitHub exactly.
+
+
+STEP 6: COLLECT STATIC FILES (VERY IMPORTANT!)
+═══════════════════════════════════════════════════════════════════
+
+python manage.py collectstatic --clear --noinput
+
+
+This copies files from core_blood_system/static/ to staticfiles/
+Without this, the browser can't load the JavaScript and CSS files!
+
+
+STEP 7: RELOAD WEB SERVER
+═══════════════════════════════════════════════════════════════════
+
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+This tells PythonAnywhere to restart your web app.
+
+
+STEP 8: CLEAR YOUR BROWSER CACHE
+═══════════════════════════════════════════════════════════════════
+
+On Computer:
+• Chrome/Edge: Ctrl + Shift + R (Windows) or Cmd + Shift + R (Mac)
+• Or: Ctrl + Shift + Delete → Clear cache
+
+On Mobile:
+• Settings → Apps → Chrome → Storage → Clear cache
+• Or: Use "Request Desktop Site" in browser menu
+• Or: Try different browser (Firefox, Edge)
+
+
+STEP 9: TEST IN INCOGNITO MODE
+═══════════════════════════════════════════════════════════════════
+
+Open browser in incognito/private mode:
+• Chrome: Ctrl + Shift + N
+• Firefox: Ctrl + Shift + P
+• Edge: Ctrl + Shift + N
+
+Go to: https://kibeterick.pythonanywhere.com/login/
+
+If you see the eye icon in incognito but not in normal browser,
+the problem is 100% browser cache.
+
+
+STEP 10: WHAT YOU SHOULD SEE
+═══════════════════════════════════════════════════════════════════
+
+On login page, the password field should look like this:
+
+  Password
+  ┌──────────────────────────┬─────┐
+  │ ••••••••                 │ 👁️  │
+  └──────────────────────────┴─────┘
+           ↑                    ↑
+      Password field        Eye icon
+
+
+If you DON'T see the eye icon, one of these is wrong:
+1. Files not pulled from GitHub
+2. Static files not collected
+3. Web server not reloaded
+4. Browser cache not cleared
+
+
+TROUBLESHOOTING QUESTIONS:
+═══════════════════════════════════════════════════════════════════
+
+Q: Did you run git pull?
+A: Run the commands in STEP 2 above
+
+Q: Did you run collectstatic?
+A: Run the command in STEP 6 above
+
+Q: Did you reload the web server?
+A: Run the command in STEP 7 above
+
+Q: Did you clear browser cache?
+A: Follow STEP 8 above
+
+Q: Did you try incognito mode?
+A: Follow STEP 9 above
+
+
+MOST COMMON PROBLEM:
+═══════════════════════════════════════════════════════════════════
+
+🔥 BROWSER CACHE 🔥
+
+Your browser downloaded the OLD login.html file (without eye icon)
+and is showing you that old file from cache.
+
+Even if PythonAnywhere has the NEW file, your browser won't
+download it unless you:
+1. Hard refresh (Ctrl + Shift + R)
+2. Clear cache completely
+3. Use incognito mode
+
+
+COPY THIS ENTIRE COMMAND BLOCK:
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack
+git fetch origin
+git reset --hard origin/main
+git log --oneline -3
+python manage.py collectstatic --clear --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+echo "✅ Deployment complete! Now clear your browser cache."
+
+
+AFTER RUNNING COMMANDS:
+═══════════════════════════════════════════════════════════════════
+
+1. Close ALL browser tabs
+2. Clear browser cache (Ctrl + Shift + Delete)
+3. Restart browser
+4. Go to: https://kibeterick.pythonanywhere.com/login/
+5. Look for eye icon in password field
+
+
+IF YOU STILL DON'T SEE IT:
+═══════════════════════════════════════════════════════════════════
+
+Run the debug script and send me the output:
+
+cd /home/kibeterick/blood_management_fullstack
+python DEBUG_WHATS_WRONG.py
+
+This will tell me exactly what's wrong.
+
+
+═══════════════════════════════════════════════════════════════════
+                    🎯 QUICK SUMMARY
+═══════════════════════════════════════════════════════════════════
+
+1. Run the command block above (git reset, collectstatic, touch)
+2. Clear browser cache (Ctrl + Shift + Delete)
+3. Try incognito mode
+4. If still nothing, run DEBUG_WHATS_WRONG.py and show me output
+
+The problem is either:
+• PythonAnywhere doesn't have the new files (git pull issue)
+• Static files not collected (collectstatic issue)
+• Browser showing old cached files (cache issue)
+
+═══════════════════════════════════════════════════════════════════
