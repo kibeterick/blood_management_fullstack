@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════════════
+   📋 COPY AND PASTE THIS ENTIRE BLOCK INTO PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git fetch origin && git reset --hard origin/main && python manage.py collectstatic --clear --noinput && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ Done! Now clear browser cache and refresh."
+
+
+═══════════════════════════════════════════════════════════════════
+   ✅ AFTER RUNNING THE COMMAND ABOVE
+═══════════════════════════════════════════════════════════════════
+
+1. CLOSE ALL BROWSER TABS
+
+2. CLEAR BROWSER CACHE:
+   • Press: Ctrl + Shift + Delete
+   • Select: "Cached images and files"
+   • Click: "Clear data"
+
+3. RESTART YOUR BROWSER
+
+4. GO TO: https://kibeterick.pythonanywhere.com/login/
+
+5. LOOK FOR: Eye icon (👁️) in password field
+
+
+═══════════════════════════════════════════════════════════════════
+   🔍 IF YOU STILL DON'T SEE THE EYE ICON
+═══════════════════════════════════════════════════════════════════
+
+Run this test script:
+
+cd /home/kibeterick/blood_management_fullstack
+python test_password_toggle.py
+
+
+Then copy the output and show me. This will tell me exactly
+what's wrong.
+
+
+═══════════════════════════════════════════════════════════════════
+   🎯 WHAT THE EYE ICON LOOKS LIKE
+═══════════════════════════════════════════════════════════════════
+
+When you type in the password field, you should see:
+
+  Password
+  ┌────────────────────────┬─────┐
+  │ ••••••••               │ 👁️  │  ← Click this eye
+  └────────────────────────┴─────┘
+
+After clicking the eye:
+
+  Password
+  ┌────────────────────────┬─────┐
+  │ MyPass123              │ 👁️‍🗨️ │  ← Password visible
+  └────────────────────────┴─────┘
+
+
+═══════════════════════════════════════════════════════════════════
+   ⚠️ MOST COMMON PROBLEM: BROWSER CACHE
+═══════════════════════════════════════════════════════════════════
+
+Your browser downloaded the OLD login page and saved it.
+Even though PythonAnywhere has the NEW page, your browser
+won't download it unless you clear the cache.
+
+TRY INCOGNITO MODE:
+• Chrome: Ctrl + Shift + N
+• Firefox: Ctrl + Shift + P
+
+If you see the eye icon in incognito but not in normal browser,
+the problem is 100% browser cache.
+
+
+═══════════════════════════════════════════════════════════════════
