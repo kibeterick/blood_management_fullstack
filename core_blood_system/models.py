@@ -52,6 +52,7 @@ class CustomUser(AbstractUser):
 
 
 # Donor Model
+# Donor Model
 class Donor(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=100)
@@ -66,14 +67,93 @@ class Donor(models.Model):
     state = models.CharField(max_length=100)
     last_donation_date = models.DateField(null=True, blank=True)
     is_available = models.BooleanField(default=True)
+
+    # Eligibility tracking fields
+    next_eligible_date = models.DateField(null=True, blank=True, help_text="Next date donor is eligible to donate")
+    is_eligible_override = models.BooleanField(default=False, help_text="Admin override for eligibility")
+    eligibility_notes = models.TextField(blank=True, null=True, help_text="Notes about eligibility status")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.blood_type}"
-    
+
+    def calculate_next_eligible_date(self):
+        """Calculate next eligible donation date (56 days from last donation)"""
+        if self.last_donation_date:
+            from datetime import timedelta
+            return self.last_donation_date + timedelta(days=56)
+        return None
+
+    def is_eligible(self):
+        """Check if donor is currently eligible to donate"""
+        # Admin override takes precedence
+        if self.is_eligible_override:
+            return True
+
+        # If no last donation date, donor is eligible
+        if not self.last_donation_date:
+            return True
+
+        # Check if 56 days have passed since last donation
+        from datetime import date
+        next_eligible = self.calculate_next_eligible_date()
+        if next_eligible:
+            return date.today() >= next_eligible
+
+        return True
+
+    def days_until_eligible(self):
+        """Calculate days remaining until eligible to donate"""
+        if self.is_eligible():
+            return 0
+
+        from datetime import date
+        next_eligible = self.calculate_next_eligible_date()
+        if next_eligible:
+            days = (next_eligible - date.today()).days
+            return max(0, days)
+
+        return 0
+
+    def get_eligibility_status(self):
+        """Get eligibility status with reason"""
+        if self.is_eligible_override:
+            return {
+                'eligible': True,
+                'reason': 'Admin Override',
+                'badge_class': 'success',
+                'icon': 'check-circle-fill'
+            }
+
+        if self.is_eligible():
+            return {
+                'eligible': True,
+                'reason': 'Eligible to Donate',
+                'badge_class': 'success',
+                'icon': 'check-circle-fill'
+            }
+        else:
+            days = self.days_until_eligible()
+            next_date = self.calculate_next_eligible_date()
+            return {
+                'eligible': False,
+                'reason': f'Wait {days} more days',
+                'next_date': next_date,
+                'badge_class': 'danger',
+                'icon': 'x-circle-fill'
+            }
+
+    def save(self, *args, **kwargs):
+        """Auto-calculate next eligible date on save"""
+        if self.last_donation_date and not self.is_eligible_override:
+            self.next_eligible_date = self.calculate_next_eligible_date()
+        super().save(*args, **kwargs)
+
     class Meta:
         ordering = ['-created_at']
+
 
 
 # Blood Request Model

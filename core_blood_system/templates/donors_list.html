@@ -207,6 +207,7 @@
                         <th>Name</th>
                         <th>Profile</th>
                         <th>Blood Group</th>
+                        <th>Eligibility</th>
                         <th>Address</th>
                         <th>Mobile</th>
                         {% if user.role == 'admin' %}
@@ -234,6 +235,22 @@
                             <span class="blood-badge">{{ donor.blood_type }}</span>
                         </td>
                         <td>
+                            {% with status=donor.get_eligibility_status %}
+                                {% if status.eligible %}
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-{{ status.icon }}"></i> {{ status.reason }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-{{ status.icon }}"></i> {{ status.reason }}
+                                    </span>
+                                    {% if status.next_date %}
+                                        <br><small class="text-muted">Next: {{ status.next_date|date:"M d, Y" }}</small>
+                                    {% endif %}
+                                {% endif %}
+                            {% endwith %}
+                        </td>
+                        <td>
                             {{ donor.city }}, {{ donor.state }}<br>
                             <small class="text-muted">{{ donor.address|truncatewords:5 }}</small>
                         </td>
@@ -255,7 +272,7 @@
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="{% if user.role == 'admin' %}6{% else %}5{% endif %}" class="no-donors">
+                        <td colspan="{% if user.role == 'admin' %}7{% else %}6{% endif %}" class="no-donors">
                             <i class="bi bi-inbox" style="font-size: 3rem; color: #ccc;"></i>
                             <p>No donors found.</p>
                             {% if user.role == 'admin' %}

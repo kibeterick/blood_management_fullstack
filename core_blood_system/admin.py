@@ -27,8 +27,8 @@ class CustomUserAdmin(UserAdmin):
 @admin.register(Donor)
 class DonorAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'blood_type', 'email', 'phone_number', 
-                    'is_available', 'last_donation_date', 'created_at']
-    list_filter = ['blood_type', 'is_available', 'city', 'state']
+                    'is_available', 'is_eligible_display', 'last_donation_date', 'next_eligible_date', 'created_at']
+    list_filter = ['blood_type', 'is_available', 'city', 'state', 'is_eligible_override']
     search_fields = ['first_name', 'last_name', 'email', 'phone_number']
     date_hierarchy = 'created_at'
     ordering = ['-created_at']
@@ -40,10 +40,25 @@ class DonorAdmin(admin.ModelAdmin):
         ('Blood Information', {
             'fields': ('blood_type', 'last_donation_date', 'is_available')
         }),
+        ('Eligibility Tracking', {
+            'fields': ('next_eligible_date', 'is_eligible_override', 'eligibility_notes'),
+            'description': 'Eligibility is automatically calculated based on 56-day waiting period. Admin override allows manual control.'
+        }),
         ('Address', {
             'fields': ('address', 'city', 'state')
         }),
     )
+    
+    readonly_fields = ['next_eligible_date']
+    
+    def is_eligible_display(self, obj):
+        """Display eligibility status in admin list"""
+        if obj.is_eligible():
+            return "✅ Eligible"
+        else:
+            days = obj.days_until_eligible()
+            return f"❌ Wait {days} days"
+    is_eligible_display.short_description = 'Eligibility Status'
 
 
 # Blood Request Admin

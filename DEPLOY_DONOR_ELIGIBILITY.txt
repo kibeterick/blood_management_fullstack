@@ -1,0 +1,61 @@
+═══════════════════════════════════════════════════════════════
+🩸 DEPLOY DONOR ELIGIBILITY TRACKING FEATURE
+═══════════════════════════════════════════════════════════════
+
+Copy and paste these commands ONE BY ONE in PythonAnywhere Bash Console:
+
+STEP 1: Navigate to project directory
+─────────────────────────────────────────────────────────────
+cd ~/blood_management_fullstack
+
+
+STEP 2: Pull latest code from GitHub
+─────────────────────────────────────────────────────────────
+git pull origin main
+
+
+STEP 3: Run database migration to add eligibility fields
+─────────────────────────────────────────────────────────────
+python add_donor_eligibility_fields.py
+
+
+STEP 4: Reload web app
+─────────────────────────────────────────────────────────────
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+═══════════════════════════════════════════════════════════════
+✅ DONE! Now check your site:
+═══════════════════════════════════════════════════════════════
+
+1. Login as admin
+2. Go to Donors List
+3. You'll see new "Eligibility" column with badges:
+   • Green badge = "Eligible to Donate"
+   • Red badge = "Wait X more days" (with next eligible date)
+
+4. Admin can override eligibility in Django admin panel
+
+═══════════════════════════════════════════════════════════════
+📋 WHAT THIS FEATURE DOES:
+═══════════════════════════════════════════════════════════════
+
+✅ Tracks last donation date for each donor
+✅ Auto-calculates next eligible date (56 days waiting period)
+✅ Shows eligibility status with color-coded badges
+✅ Prevents unsafe donations (donors must wait 56 days)
+✅ Admin can override eligibility if needed
+✅ Displays countdown: "Wait 23 more days"
+✅ Shows next eligible date
+
+═══════════════════════════════════════════════════════════════
+🔒 SAFETY FEATURES:
+═══════════════════════════════════════════════════════════════
+
+• 56-day waiting period enforced automatically
+• Visual indicators prevent confusion
+• Admin override for special cases
+• Eligibility notes field for documentation
+• Automatic calculation on every save
+
+═══════════════════════════════════════════════════════════════
