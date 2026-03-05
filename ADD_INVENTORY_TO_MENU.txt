@@ -1,0 +1,34 @@
+═══════════════════════════════════════════════════════════════
+  📋 ADD INVENTORY TO NAVIGATION MENU
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ Inventory added to menu! Reload your web app"
+
+═══════════════════════════════════════════════════════════════
+  AFTER RUNNING:
+═══════════════════════════════════════════════════════════════
+
+1. Go to Web tab
+2. Click "Reload" button
+3. Login as admin
+4. Look at the top navigation bar
+
+You'll see: Dashboard | Inventory | 🔔 | Manage | Analytics | Reports
+
+Click "Inventory" to access all inventory features! 🎉
+
+═══════════════════════════════════════════════════════════════
+  WHAT YOU GET:
+═══════════════════════════════════════════════════════════════
+
+The Inventory link will take you to:
+  ✓ Real-time blood stock levels
+  ✓ Visual charts and graphs
+  ✓ Low stock alerts (yellow/red)
+  ✓ Expiration warnings
+  ✓ Quick access to:
+    - Add Blood Units
+    - Expiration Tracking
+    - Configure Thresholds
+
+No more typing URLs - just one click! 🚀
