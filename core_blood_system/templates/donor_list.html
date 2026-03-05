@@ -60,6 +60,7 @@
                                 <th>#</th>
                                 <th>Full Name</th>
                                 <th>Blood Type</th>
+                                <th>Eligibility</th>
                                 <th>Email</th>
                                 <th>Phone</th>
                                 <th>City</th>
@@ -79,6 +80,22 @@
                                 </td>
                                 <td>
                                     <span class="badge bg-danger">{{ donor.blood_type }}</span>
+                                </td>
+                                <td>
+                                    {% with status=donor.get_eligibility_status %}
+                                        {% if status.eligible %}
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-{{ status.icon }}"></i> {{ status.reason }}
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-{{ status.icon }}"></i> {{ status.reason }}
+                                            </span>
+                                            {% if status.next_date %}
+                                                <br><small class="text-muted">Next: {{ status.next_date|date:"M d, Y" }}</small>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endwith %}
                                 </td>
                                 <td>{{ donor.email }}</td>
                                 <td>{{ donor.phone_number }}</td>
