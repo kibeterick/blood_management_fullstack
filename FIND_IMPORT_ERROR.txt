@@ -1,0 +1,49 @@
+════════════════════════════════════════════════════════════
+PASTE THIS TO FIND WHICH FILE HAS THE ERROR
+════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && python manage.py shell -c "
+try:
+    from core_blood_system import views
+    print('✓ views OK')
+except Exception as e:
+    print('✗ views ERROR:', e)
+
+try:
+    from core_blood_system import api_views
+    print('✓ api_views OK')
+except Exception as e:
+    print('✗ api_views ERROR:', e)
+
+try:
+    from core_blood_system import views_appointments
+    print('✓ views_appointments OK')
+except Exception as e:
+    print('✗ views_appointments ERROR:', e)
+
+try:
+    from core_blood_system import views_notifications
+    print('✓ views_notifications OK')
+except Exception as e:
+    print('✗ views_notifications ERROR:', e)
+
+try:
+    from core_blood_system import views_matching
+    print('✓ views_matching OK')
+except Exception as e:
+    print('✗ views_matching ERROR:', e)
+
+try:
+    from core_blood_system import views_analytics
+    print('✓ views_analytics OK')
+except Exception as e:
+    print('✗ views_analytics ERROR:', e)
+
+try:
+    from core_blood_system import views_qrcode
+    print('✓ views_qrcode OK')
+except Exception as e:
+    print('✗ views_qrcode ERROR:', e)
+"
+
+════════════════════════════════════════════════════════════

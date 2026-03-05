@@ -230,29 +230,29 @@ class BloodUnitForm(forms.ModelForm):
             )
 
 
-# Inventory Threshold Form - DISABLED (requires database migration)
-# class InventoryThresholdForm(forms.ModelForm):
-#     """Form for configuring inventory thresholds"""
-#     class Meta:
-#         model = BloodInventory
-#         fields = ['minimum_threshold', 'critical_threshold', 'optimal_level']
-#         widgets = {
-#             'minimum_threshold': forms.NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'min': '1',
-#                 'placeholder': 'Minimum Threshold'
-#             }),
-#             'critical_threshold': forms.NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'min': '1',
-#                 'placeholder': 'Critical Threshold'
-#             }),
-#             'optimal_level': forms.NumberInput(attrs={
-#                 'class': 'form-control',
-#                 'min': '1',
-#                 'placeholder': 'Optimal Level'
-#             }),
-#         }
+# Inventory Threshold Form
+class InventoryThresholdForm(forms.ModelForm):
+    """Form for configuring inventory thresholds"""
+    class Meta:
+        model = BloodInventory
+        fields = ['minimum_threshold', 'critical_threshold', 'optimal_level']
+        widgets = {
+            'minimum_threshold': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Minimum Threshold'
+            }),
+            'critical_threshold': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Critical Threshold'
+            }),
+            'optimal_level': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Optimal Level'
+            }),
+        }
 
 
 

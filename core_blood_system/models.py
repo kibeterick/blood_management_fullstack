@@ -154,12 +154,25 @@ class BloodInventory(models.Model):
     units_available = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
     minimum_threshold = models.IntegerField(default=5, help_text="Minimum units to maintain")
+    critical_threshold = models.IntegerField(default=2, help_text="Critical low level")
+    optimal_level = models.IntegerField(default=20, help_text="Optimal stock level")
+    alert_sent_at = models.DateTimeField(null=True, blank=True, help_text="Last alert timestamp")
     
     def __str__(self):
         return f"{self.blood_type}: {self.units_available} units"
     
     def is_low_stock(self):
         return self.units_available < self.minimum_threshold
+    
+    def get_status(self):
+        """Get inventory status"""
+        if self.units_available <= self.critical_threshold:
+            return 'critical'
+        elif self.units_available < self.minimum_threshold:
+            return 'low'
+        elif self.units_available >= self.optimal_level:
+            return 'optimal'
+        return 'adequate'
     
     class Meta:
         verbose_name_plural = "Blood Inventories"

@@ -1,0 +1,10 @@
+════════════════════════════════════════════════════════════
+PASTE THIS IN PYTHONANYWHERE BASH TO SEE THE ERROR
+════════════════════════════════════════════════════════════
+
+tail -50 /var/log/kibeterick.pythonanywhere.com.error.log
+
+════════════════════════════════════════════════════════════
+This will show the last 50 lines of your error log.
+Copy the error message and send it to me.
+════════════════════════════════════════════════════════════

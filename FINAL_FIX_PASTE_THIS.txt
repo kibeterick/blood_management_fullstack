@@ -1,0 +1,1 @@
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ FIXED! Go to Web tab and click Reload"

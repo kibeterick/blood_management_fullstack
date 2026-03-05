@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode
+from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode, views_inventory
 
 urlpatterns = [
     # Home
@@ -110,6 +110,12 @@ urlpatterns = [
     path('qr/verify/', views_qrcode.verify_qr, name='verify_qr'),
     path('qr/download/<int:qr_id>/', views_qrcode.download_qr_image, name='download_qr_image'),
     path('qr/my-codes/', views_qrcode.my_qr_codes, name='my_qr_codes'),
+    
+    # INVENTORY MANAGEMENT
+    path('inventory/', views_inventory.inventory_dashboard, name='inventory_dashboard'),
+    path('inventory/add-unit/', views_inventory.add_blood_unit, name='add_blood_unit'),
+    path('inventory/expiration/', views_inventory.expiration_list, name='expiration_list'),
+    path('inventory/configure-thresholds/', views_inventory.configure_thresholds, name='configure_thresholds'),
     
     # CLEAR WELCOME FLAG
     path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),
