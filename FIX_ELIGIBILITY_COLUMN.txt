@@ -1,0 +1,29 @@
+═══════════════════════════════════════════════════════════════
+🔧 FIX ELIGIBILITY COLUMN - QUICK DEPLOY
+═══════════════════════════════════════════════════════════════
+
+Copy and paste this ONE command in PythonAnywhere Bash Console:
+
+cd ~/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+
+✅ WHAT THIS FIXES:
+
+The eligibility column was missing because the site uses a different 
+template file (donor_list.html) than expected.
+
+Now the donor list will show:
+
+# | Full Name | Blood Type | ✨ Eligibility ✨ | Email | Phone | City | Last Donation | Status | Actions
+
+═══════════════════════════════════════════════════════════════
+
+After running the command above:
+
+1. Go to: https://kibeterick.pythonanywhere.com/donors/
+2. You'll see the NEW "Eligibility" column with badges:
+   ✅ Green badge = "Eligible to Donate"
+   ❌ Red badge = "Wait X more days"
+
+═══════════════════════════════════════════════════════════════
