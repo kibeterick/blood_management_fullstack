@@ -329,7 +329,7 @@
     
     // Auto-refresh every 30 seconds
     setInterval(() => {
-        fetch('{% url "inventory_api" %}')
+        fetch('{% url "api_inventory" %}')
             .then(response => response.json())
             .then(data => {
                 console.log('Inventory updated:', data);
