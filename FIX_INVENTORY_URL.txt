@@ -1,0 +1,15 @@
+═══════════════════════════════════════════════════════════════
+  🔧 FIX INVENTORY DASHBOARD - PASTE THIS NOW
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ Fixed! Reload your web app now"
+
+═══════════════════════════════════════════════════════════════
+  THEN:
+═══════════════════════════════════════════════════════════════
+
+1. Go to Web tab in PythonAnywhere
+2. Click the green "Reload" button
+3. Visit: https://kibeterick.pythonanywhere.com/inventory/
+
+The inventory dashboard will now load correctly! 🎉
