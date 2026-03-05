@@ -1,0 +1,30 @@
+═══════════════════════════════════════════════════════════════
+🚨 EMERGENCY FIX - Copy and paste this into PythonAnywhere Bash
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && cat > backend/__init__.py << 'EOF'
+"""
+Backend package initialization
+Ensures Celery app is loaded when Django starts
+"""
+
+# Celery import commented out - not installed on PythonAnywhere
+# from core_blood_system.celery import app as celery_app
+
+# __all__ = ('celery_app',)
+
+EOF
+
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ Fixed! Now go to Web tab and click Reload"
+
+═══════════════════════════════════════════════════════════════
+WHAT THIS DOES:
+- Comments out the Celery import that's causing the crash
+- Touches the WSGI file to trigger reload
+- Your site will work again immediately
+
+AFTER RELOAD:
+- Your site should load without errors
+- The template fix is already in place
+- Everything should work normally
+═══════════════════════════════════════════════════════════════

@@ -63,16 +63,19 @@ def mark_expired_units():
     Mark expired blood units daily
     Runs daily at midnight
     """
-    from .inventory_manager import InventoryManager
-    
-    try:
-        expired_count = InventoryManager.mark_expired_units()
-        result = f"Marked {expired_count} blood units as expired"
-        logger.info(result)
-        return result
-    except Exception as e:
-        logger.error(f"Failed to mark expired units: {str(e)}")
-        return f"Error: {str(e)}"
+    # Disabled - requires InventoryManager enhancement
+    logger.info("mark_expired_units task disabled - enhancement not deployed")
+    return "Task disabled"
+    # from .inventory_manager import InventoryManager
+    # 
+    # try:
+    #     expired_count = InventoryManager.mark_expired_units()
+    #     result = f"Marked {expired_count} blood units as expired"
+    #     logger.info(result)
+    #     return result
+    # except Exception as e:
+    #     logger.error(f"Failed to mark expired units: {str(e)}")
+    #     return f"Error: {str(e)}"
 
 
 @shared_task
@@ -82,34 +85,37 @@ def check_low_stock():
     Respects 24-hour notification limit
     Runs daily at 8:00 AM
     """
-    from .models import BloodInventory, CustomUser
-    from .email_notifications import EmailNotificationService
-    
-    try:
-        low_stock_items = []
-        
-        # Check all inventory items
-        for inventory in BloodInventory.objects.all():
-            status = inventory.get_status()
-            
-            # Check if stock is low or critical
-            if status in ['low', 'critical']:
-                # Check if we haven't sent an alert in the last 24 hours
-                if not inventory.alert_sent_at or (timezone.now() - inventory.alert_sent_at).total_seconds() >= 86400:
-                    low_stock_items.append(inventory)
-        
-        # Send alerts for low stock items
-        alert_count = 0
-        for inventory in low_stock_items:
-            if EmailNotificationService.send_low_stock_alert(inventory):
-                inventory.alert_sent_at = timezone.now()
-                inventory.save()
-                alert_count += 1
-        
-        result = f"Sent {alert_count} low stock alerts for {len(low_stock_items)} blood types"
-        logger.info(result)
-        return result
-        
-    except Exception as e:
-        logger.error(f"Failed to check low stock: {str(e)}")
-        return f"Error: {str(e)}"
+    # Disabled - requires enhanced BloodInventory model fields
+    logger.info("check_low_stock task disabled - enhancement not deployed")
+    return "Task disabled"
+    # from .models import BloodInventory, CustomUser
+    # from .email_notifications import EmailNotificationService
+    # 
+    # try:
+    #     low_stock_items = []
+    #     
+    #     # Check all inventory items
+    #     for inventory in BloodInventory.objects.all():
+    #         status = inventory.get_status()
+    #         
+    #         # Check if stock is low or critical
+    #         if status in ['low', 'critical']:
+    #             # Check if we haven't sent an alert in the last 24 hours
+    #             if not inventory.alert_sent_at or (timezone.now() - inventory.alert_sent_at).total_seconds() >= 86400:
+    #                 low_stock_items.append(inventory)
+    #     
+    #     # Send alerts for low stock items
+    #     alert_count = 0
+    #     for inventory in low_stock_items:
+    #         if EmailNotificationService.send_low_stock_alert(inventory):
+    #             inventory.alert_sent_at = timezone.now()
+    #             inventory.save()
+    #             alert_count += 1
+    #     
+    #     result = f"Sent {alert_count} low stock alerts for {len(low_stock_items)} blood types"
+    #     logger.info(result)
+    #     return result
+    #     
+    # except Exception as e:
+    #     logger.error(f"Failed to check low stock: {str(e)}")
+    #     return f"Error: {str(e)}"

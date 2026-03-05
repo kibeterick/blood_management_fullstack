@@ -1,0 +1,24 @@
+========================================
+COPY THESE 3 COMMANDS - PASTE IN PYTHONANYWHERE BASH
+========================================
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+AFTER RUNNING THE COMMAND ABOVE:
+========================================
+
+1. Go to PythonAnywhere "Web" tab
+2. Click the green "Reload kibeterick.pythonanywhere.com" button
+3. Done!
+
+========================================
+TEST IT:
+========================================
+
+Go to your site and click "My Appointments" - it should work now!
+
+WHAT WAS FIXED:
+- Template syntax error on line 40 of my_appointments.html
+- Changed invalid Python conditional to proper Django template tags
+- Badge colors will now display correctly

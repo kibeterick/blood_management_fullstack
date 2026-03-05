@@ -1,0 +1,22 @@
+═══════════════════════════════════════════════════════════════
+✅ FIX IS READY - Copy and paste this into PythonAnywhere Bash
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ DONE! Go to Web tab and click Reload"
+
+═══════════════════════════════════════════════════════════════
+WHAT THIS DOES:
+1. Pulls the fix from GitHub (Celery import is now commented out)
+2. Touches WSGI file to trigger reload
+3. Your site will work after you click Reload
+
+WHAT WAS FIXED:
+✅ Celery import commented out in backend/__init__.py
+✅ Template syntax already fixed in my_appointments.html
+✅ Site will load without ModuleNotFoundError
+
+AFTER YOU RELOAD:
+- Site should work normally
+- No more "Something went wrong" error
+- My Appointments page will display correctly
+═══════════════════════════════════════════════════════════════

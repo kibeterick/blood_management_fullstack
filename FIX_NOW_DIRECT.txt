@@ -1,0 +1,30 @@
+========================================
+RUN THESE COMMANDS IN PYTHONANYWHERE BASH
+========================================
+
+Step 1: Go to your project directory
+cd /home/kibeterick/blood_management_fullstack
+
+Step 2: Pull the latest code (this should have the fix)
+git pull origin main
+
+Step 3: Clear Django's template cache
+python manage.py shell -c "from django.core.cache import cache; cache.clear(); print('Cache cleared')"
+
+Step 4: Collect static files
+python manage.py collectstatic --noinput
+
+Step 5: Touch WSGI file
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+Step 6: Restart Python processes
+kill -HUP $(pgrep -f 'python.*wsgi')
+
+========================================
+THEN: Go to Web tab and click "Reload"
+========================================
+
+IF STILL NOT WORKING, run this Python script:
+python /home/kibeterick/blood_management_fullstack/EMERGENCY_FIX_TEMPLATE.py
+
+This will directly fix the template file on the server.

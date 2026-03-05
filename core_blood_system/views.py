@@ -1027,17 +1027,10 @@ def approve_donation(request, donation_id):
     donation.approved_at = timezone.now()
     donation.save()
     
-    # Add units to blood inventory using InventoryManager
-    from .inventory_manager import InventoryManager
-    unit = InventoryManager.update_inventory_from_donation(donation)
-    
-    if unit:
-        messages.success(request, f'Donation approved! Blood unit {unit.unit_number} created. {donation.units_donated} unit(s) of {donation.blood_type} added to inventory.')
-    else:
-        # Fallback to old method if InventoryManager fails
-        inventory, created = BloodInventory.objects.get_or_create(
-            blood_type=donation.blood_type,
-            defaults={'units_available': 0}
+    # Add units to blood inventory (simple method)
+    inventory, created = BloodInventory.objects.get_or_create(
+        blood_type=donation.blood_type,
+        defaults={'units_available': 0}
         )
         inventory.units_available += donation.units_donated
         inventory.save()

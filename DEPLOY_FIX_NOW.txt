@@ -1,0 +1,21 @@
+========================================
+COPY & PASTE IN PYTHONANYWHERE BASH CONSOLE
+========================================
+
+cd /home/kibeterick/blood_management_fullstack
+git pull origin main
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+THEN: Go to Web tab and click "Reload" button
+========================================
+
+WHAT THIS FIXES:
+✓ Template syntax error in My Appointments page
+✓ Page will now load without errors
+✓ Badge colors will display correctly (green for confirmed, yellow for pending)
+
+TEST IT:
+1. Login to your site
+2. Click "My Appointments" 
+3. Page should load successfully now!

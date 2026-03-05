@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode, views_inventory
+from . import views, api_views, views_appointments, views_notifications, views_matching, views_analytics, views_qrcode
 
 urlpatterns = [
     # Home
@@ -110,16 +110,6 @@ urlpatterns = [
     path('qr/verify/', views_qrcode.verify_qr, name='verify_qr'),
     path('qr/download/<int:qr_id>/', views_qrcode.download_qr_image, name='download_qr_image'),
     path('qr/my-codes/', views_qrcode.my_qr_codes, name='my_qr_codes'),
-    
-    # INVENTORY MANAGEMENT SYSTEM
-    path('inventory/', views_inventory.inventory_dashboard, name='inventory_dashboard'),
-    path('inventory/add-unit/', views_inventory.add_blood_unit, name='add_blood_unit'),
-    path('inventory/expiration/', views_inventory.expiration_list, name='expiration_list'),
-    path('inventory/configure-thresholds/', views_inventory.configure_thresholds, name='configure_thresholds'),
-    path('inventory/api/', views_inventory.inventory_api, name='inventory_api'),
-    path('inventory/unit/<int:unit_id>/use/', views_inventory.mark_unit_used, name='mark_unit_used'),
-    path('inventory/unit/<int:unit_id>/expire/', views_inventory.mark_unit_expired, name='mark_unit_expired'),
-    path('inventory/unit/<int:unit_id>/', views_inventory.unit_detail, name='unit_detail'),
     
     # CLEAR WELCOME FLAG
     path('clear-welcome/', views.clear_welcome_flag, name='clear_welcome_flag'),
