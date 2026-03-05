@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Donor, BloodRequest, BloodDonation, BloodInventory
+from .models import (
+    CustomUser, Donor, BloodRequest, BloodDonation, BloodInventory,
+    BloodUnit, NotificationPreference, NotificationLog, DonorEligibility
+)
 
 
 # Custom User Admin
@@ -116,3 +119,126 @@ class BloodInventoryAdmin(admin.ModelAdmin):
         return obj.is_low_stock()
     is_low_stock.boolean = True
     is_low_stock.short_description = 'Low Stock'
+
+
+
+# Blood Unit Admin
+@admin.register(BloodUnit)
+class BloodUnitAdmin(admin.ModelAdmin):
+    list_display = ['unit_number', 'blood_type', 'status', 'donation_date', 'expiration_date', 
+                    'volume_ml', 'storage_location', 'is_expiring_soon', 'is_expired']
+    list_filter = ['blood_type', 'status', 'donation_date', 'expiration_date']
+    search_fields = ['unit_number', 'donation__donor__first_name', 'donation__donor__last_name']
+    date_hierarchy = 'donation_date'
+    ordering = ['-donation_date']
+    
+    fieldsets = (
+        ('Unit Information', {
+            'fields': ('unit_number', 'blood_type', 'status', 'volume_ml')
+        }),
+        ('Donation Details', {
+            'fields': ('donation', 'donation_date', 'expiration_date')
+        }),
+        ('Storage', {
+            'fields': ('storage_location', 'notes')
+        }),
+    )
+    
+    readonly_fields = ['created_at', 'updated_at']
+    
+    actions = ['mark_as_used', 'mark_as_expired']
+    
+    def mark_as_used(self, request, queryset):
+        updated = queryset.update(status='used')
+        self.message_user(request, f'{updated} units marked as used.')
+    mark_as_used.short_description = 'Mark selected units as used'
+    
+    def mark_as_expired(self, request, queryset):
+        updated = queryset.update(status='expired')
+        self.message_user(request, f'{updated} units marked as expired.')
+    mark_as_expired.short_description = 'Mark selected units as expired'
+
+
+# Notification Preference Admin
+@admin.register(NotificationPreference)
+class NotificationPreferenceAdmin(admin.ModelAdmin):
+    list_display = ['user', 'email_enabled', 'sms_enabled', 'urgent_blood_email', 
+                    'appointment_reminder_sms', 'created_at']
+    list_filter = ['email_enabled', 'sms_enabled', 'urgent_blood_email', 'appointment_reminder_sms']
+    search_fields = ['user__username', 'user__email']
+    ordering = ['-created_at']
+    
+    fieldsets = (
+        ('User', {
+            'fields': ('user',)
+        }),
+        ('Channel Preferences', {
+            'fields': ('email_enabled', 'sms_enabled')
+        }),
+        ('Email Notification Types', {
+            'fields': ('urgent_blood_email', 'appointment_confirmation_email', 
+                      'request_status_email', 'low_stock_email')
+        }),
+        ('SMS Notification Types', {
+            'fields': ('appointment_reminder_sms', 'urgent_blood_sms')
+        }),
+    )
+    
+    readonly_fields = ['created_at', 'updated_at']
+
+
+# Notification Log Admin
+@admin.register(NotificationLog)
+class NotificationLogAdmin(admin.ModelAdmin):
+    list_display = ['user', 'notification_type', 'channel', 'recipient', 'status', 'sent_at']
+    list_filter = ['notification_type', 'channel', 'status', 'sent_at']
+    search_fields = ['user__username', 'recipient', 'subject', 'external_id']
+    date_hierarchy = 'sent_at'
+    ordering = ['-sent_at']
+    
+    fieldsets = (
+        ('Notification Details', {
+            'fields': ('user', 'notification_type', 'channel', 'recipient')
+        }),
+        ('Content', {
+            'fields': ('subject', 'message')
+        }),
+        ('Status', {
+            'fields': ('status', 'error_message', 'external_id')
+        }),
+    )
+    
+    readonly_fields = ['sent_at', 'created_at']
+    
+    def has_add_permission(self, request):
+        return False  # Logs are created automatically
+    
+    def has_change_permission(self, request, obj=None):
+        return False  # Logs should not be edited
+
+
+# Donor Eligibility Admin
+@admin.register(DonorEligibility)
+class DonorEligibilityAdmin(admin.ModelAdmin):
+    list_display = ['donor', 'age', 'weight', 'is_eligible', 'assessment_date', 'next_eligible_date']
+    list_filter = ['is_eligible', 'assessment_date']
+    search_fields = ['donor__first_name', 'donor__last_name', 'ineligibility_reasons']
+    date_hierarchy = 'assessment_date'
+    ordering = ['-assessment_date']
+    
+    fieldsets = (
+        ('Donor Information', {
+            'fields': ('donor', 'assessment_date')
+        }),
+        ('Physical Criteria', {
+            'fields': ('age', 'weight', 'last_donation_date')
+        }),
+        ('Health Conditions', {
+            'fields': ('health_conditions',)
+        }),
+        ('Eligibility Result', {
+            'fields': ('is_eligible', 'ineligibility_reasons', 'next_eligible_date')
+        }),
+    )
+    
+    readonly_fields = ['assessment_date']

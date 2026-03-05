@@ -1,6 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import CustomUser, Donor, BloodRequest, BloodDonation, BLOOD_TYPE_CHOICES, PURPOSE_CHOICES
+from .models import (
+    CustomUser, Donor, BloodRequest, BloodDonation, BloodUnit, BloodInventory,
+    NotificationPreference, BLOOD_TYPE_CHOICES, PURPOSE_CHOICES
+)
 
 
 # User Registration Form
@@ -188,3 +191,120 @@ class BloodRequestStatusForm(forms.ModelForm):
             'status': forms.Select(attrs={'class': 'form-control'}),
             'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+
+
+# ============================================
+# INVENTORY MANAGEMENT FORMS
+# ============================================
+
+# Blood Unit Form
+class BloodUnitForm(forms.ModelForm):
+    """Form for adding individual blood units to inventory"""
+    blood_type = forms.ChoiceField(choices=BLOOD_TYPE_CHOICES, widget=forms.Select(attrs={
+        'class': 'form-control',
+        'required': 'required'
+    }))
+    
+    class Meta:
+        model = BloodUnit
+        fields = ['blood_type', 'donation', 'donation_date', 'expiration_date', 
+                  'unit_number', 'volume_ml', 'storage_location', 'notes']
+        widgets = {
+            'donation': forms.Select(attrs={'class': 'form-control'}),
+            'donation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'expiration_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'unit_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Unique Unit Number'}),
+            'volume_ml': forms.NumberInput(attrs={'class': 'form-control', 'value': '450', 'min': '1'}),
+            'storage_location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Storage Location (optional)'}),
+            'notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Notes (optional)'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Auto-calculate expiration date (42 days from donation)
+        if not self.instance.pk and 'donation_date' in self.initial:
+            from datetime import timedelta
+            self.initial['expiration_date'] = (
+                self.initial['donation_date'] + timedelta(days=42)
+            )
+
+
+# Inventory Threshold Form
+class InventoryThresholdForm(forms.ModelForm):
+    """Form for configuring inventory thresholds"""
+    class Meta:
+        model = BloodInventory
+        fields = ['minimum_threshold', 'critical_threshold', 'optimal_level']
+        widgets = {
+            'minimum_threshold': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Minimum Threshold'
+            }),
+            'critical_threshold': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Critical Threshold'
+            }),
+            'optimal_level': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'placeholder': 'Optimal Level'
+            }),
+        }
+
+
+
+class NotificationPreferenceForm(forms.ModelForm):
+    """Form for user notification preferences"""
+    
+    class Meta:
+        model = NotificationPreference
+        fields = [
+            'email_enabled', 'sms_enabled',
+            'urgent_blood_email', 'urgent_blood_sms',
+            'appointment_reminder_email', 'appointment_reminder_sms',
+            'appointment_confirmation_email', 'appointment_confirmation_sms',
+            'request_status_email', 'request_status_sms',
+            'low_stock_email', 'low_stock_sms',
+        ]
+        
+        widgets = {
+            'email_enabled': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'sms_enabled': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'urgent_blood_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'urgent_blood_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'appointment_reminder_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'appointment_reminder_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'appointment_confirmation_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'appointment_confirmation_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'request_status_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'request_status_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'low_stock_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'low_stock_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        
+        labels = {
+            'email_enabled': 'Enable Email Notifications',
+            'sms_enabled': 'Enable SMS Notifications',
+            'urgent_blood_email': 'Urgent Blood Needs',
+            'urgent_blood_sms': 'Urgent Blood Needs',
+            'appointment_reminder_email': 'Appointment Reminders',
+            'appointment_reminder_sms': 'Appointment Reminders',
+            'appointment_confirmation_email': 'Booking Confirmations',
+            'appointment_confirmation_sms': 'Booking Confirmations',
+            'request_status_email': 'Request Status Updates',
+            'request_status_sms': 'Request Status Updates',
+            'low_stock_email': 'Low Stock Alerts (Admin)',
+            'low_stock_sms': 'Low Stock Alerts (Admin)',
+        }
+    
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        
+        # Hide admin-only fields for non-admin users
+        if user and user.role != 'admin':
+            self.fields.pop('low_stock_email', None)
+            self.fields.pop('low_stock_sms', None)

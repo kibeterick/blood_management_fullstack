@@ -1,0 +1,61 @@
+=================================================================
+SIMPLE DEPLOYMENT STEPS FOR PYTHONANYWHERE
+=================================================================
+
+STEP 1: Find your project
+=================================================================
+
+Run this ONE command:
+
+find ~ -name "manage.py" -type f 2>/dev/null
+
+Copy the path it shows (everything except "/manage.py")
+
+=================================================================
+STEP 2: Go to that directory
+=================================================================
+
+cd [paste the path here]
+
+Example:
+cd /home/kibeterick/mysite
+
+=================================================================
+STEP 3: Pull latest code (if using Git)
+=================================================================
+
+git status
+
+If it says "not a git repository", skip to STEP 5.
+If it shows git info, run:
+
+git pull origin main
+
+=================================================================
+STEP 4: Reload web app
+=================================================================
+
+Go to PythonAnywhere Web tab → Click "Reload" button
+
+=================================================================
+STEP 5: If NOT using Git - Manual Upload
+=================================================================
+
+1. Go to PythonAnywhere "Files" tab
+2. Navigate to: your_project/core_blood_system/templates/notifications/
+3. Click "Upload a file"
+4. Upload: notification_preferences.html
+5. Go to Web tab → Click "Reload"
+
+=================================================================
+WHAT TO TEST
+=================================================================
+
+1. Visit your website
+2. Log in
+3. Go to dashboard
+4. Look for "Notification Settings" card (🔔 icon)
+5. Click it
+6. You should see notification preferences page
+
+=================================================================

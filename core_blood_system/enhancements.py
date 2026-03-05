@@ -48,7 +48,7 @@ def create_appointment(donor, user, date, time_slot, location, address, notes=''
         status='scheduled'
     )
     
-    # Create notification
+    # Create in-app notification
     create_notification(
         user=user,
         notification_type='appointment',
@@ -56,6 +56,24 @@ def create_appointment(donor, user, date, time_slot, location, address, notes=''
         message=f'Your blood donation appointment is scheduled for {date} at {time_slot}',
         link=f'/appointments/{appointment.id}/'
     )
+    
+    # Send email confirmation
+    try:
+        from .email_notifications import EmailNotificationService
+        EmailNotificationService.send_appointment_confirmation(appointment)
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Failed to send appointment confirmation email: {str(e)}")
+    
+    # Send SMS confirmation
+    try:
+        from .sms_notifications import SMSNotificationService
+        SMSNotificationService.send_booking_confirmation_sms(appointment)
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Failed to send appointment confirmation SMS: {str(e)}")
     
     return appointment
 

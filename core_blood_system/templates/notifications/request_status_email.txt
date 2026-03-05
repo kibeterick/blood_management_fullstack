@@ -1,0 +1,53 @@
+BLOOD REQUEST UPDATE
+
+Dear {{ request.requester.first_name }} {{ request.requester.last_name }},
+
+Your blood request has been {{ status|upper }}.
+
+REQUEST DETAILS:
+----------------
+Patient Name: {{ request.patient_name }}
+Blood Type: {{ request.blood_type }}
+Units Needed: {{ request.units_needed }}
+Purpose: {{ request.get_purpose_display }}
+Hospital: {{ request.hospital_name }}
+Required Date: {{ request.required_date|date:"F d, Y" }}
+Status: {{ status|upper }}
+
+{% if status == 'approved' %}
+✅ REQUEST APPROVED
+
+Your blood request has been approved. Our team will coordinate with the hospital to fulfill this request.
+
+NEXT STEPS:
+- We are matching available donors with your request
+- The hospital will be notified when blood is ready
+- You will receive updates on the fulfillment status
+
+{% elif status == 'rejected' %}
+⚠️ REQUEST NOT APPROVED
+
+Unfortunately, your blood request could not be approved at this time.
+
+{% if request.rejection_reason %}
+REASON: {{ request.rejection_reason }}
+{% endif %}
+
+Please contact us if you have questions or need to submit a new request.
+
+{% elif status == 'fulfilled' %}
+✅ REQUEST FULFILLED
+
+Great news! Your blood request has been fulfilled. The blood is ready for the patient.
+
+Thank you for using our blood bank service.
+{% endif %}
+
+If you have any questions, please don't hesitate to contact us.
+
+Best regards,
+Blood Bank Team
+
+---
+This is an automated notification email.
+For questions or concerns, please log in to your account or contact us directly.

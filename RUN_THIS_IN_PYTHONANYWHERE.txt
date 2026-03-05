@@ -1,0 +1,36 @@
+=================================================================
+COPY AND PASTE THESE COMMANDS IN PYTHONANYWHERE BASH CONSOLE
+=================================================================
+
+# Step 1: Find your Django project
+find ~ -name "manage.py" -type f 2>/dev/null
+
+# After you see the path, use it in the next command
+# Example: if it shows /home/kibeterick/mysite/manage.py
+# Then your project is at /home/kibeterick/mysite
+
+# Step 2: Navigate to your project (REPLACE WITH YOUR ACTUAL PATH)
+cd /home/kibeterick/YOUR_PROJECT_NAME
+
+# Step 3: Check if you're using Git
+git status
+
+# Step 4a: If Git is set up, pull latest changes
+git pull origin main
+
+# Step 4b: If NOT using Git, you'll need to manually upload files
+# Go to Files tab and upload notification_preferences.html to:
+# core_blood_system/templates/notifications/
+
+# Step 5: Reload your web app
+# Go to Web tab and click the green "Reload" button
+
+=================================================================
+ALTERNATIVE: Run the helper script
+=================================================================
+
+# Upload deploy_notification_preferences.py to your home directory
+# Then run:
+python3 deploy_notification_preferences.py
+
+=================================================================

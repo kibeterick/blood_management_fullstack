@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .status-box {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid {% if status == 'approved' %}#28a745{% else %}#ffc107{% endif %};
+            border-radius: 4px;
+        }
+        .detail-row {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Blood Request Update</h1>
+    </div>
+    
+    <div class="content">
+        <p>Dear {{ request.requester.first_name }} {{ request.requester.last_name }},</p>
+        
+        <p>Your blood request has been <strong>{{ status|upper }}</strong>.</p>
+        
+        <div class="status-box">
+            <h3 style="margin-top: 0; color: #dc3545;">Request Details</h3>
+            
+            <div class="detail-row">
+                <span class="detail-label">Patient Name:</span>
+                {{ request.patient_name }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Blood Type:</span>
+                {{ request.blood_type }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Units Needed:</span>
+                {{ request.units_needed }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Purpose:</span>
+                {{ request.get_purpose_display }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Hospital:</span>
+                {{ request.hospital_name }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Required Date:</span>
+                {{ request.required_date|date:"F d, Y" }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <strong>{{ status|upper }}</strong>
+            </div>
+        </div>
+        
+        {% if status == 'approved' %}
+        <h3 style="color: #28a745;">✅ Request Approved</h3>
+        <p>Your blood request has been approved. Our team will coordinate with the hospital to fulfill this request.</p>
+        <p><strong>Next Steps:</strong></p>
+        <ul>
+            <li>We are matching available donors with your request</li>
+            <li>The hospital will be notified when blood is ready</li>
+            <li>You will receive updates on the fulfillment status</li>
+        </ul>
+        {% elif status == 'rejected' %}
+        <h3 style="color: #ffc107;">⚠️ Request Not Approved</h3>
+        <p>Unfortunately, your blood request could not be approved at this time.</p>
+        {% if request.rejection_reason %}
+        <p><strong>Reason:</strong> {{ request.rejection_reason }}</p>
+        {% endif %}
+        <p>Please contact us if you have questions or need to submit a new request.</p>
+        {% elif status == 'fulfilled' %}
+        <h3 style="color: #28a745;">✅ Request Fulfilled</h3>
+        <p>Great news! Your blood request has been fulfilled. The blood is ready for the patient.</p>
+        <p>Thank you for using our blood bank service.</p>
+        {% endif %}
+        
+        <p style="margin-top: 30px;">If you have any questions, please don't hesitate to contact us.</p>
+        
+        <p>Best regards,<br>
+        <strong>Blood Bank Team</strong></p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated notification email.</p>
+        <p>For questions or concerns, please log in to your account or contact us directly.</p>
+    </div>
+</body>
+</html>

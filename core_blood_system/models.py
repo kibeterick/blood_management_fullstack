@@ -310,3 +310,182 @@ class QRCode(models.Model):
     
     def __str__(self):
         return f"{self.get_qr_type_display()} - {self.code}"
+
+
+# BLOOD MANAGEMENT ENHANCEMENTS - NOTIFICATION PREFERENCES
+class NotificationPreference(models.Model):
+    """User notification preferences for channels and types"""
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, 
+                               related_name='notification_preferences')
+    email_enabled = models.BooleanField(default=True)
+    sms_enabled = models.BooleanField(default=False)
+    
+    # Individual notification type preferences - Email
+    urgent_blood_email = models.BooleanField(default=True, 
+                                             help_text="Receive urgent blood need alerts via email")
+    appointment_reminder_email = models.BooleanField(default=True,
+                                                     help_text="Receive appointment reminders via email")
+    appointment_confirmation_email = models.BooleanField(default=True,
+                                                         help_text="Receive booking confirmations via email")
+    request_status_email = models.BooleanField(default=True,
+                                              help_text="Receive request status updates via email")
+    low_stock_email = models.BooleanField(default=True,
+                                         help_text="Receive low stock alerts via email (admin only)")
+    
+    # Individual notification type preferences - SMS
+    urgent_blood_sms = models.BooleanField(default=False,
+                                          help_text="Receive urgent blood need alerts via SMS")
+    appointment_reminder_sms = models.BooleanField(default=True,
+                                                   help_text="Receive appointment reminders via SMS")
+    appointment_confirmation_sms = models.BooleanField(default=False,
+                                                       help_text="Receive booking confirmations via SMS")
+    request_status_sms = models.BooleanField(default=False,
+                                            help_text="Receive request status updates via SMS")
+    low_stock_sms = models.BooleanField(default=False,
+                                       help_text="Receive low stock alerts via SMS (admin only)")
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = "Notification Preference"
+        verbose_name_plural = "Notification Preferences"
+    
+    def __str__(self):
+        return f"{self.user.username} - Notification Preferences"
+    
+    def get_enabled_channels(self, notification_type):
+        """Get enabled channels for a specific notification type"""
+        channels = []
+        if getattr(self, f'{notification_type}_email', False):
+            channels.append('email')
+        if getattr(self, f'{notification_type}_sms', False):
+            channels.append('sms')
+        return channels
+
+
+class NotificationLog(models.Model):
+    """Log of all sent notifications for tracking and debugging"""
+    CHANNEL_CHOICES = [
+        ('email', 'Email'),
+        ('sms', 'SMS'),
+        ('in_app', 'In-App'),
+    ]
+    
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('sent', 'Sent'),
+        ('failed', 'Failed'),
+        ('bounced', 'Bounced'),
+    ]
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, 
+                            related_name='notification_logs')
+    notification_type = models.CharField(max_length=50)
+    channel = models.CharField(max_length=10, choices=CHANNEL_CHOICES)
+    recipient = models.CharField(max_length=200, help_text="Email or phone number")
+    subject = models.CharField(max_length=200, blank=True)
+    message = models.TextField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    error_message = models.TextField(blank=True)
+    sent_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    # External service tracking
+    external_id = models.CharField(max_length=100, blank=True, 
+                                   help_text="Twilio SID, etc.")
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Notification Log"
+        verbose_name_plural = "Notification Logs"
+        indexes = [
+            models.Index(fields=['user', 'notification_type']),
+            models.Index(fields=['status', 'created_at']),
+        ]
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.notification_type} via {self.channel}"
+
+
+class BloodUnit(models.Model):
+    """Individual blood unit tracking with expiration management"""
+    STATUS_CHOICES = [
+        ('available', 'Available'),
+        ('reserved', 'Reserved'),
+        ('used', 'Used'),
+        ('expired', 'Expired'),
+        ('discarded', 'Discarded'),
+    ]
+    
+    blood_type = models.CharField(max_length=3, choices=[
+        ('A+', 'A+'), ('A-', 'A-'),
+        ('B+', 'B+'), ('B-', 'B-'),
+        ('AB+', 'AB+'), ('AB-', 'AB-'),
+        ('O+', 'O+'), ('O-', 'O-'),
+    ])
+    donation = models.ForeignKey(BloodDonation, on_delete=models.SET_NULL, 
+                                null=True, blank=True, related_name='blood_units')
+    donation_date = models.DateField()
+    expiration_date = models.DateField(help_text="Typically 42 days from donation")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='available')
+    unit_number = models.CharField(max_length=50, unique=True, 
+                                   help_text="Unique identifier")
+    volume_ml = models.IntegerField(default=450, help_text="Standard unit volume")
+    storage_location = models.CharField(max_length=100, blank=True)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['expiration_date', 'donation_date']
+        verbose_name = "Blood Unit"
+        verbose_name_plural = "Blood Units"
+        indexes = [
+            models.Index(fields=['blood_type', 'status']),
+            models.Index(fields=['expiration_date']),
+        ]
+    
+    def is_expiring_soon(self):
+        """Check if unit expires within 7 days"""
+        from datetime import date, timedelta
+        return (self.expiration_date - date.today()).days <= 7
+    
+    def is_expired(self):
+        """Check if unit has expired"""
+        from datetime import date
+        return self.expiration_date < date.today()
+    
+    def __str__(self):
+        return f"{self.unit_number} - {self.blood_type} ({self.status})"
+
+
+class DonorEligibility(models.Model):
+    """Track donor eligibility assessments"""
+    donor = models.ForeignKey(Donor, on_delete=models.CASCADE, 
+                             related_name='eligibility_assessments')
+    age = models.IntegerField()
+    weight = models.FloatField(help_text="Weight in kilograms")
+    last_donation_date = models.DateField(null=True, blank=True)
+    
+    # Health screening
+    recent_illness = models.BooleanField(default=False, 
+                                        help_text="Illness within last 14 days")
+    current_medication = models.BooleanField(default=False)
+    anemia = models.BooleanField(default=False)
+    blood_pressure_issues = models.BooleanField(default=False)
+    
+    # Eligibility result
+    is_eligible = models.BooleanField(default=False)
+    ineligibility_reasons = models.TextField(blank=True)
+    next_eligible_date = models.DateField(null=True, blank=True)
+    assessment_date = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-assessment_date']
+        verbose_name = "Donor Eligibility"
+        verbose_name_plural = "Donor Eligibilities"
+    
+    def __str__(self):
+        status = "Eligible" if self.is_eligible else "Ineligible"
+        return f"{self.donor} - {status} ({self.assessment_date.date()})"

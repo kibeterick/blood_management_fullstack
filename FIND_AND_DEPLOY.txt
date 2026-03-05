@@ -1,0 +1,56 @@
+═══════════════════════════════════════════════════════════════════
+  STEP 1: FIND YOUR PROJECT DIRECTORY
+═══════════════════════════════════════════════════════════════════
+
+First, let's find where your project is located. Run this command:
+
+ls -la
+
+Look for your Django project folder. It might be named something like:
+- bloodbank
+- BloodBank
+- blood_bank
+- mysite
+- or your PythonAnywhere username
+
+═══════════════════════════════════════════════════════════════════
+  STEP 2: ONCE YOU FIND IT, RUN THESE COMMANDS ONE BY ONE
+═══════════════════════════════════════════════════════════════════
+
+Replace "YOUR_PROJECT_FOLDER" with the actual folder name you found:
+
+cd YOUR_PROJECT_FOLDER
+
+git pull origin main
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py collectstatic --noinput
+
+pip install icalendar
+
+═══════════════════════════════════════════════════════════════════
+  STEP 3: RELOAD YOUR WEB APP
+═══════════════════════════════════════════════════════════════════
+
+1. Go to PythonAnywhere "Web" tab
+2. Click the green "Reload" button
+3. Wait 10-20 seconds
+4. Visit your site
+
+═══════════════════════════════════════════════════════════════════
+  IF YOU STILL CAN'T FIND YOUR PROJECT
+═══════════════════════════════════════════════════════════════════
+
+Try these commands to search for it:
+
+find ~ -name "manage.py" -type f 2>/dev/null
+
+This will show you where manage.py is located, which tells you where
+your Django project is.
+
+Then cd to that directory and run the commands above.
+
+═══════════════════════════════════════════════════════════════════

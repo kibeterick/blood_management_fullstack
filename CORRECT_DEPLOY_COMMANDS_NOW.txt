@@ -1,0 +1,23 @@
+=================================================================
+COPY AND PASTE THESE EXACT COMMANDS
+=================================================================
+
+cd /home/kibeterick/blood_management_fullstack
+
+git status
+
+git pull origin main
+
+python manage.py collectstatic --noinput
+
+=================================================================
+THEN RELOAD YOUR WEB APP
+=================================================================
+
+Go to the Web tab in PythonAnywhere and click the green "Reload" button
+
+OR run this command (replace 'kibeterick' if needed):
+
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+=================================================================

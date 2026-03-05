@@ -1,0 +1,37 @@
+Dear {{ donor.first_name }} {{ donor.last_name }},
+
+URGENT BLOOD NEED ALERT
+
+We urgently need {{ blood_type }} blood donations!
+
+{% if urgency == 'critical' %}
+🚨 CRITICAL SITUATION: A patient's life depends on receiving {{ blood_type }} blood immediately.
+{% else %}
+⚠️ URGENT: We have a critical shortage of {{ blood_type }} blood in our inventory.
+{% endif %}
+
+Your blood type matches this urgent need. Your donation can save a life today!
+
+WHAT YOU CAN DO:
+- Contact us immediately to schedule a donation
+- Share this message with friends who have {{ blood_type }} blood
+- Every donation counts and makes a difference
+
+CONTACT US:
+Phone: {{ contact_phone }}
+Visit our blood bank during operating hours
+
+DONATION REQUIREMENTS:
+- Age: 18-65 years
+- Weight: At least 50kg
+- Good health condition
+- At least 56 days since last donation (men) or 84 days (women)
+
+Thank you for being a registered donor. Your willingness to help saves lives!
+
+Best regards,
+Blood Bank Team
+
+---
+This is an automated notification. You received this because you are registered as a {{ blood_type }} blood donor.
+To manage your notification preferences, log in to your account.

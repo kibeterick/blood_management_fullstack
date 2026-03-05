@@ -149,6 +149,22 @@ LOGOUT_REDIRECT_URL = 'home'
 # ============================================
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'support@bloodflow.com'
+BLOOD_BANK_CONTACT = os.environ.get('BLOOD_BANK_CONTACT', '+254-XXX-XXXXXX')
+
+# ============================================
+# SMS CONFIGURATION (Optional)
+# ============================================
+# SMS Provider: 'twilio' or 'africas_talking' or None
+SMS_PROVIDER = os.environ.get('SMS_PROVIDER', None)
+
+# Twilio Configuration (if using Twilio)
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
+
+# Africa's Talking Configuration (if using Africa's Talking)
+AFRICAS_TALKING_USERNAME = os.environ.get('AFRICAS_TALKING_USERNAME', '')
+AFRICAS_TALKING_API_KEY = os.environ.get('AFRICAS_TALKING_API_KEY', '')
 
 # ============================================
 # SECURITY SETTINGS (For Production)
@@ -300,3 +316,47 @@ CSP_FONT_SRC = ("'self'", "https://cdn.jsdelivr.net")
 # Prevent Host Header Injection
 USE_X_FORWARDED_HOST = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# ============================================================================
+# CELERY CONFIGURATION
+# ============================================================================
+
+# Celery broker URL (Redis)
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+
+# Celery result backend
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+# Celery task serialization
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Celery timezone
+CELERY_TIMEZONE = 'UTC'
+
+# Celery beat schedule (defined in celery.py)
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+# Task time limits
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60  # 25 minutes
+
+# ============================================================================
+# SMS NOTIFICATION CONFIGURATION
+# ============================================================================
+
+# SMS Provider: 'twilio' or 'africas_talking'
+SMS_PROVIDER = os.environ.get('SMS_PROVIDER', None)
+
+# Twilio Configuration
+TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER', '')
+
+# Africa's Talking Configuration
+AFRICAS_TALKING_USERNAME = os.environ.get('AFRICAS_TALKING_USERNAME', '')
+AFRICAS_TALKING_API_KEY = os.environ.get('AFRICAS_TALKING_API_KEY', '')
+
+# Blood Bank Contact Information
+BLOOD_BANK_CONTACT = os.environ.get('BLOOD_BANK_CONTACT', '+1234567890')

@@ -1,0 +1,93 @@
+=================================================================
+FIND YOUR PROJECT AND DEPLOY NOTIFICATION PREFERENCES
+=================================================================
+
+STEP 1: Find your project directory
+=================================================================
+
+Run this command to find where your Django project is:
+
+find ~ -name "manage.py" -type f 2>/dev/null
+
+This will show you the path to your project. Look for something like:
+/home/kibeterick/mysite/manage.py
+or
+/home/kibeterick/BloodDonationSystem/manage.py
+
+=================================================================
+STEP 2: Once you find it, navigate there
+=================================================================
+
+Example (replace with your actual path):
+cd /home/kibeterick/mysite
+
+OR if it's in a different location:
+cd /home/kibeterick/BloodDonationSystem
+
+=================================================================
+STEP 3: Check if you're using Git
+=================================================================
+
+ls -la | grep .git
+
+If you see ".git" directory, you're using Git. If not, skip to STEP 5.
+
+=================================================================
+STEP 4: If using Git, pull latest changes
+=================================================================
+
+git pull origin main
+
+(or "git pull origin master" if your branch is called master)
+
+=================================================================
+STEP 5: If NOT using Git, manually upload the file
+=================================================================
+
+Go to PythonAnywhere Files tab and navigate to:
+your_project/core_blood_system/templates/notifications/
+
+Create a new file called: notification_preferences.html
+
+Then copy the content from your local file.
+
+=================================================================
+STEP 6: Reload your web app
+=================================================================
+
+Option A - Using the Web tab:
+1. Go to the "Web" tab in PythonAnywhere
+2. Click the green "Reload" button for your web app
+
+Option B - Using command line:
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+(Replace 'kibeterick' with your actual username)
+
+=================================================================
+ALTERNATIVE: Direct File Upload Method
+=================================================================
+
+If you can't find the project or Git isn't working:
+
+1. Go to PythonAnywhere Dashboard
+2. Click "Files" tab
+3. Navigate to your project directory
+4. Find: core_blood_system/templates/notifications/
+5. Upload or create notification_preferences.html
+6. Make sure these files also exist:
+   - core_blood_system/urls.py (should have notification_preferences path)
+   - core_blood_system/views.py (should have notification_preferences function)
+   - core_blood_system/templates/dashboard/user_dashboard_enhanced.html (should have link)
+
+=================================================================
+QUICK TEST
+=================================================================
+
+After deployment:
+1. Log into your site
+2. Go to your dashboard
+3. Look for "Notification Settings" card with 🔔 icon
+4. Click it - you should see the preferences page
+
+=================================================================

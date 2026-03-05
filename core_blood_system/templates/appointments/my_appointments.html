@@ -37,7 +37,11 @@
                                             <h5 class="card-title mb-0">
                                                 {{ appointment.appointment_date|date:"F d, Y" }}
                                             </h5>
-                                            <span class="badge bg-{{ appointment.status == 'confirmed' and 'success' or 'warning' }}">
+                                            {% if appointment.status == 'confirmed' %}
+                                            <span class="badge bg-success">
+                                            {% else %}
+                                            <span class="badge bg-warning">
+                                            {% endif %}
                                                 {{ appointment.get_status_display }}
                                             </span>
                                         </div>

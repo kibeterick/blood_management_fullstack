@@ -1,0 +1,33 @@
+========================================
+FIX MY APPOINTMENTS TEMPLATE - COPY & PASTE THESE COMMANDS
+========================================
+
+PROBLEM FIXED:
+- Template syntax error in my_appointments.html
+- Django doesn't support Python-style inline conditionals
+- Changed to proper {% if %} template tags
+
+COPY AND PASTE THESE COMMANDS IN PYTHONANYWHERE BASH:
+========================================
+
+cd /home/kibeterick/blood_management_fullstack
+git pull origin main
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
+DONE! Now click the green "Reload" button in the Web tab
+========================================
+
+WHAT WAS FIXED:
+- Line 40 in my_appointments.html had invalid syntax:
+  OLD: <span class="badge bg-{{ appointment.status == 'confirmed' and 'success' or 'warning' }}">
+  NEW: {% if appointment.status == 'confirmed' %}
+       <span class="badge bg-success">
+       {% else %}
+       <span class="badge bg-warning">
+       {% endif %}
+
+TEST IT:
+1. Go to your dashboard
+2. Click "My Appointments"
+3. Page should load without errors now

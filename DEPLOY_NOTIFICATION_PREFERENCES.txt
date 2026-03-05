@@ -1,0 +1,103 @@
+=================================================================
+DEPLOY NOTIFICATION PREFERENCES TO PYTHONANYWHERE
+=================================================================
+
+Copy and paste these commands into your PythonAnywhere Bash Console:
+
+=================================================================
+STEP 1: Navigate to your project directory
+=================================================================
+
+cd ~/blooddonation
+
+=================================================================
+STEP 2: Pull the latest code from GitHub
+=================================================================
+
+git pull origin main
+
+=================================================================
+STEP 3: Collect static files (if any new CSS/JS)
+=================================================================
+
+python manage.py collectstatic --noinput
+
+=================================================================
+STEP 4: Reload your web app
+=================================================================
+
+Go to the Web tab in PythonAnywhere and click the green "Reload" button
+OR use this command:
+
+touch /var/www/yourusername_pythonanywhere_com_wsgi.py
+
+(Replace 'yourusername' with your actual PythonAnywhere username)
+
+=================================================================
+WHAT WAS DEPLOYED
+=================================================================
+
+✅ Notification Preferences Template
+   - File: core_blood_system/templates/notifications/notification_preferences.html
+   - Responsive form with red theme
+   - Email and SMS notification toggles
+   - Clear explanations for each notification type
+
+✅ Navigation Link Added
+   - Updated: core_blood_system/templates/dashboard/user_dashboard_enhanced.html
+   - Added "Notification Settings" card in Quick Actions
+   - Icon: 🔔 Bell emoji
+
+✅ URL Pattern Configured
+   - Updated: core_blood_system/urls.py
+   - Path: /notifications/preferences/
+   - View: notification_preferences
+
+=================================================================
+HOW TO TEST
+=================================================================
+
+1. Log in to your Blood Management System
+2. Go to your User Dashboard
+3. Look for "Notification Settings" card with 🔔 icon
+4. Click on it
+5. You should see the notification preferences page with:
+   - Email notification options
+   - SMS notification options (if phone number is set)
+   - Toggle switches for each notification type
+   - Save button at the bottom
+
+=================================================================
+FEATURES AVAILABLE
+=================================================================
+
+Users can now control:
+✉️  Email Notifications:
+   - Urgent blood needs alerts
+   - Appointment reminders
+   - Booking confirmations
+   - Request status updates
+   - Low stock alerts (admin only)
+
+📱 SMS Notifications:
+   - Appointment reminders
+   - Urgent blood needs alerts
+   - Booking confirmations
+   - Request status updates
+
+=================================================================
+TROUBLESHOOTING
+=================================================================
+
+If the page doesn't load:
+1. Check error logs in PythonAnywhere
+2. Verify the URL pattern is correct
+3. Make sure views.py has the notification_preferences function
+4. Check that the template file exists
+
+If toggles don't save:
+1. Check that NotificationPreference model exists
+2. Run migrations if needed: python manage.py migrate
+3. Check browser console for JavaScript errors
+
+=================================================================

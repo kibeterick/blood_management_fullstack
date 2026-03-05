@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            background-color: #f8f9fa;
+            padding: 30px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .appointment-details {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #dc3545;
+            border-radius: 4px;
+        }
+        .detail-row {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            font-size: 12px;
+            color: #6c757d;
+        }
+        .button {
+            display: inline-block;
+            background-color: #dc3545;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✅ Appointment Confirmed</h1>
+    </div>
+    
+    <div class="content">
+        <p>Dear {{ donor.first_name }} {{ donor.last_name }},</p>
+        
+        <p>Thank you for scheduling a blood donation appointment! Your commitment to saving lives is greatly appreciated.</p>
+        
+        <div class="appointment-details">
+            <h3 style="margin-top: 0; color: #dc3545;">Appointment Details</h3>
+            
+            <div class="detail-row">
+                <span class="detail-label">Date:</span>
+                {{ appointment.appointment_date|date:"F d, Y" }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Time:</span>
+                {{ appointment.get_time_slot_display }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Location:</span>
+                {{ appointment.location }}
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">Address:</span>
+                {{ appointment.address }}
+            </div>
+            
+            {% if appointment.notes %}
+            <div class="detail-row">
+                <span class="detail-label">Notes:</span>
+                {{ appointment.notes }}
+            </div>
+            {% endif %}
+        </div>
+        
+        <h3 style="color: #dc3545;">Before Your Appointment:</h3>
+        <ul>
+            <li>Get a good night's sleep</li>
+            <li>Eat a healthy meal before donating</li>
+            <li>Drink plenty of water (avoid alcohol)</li>
+            <li>Bring a valid ID</li>
+            <li>Wear comfortable clothing</li>
+        </ul>
+        
+        <h3 style="color: #dc3545;">What to Expect:</h3>
+        <ul>
+            <li>Registration and health screening (10-15 minutes)</li>
+            <li>Blood donation (8-10 minutes)</li>
+            <li>Rest and refreshments (10-15 minutes)</li>
+            <li>Total time: approximately 45 minutes</li>
+        </ul>
+        
+        <p><strong>A calendar invitation is attached to this email.</strong> Add it to your calendar so you don't forget!</p>
+        
+        <p>We'll send you a reminder 24 hours before your appointment.</p>
+        
+        <p style="margin-top: 30px;">Thank you for being a hero! Your donation will save up to 3 lives.</p>
+        
+        <p>Best regards,<br>
+        <strong>Blood Bank Team</strong></p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated confirmation email.</p>
+        <p>If you need to reschedule or cancel, please log in to your account or contact us.</p>
+    </div>
+</body>
+</html>

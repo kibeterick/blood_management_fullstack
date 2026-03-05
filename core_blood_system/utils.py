@@ -179,3 +179,56 @@ def get_donation_history_summary(donor):
     }
     
     return summary
+
+
+def generate_ics_file(appointment):
+    """
+    Generate ICS calendar file for appointment
+    
+    Args:
+        appointment: DonationAppointment instance
+    
+    Returns:
+        String containing ICS file content
+    """
+    from datetime import datetime, timedelta
+    
+    # Parse appointment date and time
+    appointment_datetime = datetime.combine(
+        appointment.appointment_date,
+        datetime.strptime(appointment.time_slot, '%H:%M').time()
+    )
+    
+    # Assume 1 hour duration
+    end_datetime = appointment_datetime + timedelta(hours=1)
+    
+    # Format dates for ICS (YYYYMMDDTHHMMSS)
+    start_str = appointment_datetime.strftime('%Y%m%dT%H%M%S')
+    end_str = end_datetime.strftime('%Y%m%dT%H%M%S')
+    now_str = datetime.now().strftime('%Y%m%dT%H%M%S')
+    
+    # Create ICS content
+    ics_content = f"""BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Blood Management System//Appointment//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:appointment-{appointment.id}@bloodmanagement.com
+DTSTAMP:{now_str}
+DTSTART:{start_str}
+DTEND:{end_str}
+SUMMARY:Blood Donation Appointment
+DESCRIPTION:Blood donation appointment at {appointment.location}
+LOCATION:{appointment.location}
+STATUS:CONFIRMED
+SEQUENCE:0
+BEGIN:VALARM
+TRIGGER:-PT24H
+DESCRIPTION:Reminder: Blood donation appointment tomorrow
+ACTION:DISPLAY
+END:VALARM
+END:VEVENT
+END:VCALENDAR"""
+    
+    return ics_content

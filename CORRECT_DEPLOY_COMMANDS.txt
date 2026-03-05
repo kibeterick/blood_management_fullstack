@@ -1,0 +1,36 @@
+═══════════════════════════════════════════════════════════════════
+  COPY THESE COMMANDS ONE BY ONE TO PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════════
+
+cd ~/blood_management_fullstack
+
+git pull origin main
+
+python manage.py makemigrations
+
+python manage.py migrate
+
+python manage.py collectstatic --noinput
+
+═══════════════════════════════════════════════════════════════════
+  AFTER ALL COMMANDS COMPLETE
+═══════════════════════════════════════════════════════════════════
+
+1. Go to PythonAnywhere "Web" tab
+2. Click green "Reload" button
+3. Wait 10-20 seconds
+4. Visit your site and login as admin
+5. Check Admin Dashboard for "Inventory Management" section
+
+═══════════════════════════════════════════════════════════════════
+  NEW FEATURES NOW LIVE
+═══════════════════════════════════════════════════════════════════
+
+✓ Blood Inventory Dashboard with real-time charts
+✓ Add Blood Units (manual + automatic from donations)
+✓ Expiration tracking (expiring soon & expired units)
+✓ Email notifications for requests/appointments
+✓ SMS support (ready for configuration)
+✓ Enhanced admin panel with new models
+
+═══════════════════════════════════════════════════════════════════

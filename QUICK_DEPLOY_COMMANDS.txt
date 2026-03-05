@@ -1,0 +1,60 @@
+═══════════════════════════════════════════════════════════════════
+  QUICK DEPLOYMENT COMMANDS - COPY & PASTE
+═══════════════════════════════════════════════════════════════════
+
+STEP 1: LOCAL MACHINE (Git Bash or Terminal)
+───────────────────────────────────────────────────────────────────
+git add .
+git commit -m "Add blood management enhancements"
+git push origin main
+
+
+STEP 2: PYTHONANYWHERE BASH CONSOLE
+───────────────────────────────────────────────────────────────────
+cd ~/bloodbank
+git pull origin main
+python manage.py makemigrations
+python manage.py migrate
+python manage.py collectstatic --noinput
+
+
+STEP 3: PYTHONANYWHERE WEB TAB
+───────────────────────────────────────────────────────────────────
+Click the green "Reload" button
+
+
+STEP 4: TEST YOUR SITE
+───────────────────────────────────────────────────────────────────
+Visit: https://your-username.pythonanywhere.com
+Login as admin
+Go to Admin Dashboard → Inventory Management
+
+
+═══════════════════════════════════════════════════════════════════
+OPTIONAL: INSTALL ADDITIONAL PACKAGES (if needed)
+═══════════════════════════════════════════════════════════════════
+
+In PythonAnywhere Bash console:
+
+pip install icalendar
+pip install twilio
+pip install africastalking
+
+
+═══════════════════════════════════════════════════════════════════
+IF SOMETHING GOES WRONG
+═══════════════════════════════════════════════════════════════════
+
+Check error logs:
+- Go to Web tab on PythonAnywhere
+- Click "Error log" link
+- Look for recent errors
+
+Clear and recollect static files:
+python manage.py collectstatic --clear --noinput
+
+Fake migrations if conflicts:
+python manage.py migrate --fake-initial
+
+
+═══════════════════════════════════════════════════════════════════

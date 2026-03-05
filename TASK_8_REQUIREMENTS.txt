@@ -1,0 +1,17 @@
+# Additional Requirements for Task 8: Scheduled Notification Tasks
+# Add these to your requirements.txt file
+
+# Celery and Redis (for production servers)
+celery==5.3.4
+redis==5.0.1
+django-celery-beat==2.5.0
+
+# SMS Providers (optional - choose one or both)
+twilio==8.10.0
+africastalking==1.2.6
+
+# Calendar file generation
+icalendar==5.0.11
+
+# Note: If deploying to PythonAnywhere, you can skip celery/redis
+# and use Django management commands with PythonAnywhere's scheduled tasks instead

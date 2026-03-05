@@ -1,0 +1,41 @@
+✅ APPOINTMENT CONFIRMED
+
+Dear {{ donor.first_name }} {{ donor.last_name }},
+
+Thank you for scheduling a blood donation appointment! Your commitment to saving lives is greatly appreciated.
+
+APPOINTMENT DETAILS:
+--------------------
+Date: {{ appointment.appointment_date|date:"F d, Y" }}
+Time: {{ appointment.get_time_slot_display }}
+Location: {{ appointment.location }}
+Address: {{ appointment.address }}
+{% if appointment.notes %}
+Notes: {{ appointment.notes }}
+{% endif %}
+
+BEFORE YOUR APPOINTMENT:
+- Get a good night's sleep
+- Eat a healthy meal before donating
+- Drink plenty of water (avoid alcohol)
+- Bring a valid ID
+- Wear comfortable clothing
+
+WHAT TO EXPECT:
+- Registration and health screening (10-15 minutes)
+- Blood donation (8-10 minutes)
+- Rest and refreshments (10-15 minutes)
+- Total time: approximately 45 minutes
+
+A calendar invitation is attached to this email. Add it to your calendar so you don't forget!
+
+We'll send you a reminder 24 hours before your appointment.
+
+Thank you for being a hero! Your donation will save up to 3 lives.
+
+Best regards,
+Blood Bank Team
+
+---
+This is an automated confirmation email.
+If you need to reschedule or cancel, please log in to your account or contact us.

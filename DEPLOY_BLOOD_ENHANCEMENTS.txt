@@ -1,0 +1,201 @@
+═══════════════════════════════════════════════════════════════════
+  DEPLOY BLOOD MANAGEMENT ENHANCEMENTS TO PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════════
+
+FEATURES INCLUDED:
+✓ Blood Bank Inventory Management (Real-time tracking with expiration)
+✓ Email Notifications (Multi-channel notification system)
+✓ SMS Notifications (Twilio & Africa's Talking support)
+✓ Enhanced Models (BloodUnit, NotificationPreference, NotificationLog, DonorEligibility)
+
+═══════════════════════════════════════════════════════════════════
+STEP 1: PUSH CODE TO GITHUB
+═══════════════════════════════════════════════════════════════════
+
+Run these commands in your local terminal:
+
+git add .
+git commit -m "Add blood management enhancements: inventory, notifications, SMS"
+git push origin main
+
+═══════════════════════════════════════════════════════════════════
+STEP 2: PULL CODE ON PYTHONANYWHERE
+═══════════════════════════════════════════════════════════════════
+
+1. Go to: https://www.pythonanywhere.com
+2. Click "Consoles" tab
+3. Start a new Bash console
+4. Run these commands:
+
+cd ~/bloodbank
+git pull origin main
+
+═══════════════════════════════════════════════════════════════════
+STEP 3: RUN DATABASE MIGRATIONS
+═══════════════════════════════════════════════════════════════════
+
+In the same Bash console, run:
+
+python manage.py makemigrations
+python manage.py migrate
+
+Expected output:
+- Creating new models: BloodUnit, NotificationPreference, NotificationLog, DonorEligibility
+- Adding fields to existing models
+
+═══════════════════════════════════════════════════════════════════
+STEP 4: COLLECT STATIC FILES
+═══════════════════════════════════════════════════════════════════
+
+python manage.py collectstatic --noinput
+
+This will copy all new templates and static files.
+
+═══════════════════════════════════════════════════════════════════
+STEP 5: CONFIGURE EMAIL SETTINGS (OPTIONAL)
+═══════════════════════════════════════════════════════════════════
+
+If you want email notifications to work, add these to your settings:
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # or your email provider
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@gmail.com'
+EMAIL_HOST_PASSWORD = 'your-app-password'
+DEFAULT_FROM_EMAIL = 'your-email@gmail.com'
+
+For Gmail: Use an App Password (not your regular password)
+https://support.google.com/accounts/answer/185833
+
+═══════════════════════════════════════════════════════════════════
+STEP 6: CONFIGURE SMS SETTINGS (OPTIONAL)
+═══════════════════════════════════════════════════════════════════
+
+If you want SMS notifications, add ONE of these to your settings:
+
+OPTION A - TWILIO:
+SMS_PROVIDER = 'twilio'
+TWILIO_ACCOUNT_SID = 'your-account-sid'
+TWILIO_AUTH_TOKEN = 'your-auth-token'
+TWILIO_PHONE_NUMBER = '+1234567890'
+
+OPTION B - AFRICA'S TALKING:
+SMS_PROVIDER = 'africas_talking'
+AFRICAS_TALKING_USERNAME = 'your-username'
+AFRICAS_TALKING_API_KEY = 'your-api-key'
+AFRICAS_TALKING_SENDER_ID = 'YourSender'
+
+═══════════════════════════════════════════════════════════════════
+STEP 7: RELOAD WEB APP
+═══════════════════════════════════════════════════════════════════
+
+1. Go to "Web" tab on PythonAnywhere
+2. Click the green "Reload" button for your web app
+3. Wait for reload to complete (about 10-20 seconds)
+
+═══════════════════════════════════════════════════════════════════
+STEP 8: VERIFY DEPLOYMENT
+═══════════════════════════════════════════════════════════════════
+
+Visit your site and check:
+
+1. INVENTORY MANAGEMENT (Admin only):
+   - Go to Admin Dashboard
+   - Look for "Inventory Management" section
+   - Click "View Inventory Dashboard"
+   - You should see blood inventory with charts
+
+2. ADD BLOOD UNITS:
+   - Click "Add Blood Unit"
+   - Fill in the form and submit
+   - Unit should appear in inventory
+
+3. EXPIRATION TRACKING:
+   - Click "Expiration List"
+   - See units categorized by expiration status
+
+4. NOTIFICATIONS:
+   - When blood requests are approved/rejected
+   - When appointments are booked
+   - Email notifications should be sent (if configured)
+
+═══════════════════════════════════════════════════════════════════
+NEW ADMIN FEATURES AVAILABLE:
+═══════════════════════════════════════════════════════════════════
+
+✓ Inventory Dashboard - Real-time blood inventory with charts
+✓ Add Blood Units - Manual blood unit entry
+✓ Expiration List - Track expiring and expired units
+✓ Configure Thresholds - Set critical/optimal levels per blood type
+✓ Inventory API - JSON endpoint for real-time updates
+
+✓ Email Notifications - Automatic emails for:
+  - Urgent blood needs
+  - Appointment confirmations (with calendar file)
+  - Request status updates
+  - Low stock alerts
+
+✓ SMS Notifications - Text messages for:
+  - Appointment reminders
+  - Urgent notifications
+
+═══════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════
+
+ERROR: "No module named 'icalendar'"
+FIX: pip install icalendar
+
+ERROR: "No module named 'twilio'"
+FIX: pip install twilio
+
+ERROR: "No module named 'africastalking'"
+FIX: pip install africastalking
+
+ERROR: Migration conflicts
+FIX: python manage.py migrate --fake-initial
+
+ERROR: Static files not loading
+FIX: python manage.py collectstatic --clear --noinput
+
+ERROR: 500 error after reload
+FIX: Check error log in PythonAnywhere Web tab
+
+═══════════════════════════════════════════════════════════════════
+TESTING CHECKLIST
+═══════════════════════════════════════════════════════════════════
+
+□ Login as admin
+□ Navigate to Inventory Dashboard
+□ Add a blood unit
+□ View expiration list
+□ Configure thresholds for a blood type
+□ Approve a blood donation (should create blood unit)
+□ Check if email notification was sent (if configured)
+□ Book an appointment (should send confirmation)
+
+═══════════════════════════════════════════════════════════════════
+NEXT STEPS (OPTIONAL)
+═══════════════════════════════════════════════════════════════════
+
+The following features are ready to implement but not yet deployed:
+
+□ Celery scheduled tasks (appointment reminders, expiration checks)
+□ Notification preferences interface (let users choose email/SMS)
+□ Donor eligibility checker (pre-screening questionnaire)
+□ Admin interface for new models
+
+These require additional setup and can be deployed later.
+
+═══════════════════════════════════════════════════════════════════
+SUPPORT
+═══════════════════════════════════════════════════════════════════
+
+If you encounter issues:
+1. Check PythonAnywhere error logs (Web tab → Error log)
+2. Check server logs (Web tab → Server log)
+3. Verify all migrations ran successfully
+4. Ensure static files were collected
+
+═══════════════════════════════════════════════════════════════════

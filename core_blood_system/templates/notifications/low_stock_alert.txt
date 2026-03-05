@@ -1,0 +1,30 @@
+LOW STOCK ALERT
+
+Dear {{ admin.first_name }} {{ admin.last_name }},
+
+⚠️ ALERT: Blood Type {{ inventory.blood_type }} is Running Low
+
+The inventory for blood type {{ inventory.blood_type }} has fallen below the minimum threshold.
+
+CURRENT STATUS:
+- Blood Type: {{ inventory.blood_type }}
+- Current Units: {{ inventory.units_available }}
+- Minimum Threshold: {{ inventory.minimum_threshold }}
+- Status: {{ inventory.get_status|upper }}
+
+RECOMMENDED ACTIONS:
+- Contact eligible donors with {{ inventory.blood_type }} blood type
+- Send urgent blood need notifications
+- Check for upcoming donation appointments
+- Coordinate with other blood banks if necessary
+
+Please take immediate action to replenish this blood type.
+
+View Inventory Dashboard: /inventory/
+
+Best regards,
+Blood Management System
+
+---
+This is an automated alert from the Blood Management System.
+Last updated: {{ inventory.last_updated|date:"M d, Y H:i" }}
