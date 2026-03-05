@@ -1031,10 +1031,10 @@ def approve_donation(request, donation_id):
     inventory, created = BloodInventory.objects.get_or_create(
         blood_type=donation.blood_type,
         defaults={'units_available': 0}
-        )
-        inventory.units_available += donation.units_donated
-        inventory.save()
-        messages.success(request, f'Donation approved! {donation.units_donated} unit(s) of {donation.blood_type} added to inventory.')
+    )
+    inventory.units_available += donation.units_donated
+    inventory.save()
+    messages.success(request, f'Donation approved! {donation.units_donated} unit(s) of {donation.blood_type} added to inventory.')
     
     return redirect('donation_request_list')
 
