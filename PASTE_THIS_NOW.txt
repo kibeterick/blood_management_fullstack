@@ -1,0 +1,32 @@
+═══════════════════════════════════════════════════════════════════════════════
+  🚀 COPY AND PASTE THIS COMMAND IN PYTHONANYWHERE BASH CONSOLE
+═══════════════════════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && python create_bloodunit_table.py && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ DONE! Now reload your web app"
+
+═══════════════════════════════════════════════════════════════════════════════
+  ⚡ AFTER RUNNING THE COMMAND:
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Go to Web tab
+2. Click "Reload" button (green button at top)
+3. Visit: https://kibeterick.pythonanywhere.com/inventory/
+
+═══════════════════════════════════════════════════════════════════════════════
+  📍 WHERE TO FIND YOUR NEW FEATURES:
+═══════════════════════════════════════════════════════════════════════════════
+
+ADMIN PORTAL (/admin/):
+  ✓ Blood Units - Track individual blood bags with expiration
+  ✓ Blood Inventory - Enhanced with thresholds and alerts
+  ✓ Notification Preferences - User notification settings
+  ✓ Notification Logs - Track all sent notifications
+  ✓ Donor Eligibility - Manage donor availability
+
+MAIN WEBSITE:
+  ✓ /inventory/ - Real-time inventory dashboard with charts
+  ✓ /inventory/add-unit/ - Add new blood units
+  ✓ /inventory/expiration/ - Track expiring units
+  ✓ /inventory/configure-thresholds/ - Set stock alerts
+
+═══════════════════════════════════════════════════════════════════════════════

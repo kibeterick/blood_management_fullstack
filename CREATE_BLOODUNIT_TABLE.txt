@@ -1,0 +1,21 @@
+═══════════════════════════════════════════════════════════════
+  CREATE BLOODUNIT TABLE - PASTE THIS IN PYTHONANYWHERE CONSOLE
+═══════════════════════════════════════════════════════════════
+
+cd /home/kibeterick/blood_management_fullstack && git pull origin main && python create_bloodunit_table.py && touch /var/www/kibeterick_pythonanywhere_com_wsgi.py && echo "✅ BloodUnit table created! Reload your web app now"
+
+═══════════════════════════════════════════════════════════════
+  AFTER RUNNING THE COMMAND ABOVE:
+═══════════════════════════════════════════════════════════════
+
+1. Go to Web tab in PythonAnywhere
+2. Click the green "Reload" button
+3. Visit your site and go to: /inventory/
+
+You should now see the Inventory Dashboard with:
+  ✓ Blood inventory levels by type
+  ✓ Low stock alerts
+  ✓ Expiration tracking
+  ✓ Threshold configuration
+
+═══════════════════════════════════════════════════════════════

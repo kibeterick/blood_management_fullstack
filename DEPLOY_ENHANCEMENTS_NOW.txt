@@ -1,0 +1,34 @@
+═══════════════════════════════════════════════════════════════
+🚀 DEPLOY BLOOD MANAGEMENT ENHANCEMENTS
+═══════════════════════════════════════════════════════════════
+
+Copy and paste these commands ONE BY ONE in PythonAnywhere Bash:
+
+STEP 1: Pull the new code
+────────────────────────────────────────────────────────────────
+cd /home/kibeterick/blood_management_fullstack && git pull origin main
+
+STEP 2: Add database fields
+────────────────────────────────────────────────────────────────
+python deploy_enhancements_to_pythonanywhere.py
+
+STEP 3: Reload the site
+────────────────────────────────────────────────────────────────
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+═══════════════════════════════════════════════════════════════
+Then go to Web tab and click the green "Reload" button
+═══════════════════════════════════════════════════════════════
+
+NEW FEATURES ADDED:
+
+For ADMIN:
+✓ Inventory Dashboard - View all blood stock with status indicators
+✓ Configure Thresholds - Set minimum, critical, and optimal levels
+✓ Expiration Tracking - Track blood units nearing expiration
+✓ Low Stock Alerts - Get notified when stock is low
+✓ Add Blood Units - Manually add units to inventory
+
+Access at: /inventory/
+
+═══════════════════════════════════════════════════════════════
