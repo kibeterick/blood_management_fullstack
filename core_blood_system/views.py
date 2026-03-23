@@ -182,7 +182,8 @@ def user_dashboard(request):
 @login_required
 def admin_dashboard(request):
     """Dashboard for administrators - Enhanced version"""
-    if request.user.role != 'admin':
+    # Allow access for admins, staff, and superusers
+    if not (hasattr(request.user, 'role') and request.user.role == 'admin') and not (request.user.is_staff or request.user.is_superuser):
         messages.error(request, 'You do not have permission to access this page.')
         return redirect('user_dashboard')
     
