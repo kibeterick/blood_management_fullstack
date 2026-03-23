@@ -1,0 +1,100 @@
+================================================================================
+FIX DATABASE ERROR AND PUSH TO GITHUB
+================================================================================
+
+ISSUE: duplicate column name: alert_sent_at
+CAUSE: Migration conflict - the column is defined twice in the database
+
+================================================================================
+STEP 1: Fix the database (on PythonAnywhere)
+================================================================================
+
+Run these commands in PythonAnywhere Bash:
+
+cd ~/blood_management_fullstack
+source venv/bin/activate
+
+# Option A: Reset database (if you don't need existing data)
+rm db.sqlite3
+python manage.py migrate
+python manage.py createsuperuser
+
+# Option B: Fix without losing data (more complex)
+python manage.py migrate --fake core_blood_system 0006_remove_security_models
+python manage.py migrate
+
+
+================================================================================
+STEP 2: Configure Git (one-time setup)
+================================================================================
+
+git config --global user.email "kibeterick57@gmail.com"
+git config --global user.name "Kibeterick"
+
+
+================================================================================
+STEP 3: Add and commit changes
+================================================================================
+
+git add .
+git commit -m "Fix: Database migration for duplicate column and deployment updates"
+
+
+================================================================================
+STEP 4: Push to GitHub
+================================================================================
+
+git push origin main
+
+# If you get "fatal: The current branch main has no upstream tracking information"
+# Use this instead:
+git push -u origin main
+
+
+================================================================================
+COMPLETE ONE-LINER (Copy and paste all at once)
+================================================================================
+
+git config --global user.email "kibeterick57@gmail.com" && git config --global user.name "Kibeterick" && git add . && git commit -m "Fix: Database migration and deployment updates" && git push -u origin main
+
+
+================================================================================
+VERIFY SUCCESS
+================================================================================
+
+After running the commands:
+
+1. Check GitHub: https://github.com/kibeterick/blood_management_fullstack
+2. You should see your latest commits there
+3. Go back to PythonAnywhere Web tab and click "Reload"
+4. Visit your site: https://kibeterick.pythonanywhere.com
+
+
+================================================================================
+IF YOU GET ERRORS
+================================================================================
+
+Error: "fatal: not a git repository"
+Solution: You're not in the right directory. Make sure you're in:
+~/blood_management_fullstack
+
+Error: "fatal: The current branch main has no upstream tracking information"
+Solution: Use: git push -u origin main
+
+Error: "fatal: Authentication failed"
+Solution: Use GitHub Personal Access Token instead of password
+1. Go to: https://github.com/settings/tokens
+2. Create a new token with 'repo' scope
+3. When prompted for password, paste the token
+
+
+================================================================================
+AFTER SUCCESSFUL PUSH
+================================================================================
+
+1. Reload your PythonAnywhere web app
+2. Test your site at: https://kibeterick.pythonanywhere.com
+3. Check that all features work correctly
+
+
+================================================================================

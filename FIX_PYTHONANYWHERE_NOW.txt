@@ -1,0 +1,71 @@
+================================================================================
+PASTE THESE COMMANDS TO FIX YOUR PYTHONANYWHERE DEPLOYMENT
+================================================================================
+
+STEP 1: Create missing migrations
+----------------------------------
+python manage.py makemigrations core_blood_system
+python manage.py migrate
+
+
+STEP 2: Reload your web app
+----------------------------
+# Go to Web tab and click "Reload" button
+
+
+================================================================================
+DISK QUOTA ISSUE - OPTIONAL FIX
+================================================================================
+
+If you're running out of disk space, clean up unnecessary files:
+
+# Check disk usage
+du -sh ~/blood_management_fullstack/*
+
+# Remove Python cache files
+find ~/blood_management_fullstack -type d -name __pycache__ -exec rm -rf {} +
+find ~/blood_management_fullstack -name "*.pyc" -delete
+
+# Remove old log files (if any)
+rm -f ~/blood_management_fullstack/logs/*.log
+
+# Check space again
+du -sh ~/blood_management_fullstack/*
+
+
+================================================================================
+STATIC FILES WARNING - IGNORE THIS
+================================================================================
+
+The duplicate static files warning is harmless. Django is just telling you
+that some files exist in multiple locations. It will use the first one found.
+
+Files affected:
+- sw.js
+- manifest.json  
+- js/usability.js
+- css/password-toggle.css
+- css/mobile-responsive.css
+- css/print-styles.css
+- css/design-system.css
+
+This won't affect your site functionality.
+
+
+================================================================================
+QUICK ONE-LINER
+================================================================================
+
+python manage.py makemigrations core_blood_system && python manage.py migrate && echo "✅ Done! Now reload your web app."
+
+
+================================================================================
+AFTER RUNNING THESE COMMANDS
+================================================================================
+
+1. Go to PythonAnywhere Web tab
+2. Click the green "Reload" button
+3. Visit: https://kibeterick.pythonanywhere.com
+4. Your site should work perfectly!
+
+================================================================================

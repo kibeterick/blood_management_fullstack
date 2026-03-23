@@ -1,0 +1,73 @@
+================================================================================
+PUSH TO GITHUB USING HTTPS (Simpler Alternative)
+================================================================================
+
+The SSH key setup had permission issues. Let's use HTTPS with a Personal Access Token instead.
+
+
+STEP 1: Create GitHub Personal Access Token
+============================================
+
+1. Go to: https://github.com/settings/tokens
+2. Click "Generate new token" → "Generate new token (classic)"
+3. Give it a name: "PythonAnywhere"
+4. Check these boxes:
+   ✓ repo (Full control of private repositories)
+5. Click "Generate token"
+6. COPY the token (you won't see it again!)
+
+
+STEP 2: Change Git Remote to HTTPS
+===================================
+
+git remote set-url origin https://github.com/kibeterick/blood_management_fullstack.git
+
+
+STEP 3: Push to GitHub
+======================
+
+git add .
+git commit -m "Fix: Database migrations and deployment updates"
+git push -u origin main
+
+When prompted for password, paste your Personal Access Token (not your GitHub password)
+
+
+================================================================================
+COMPLETE COMMAND SEQUENCE
+================================================================================
+
+git remote set-url origin https://github.com/kibeterick/blood_management_fullstack.git
+git add .
+git commit -m "Fix: Database migrations and deployment updates"
+git push -u origin main
+
+# When prompted for password, paste your token
+
+
+================================================================================
+WHAT TO DO WHEN PROMPTED
+================================================================================
+
+You'll see:
+Username for 'https://github.com': 
+
+Enter: kibeterick
+
+Then:
+Password for 'https://kibeterick@github.com':
+
+Paste your Personal Access Token (the long string you copied)
+
+
+================================================================================
+VERIFY SUCCESS
+================================================================================
+
+After push completes, visit:
+https://github.com/kibeterick/blood_management_fullstack
+
+You should see your latest commits!
+
+
+================================================================================

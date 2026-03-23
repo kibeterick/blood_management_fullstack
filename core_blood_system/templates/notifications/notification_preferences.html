@@ -1,0 +1,513 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notification Preferences - Blood Management System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .preferences-container {
+        max-width: 900px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .preferences-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 2rem;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 1.5rem;
+        border-bottom: none;
+    }
+
+    .card-header-custom h2 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+
+    .card-header-custom p {
+        margin: 0.5rem 0 0 0;
+        opacity: 0.95;
+        font-size: 0.95rem;
+    }
+
+    .card-body-custom {
+        padding: 2rem;
+    }
+
+    .channel-section {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid #dc3545;
+    }
+
+    .channel-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .channel-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    .channel-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.25rem;
+        margin-right: 1rem;
+    }
+
+    .channel-title {
+        flex: 1;
+    }
+
+    .channel-title h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .channel-title p {
+        margin: 0.25rem 0 0 0;
+        font-size: 0.875rem;
+        color: #6c757d;
+    }
+
+    .notification-item {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.2s ease;
+    }
+
+    .notification-item:hover {
+        border-color: #dc3545;
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.1);
+    }
+
+    .notification-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: flex-start;
+        padding: 0;
+        margin: 0;
+    }
+
+    .form-check-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.125rem;
+        margin-right: 0.75rem;
+        cursor: pointer;
+        border: 2px solid #ced4da;
+        flex-shrink: 0;
+    }
+
+    .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .form-check-input:focus {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .notification-label {
+        flex: 1;
+        cursor: pointer;
+    }
+
+    .notification-label strong {
+        display: block;
+        color: #212529;
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .notification-label small {
+        display: block;
+        color: #6c757d;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    .btn-save {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        border: none;
+        color: white;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+        background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+    }
+
+    .btn-save:active {
+        transform: translateY(0);
+    }
+
+    .btn-cancel {
+        background: white;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        margin-right: 1rem;
+    }
+
+    .btn-cancel:hover {
+        border-color: #adb5bd;
+        color: #495057;
+        background: #f8f9fa;
+    }
+
+    .alert-info-custom {
+        background: #e7f3ff;
+        border-left: 4px solid #0d6efd;
+        border-radius: 8px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #084298;
+    }
+
+    .alert-info-custom i {
+        margin-right: 0.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 1.5rem;
+        border-top: 2px solid #e9ecef;
+        margin-top: 1.5rem;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .preferences-container {
+            margin: 1rem auto;
+        }
+
+        .card-header-custom {
+            padding: 1.25rem;
+        }
+
+        .card-header-custom h2 {
+            font-size: 1.5rem;
+        }
+
+        .card-body-custom {
+            padding: 1.25rem;
+        }
+
+        .channel-section {
+            padding: 1rem;
+        }
+
+        .notification-item {
+            padding: 0.875rem 1rem;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+        .btn-cancel,
+        .btn-save {
+            width: 100%;
+            margin: 0.5rem 0 0 0;
+        }
+
+        .btn-save {
+            margin-top: 0;
+        }
+    }
+
+    /* Success message animation */
+    .alert-success {
+        animation: slideInDown 0.5s ease-out;
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="preferences-container">
+    <!-- Success/Error Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Main Preferences Card -->
+    <div class="preferences-card">
+        <div class="card-header-custom">
+            <h2><i class="bi bi-bell-fill"></i> Notification Preferences</h2>
+            <p>Customize how and when you receive notifications from the Blood Management System</p>
+        </div>
+
+        <div class="card-body-custom">
+            <!-- Info Alert -->
+            <div class="alert-info-custom">
+                <i class="bi bi-info-circle-fill"></i>
+                <strong>Stay Informed:</strong> Choose which notifications you'd like to receive via email or SMS. You can update these preferences at any time.
+            </div>
+
+            <form method="post" id="preferencesForm">
+                {% csrf_token %}
+
+                <!-- Email Notifications Section -->
+                <div class="channel-section">
+                    <div class="channel-header">
+                        <div class="channel-icon">
+                            <i class="bi bi-envelope-fill"></i>
+                        </div>
+                        <div class="channel-title">
+                            <h3>Email Notifications</h3>
+                            <p>Receive notifications via email to {{ user.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.urgent_blood_email }}
+                            <label class="notification-label" for="{{ form.urgent_blood_email.id_for_label }}">
+                                <strong><i class="bi bi-exclamation-triangle-fill text-danger"></i> Urgent Blood Needs</strong>
+                                <small>Get notified when your blood type is urgently needed. Your donation could save a life!</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.appointment_reminder_email }}
+                            <label class="notification-label" for="{{ form.appointment_reminder_email.id_for_label }}">
+                                <strong><i class="bi bi-calendar-check text-primary"></i> Appointment Reminders</strong>
+                                <small>Receive reminders 24 hours before your scheduled donation appointment.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.appointment_confirmation_email }}
+                            <label class="notification-label" for="{{ form.appointment_confirmation_email.id_for_label }}">
+                                <strong><i class="bi bi-check-circle text-success"></i> Booking Confirmations</strong>
+                                <small>Get instant confirmation when you book a donation appointment, including calendar attachment.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.request_status_email }}
+                            <label class="notification-label" for="{{ form.request_status_email.id_for_label }}">
+                                <strong><i class="bi bi-info-circle text-info"></i> Request Status Updates</strong>
+                                <small>Stay informed about the status of your blood requests (approved, rejected, or in progress).</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    {% if user.role == 'admin' %}
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.low_stock_email }}
+                            <label class="notification-label" for="{{ form.low_stock_email.id_for_label }}">
+                                <strong><i class="bi bi-box-seam text-warning"></i> Low Stock Alerts (Admin Only)</strong>
+                                <small>Receive alerts when blood inventory falls below threshold levels.</small>
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- SMS Notifications Section -->
+                <div class="channel-section">
+                    <div class="channel-header">
+                        <div class="channel-icon">
+                            <i class="bi bi-phone-fill"></i>
+                        </div>
+                        <div class="channel-title">
+                            <h3>SMS Notifications</h3>
+                            <p>Receive text messages to {% if user.phone_number %}{{ user.phone_number }}{% else %}<span class="text-muted">No phone number on file</span>{% endif %}</p>
+                        </div>
+                    </div>
+
+                    {% if not user.phone_number %}
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Phone Number Required:</strong> To receive SMS notifications, please add your phone number to your profile.
+                    </div>
+                    {% endif %}
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.urgent_blood_sms }}
+                            <label class="notification-label" for="{{ form.urgent_blood_sms.id_for_label }}">
+                                <strong><i class="bi bi-exclamation-triangle-fill text-danger"></i> Urgent Blood Needs</strong>
+                                <small>Get instant SMS alerts when your blood type is critically needed.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.appointment_reminder_sms }}
+                            <label class="notification-label" for="{{ form.appointment_reminder_sms.id_for_label }}">
+                                <strong><i class="bi bi-calendar-check text-primary"></i> Appointment Reminders</strong>
+                                <small>Get SMS reminders 24 hours before your donation appointment.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.appointment_confirmation_sms }}
+                            <label class="notification-label" for="{{ form.appointment_confirmation_sms.id_for_label }}">
+                                <strong><i class="bi bi-check-circle text-success"></i> Booking Confirmations</strong>
+                                <small>Receive instant SMS confirmation when you book an appointment.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.request_status_sms }}
+                            <label class="notification-label" for="{{ form.request_status_sms.id_for_label }}">
+                                <strong><i class="bi bi-info-circle text-info"></i> Request Status Updates</strong>
+                                <small>Get SMS updates about your blood request status changes.</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    {% if user.role == 'admin' %}
+                    <div class="notification-item">
+                        <div class="form-check">
+                            {{ form.low_stock_sms }}
+                            <label class="notification-label" for="{{ form.low_stock_sms.id_for_label }}">
+                                <strong><i class="bi bi-box-seam text-warning"></i> Low Stock Alerts (Admin Only)</strong>
+                                <small>Receive SMS alerts for critical blood inventory levels.</small>
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% url 'user_dashboard' %}" class="btn btn-cancel">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-save">
+                        <i class="bi bi-check-circle-fill"></i> Save Preferences
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Additional Info Card -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title"><i class="bi bi-shield-check text-success"></i> Privacy & Security</h5>
+            <p class="card-text text-muted mb-0">
+                Your notification preferences are private and secure. We will never share your contact information with third parties. 
+                You can update or disable notifications at any time.
+            </p>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Disable SMS checkboxes if no phone number
+    {% if not user.phone_number %}
+    document.addEventListener('DOMContentLoaded', function() {
+        const smsCheckboxes = [
+            '{{ form.urgent_blood_sms.id_for_label }}',
+            '{{ form.appointment_reminder_sms.id_for_label }}',
+            '{{ form.appointment_confirmation_sms.id_for_label }}',
+            '{{ form.request_status_sms.id_for_label }}'
+            {% if user.role == 'admin' %}, '{{ form.low_stock_sms.id_for_label }}'{% endif %}
+        ];
+        
+        smsCheckboxes.forEach(function(id) {
+            const checkbox = document.getElementById(id);
+            if (checkbox) {
+                checkbox.disabled = true;
+                checkbox.checked = false;
+            }
+        });
+    });
+    {% endif %}
+
+    // Form submission confirmation
+    document.getElementById('preferencesForm').addEventListener('submit', function(e) {
+        const button = this.querySelector('button[type="submit"]');
+        button.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+        button.disabled = true;
+    });
+
+    // Auto-dismiss alerts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+            setTimeout(function() {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

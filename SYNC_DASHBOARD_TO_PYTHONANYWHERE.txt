@@ -1,0 +1,49 @@
+========================================
+SYNC ADMIN DASHBOARD TO PYTHONANYWHERE
+========================================
+
+Your localhost has the enhanced dashboard but PythonAnywhere shows the old version.
+This will sync everything to match your localhost.
+
+STEP 1: COMMIT AND PUSH TO GITHUB
+----------------------------------
+Run these commands in your LOCAL terminal:
+
+cd C:\Users\HP\blood_management_fullstack
+git add .
+git commit -m "Sync enhanced admin dashboard with full navigation"
+git push origin main
+
+
+STEP 2: PULL ON PYTHONANYWHERE
+-------------------------------
+Go to PythonAnywhere Bash Console and run:
+
+cd ~/blood_management_fullstack
+git stash
+git pull origin main
+python manage.py collectstatic --noinput
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+STEP 3: VERIFY THE FIX
+-----------------------
+1. Go to: https://kibeterick.pythonanywhere.com/admin-dashboard/
+2. You should now see the FULL navigation menu:
+   - Dashboard
+   - Inventory
+   - Notification Bell (yellow)
+   - Manage (dropdown with all options)
+   - Analytics
+   - Reports (dropdown)
+   - Compatibility
+   - Advanced Search
+   - admin dropdown (right side)
+
+WHAT THIS FIXES:
+- Syncs the enhanced admin dashboard template
+- Ensures base.html navigation is loaded
+- Collects all static files (CSS/JS)
+- Reloads the web app
+
+========================================

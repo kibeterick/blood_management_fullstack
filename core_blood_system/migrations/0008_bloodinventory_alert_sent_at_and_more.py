@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("core_blood_system", "0007_fix_duplicate_alert_sent_at"),
+        ("core_blood_system", "0006_remove_security_models"),
     ]
 
     operations = [

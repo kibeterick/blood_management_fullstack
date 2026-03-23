@@ -1,0 +1,85 @@
+================================================================================
+COPY AND PASTE THESE COMMANDS INTO PYTHONANYWHERE BASH CONSOLE
+================================================================================
+
+STEP 1: Navigate to your project directory
+-------------------------------------------
+cd ~/blood_management_fullstack
+
+
+STEP 2: Pull latest code from Git (if using Git)
+-------------------------------------------------
+git pull origin main
+
+
+STEP 3: Activate virtual environment
+-------------------------------------
+source venv/bin/activate
+
+
+STEP 4: Install/Update dependencies
+------------------------------------
+pip install -r requirements.txt
+
+
+STEP 5: Apply database migrations
+----------------------------------
+python manage.py migrate
+
+
+STEP 6: Collect static files
+-----------------------------
+python manage.py collectstatic --noinput
+
+
+STEP 7: Reload your web app
+----------------------------
+# Go to PythonAnywhere Web tab and click "Reload" button
+# OR use this command if you have the API token:
+# pa_reload_webapp.py yourusername.pythonanywhere.com
+
+
+================================================================================
+OPTIONAL: Create superuser (if needed)
+================================================================================
+python manage.py createsuperuser
+
+
+================================================================================
+QUICK ONE-LINER (Copy all at once)
+================================================================================
+cd ~/blood_management_fullstack && source venv/bin/activate && git pull origin main && pip install -r requirements.txt && python manage.py migrate && python manage.py collectstatic --noinput && echo "✅ Deployment complete! Now reload your web app from the Web tab."
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+If you get "git pull" errors:
+------------------------------
+git stash
+git pull origin main
+git stash pop
+
+
+If migrations fail:
+-------------------
+python manage.py makemigrations
+python manage.py migrate
+
+
+Check for errors:
+-----------------
+tail -n 50 /var/log/yourusername.pythonanywhere.com.error.log
+
+
+================================================================================
+AFTER DEPLOYMENT
+================================================================================
+
+1. Go to PythonAnywhere Web tab
+2. Click the green "Reload" button
+3. Visit your site: https://yourusername.pythonanywhere.com
+4. Test login and features
+
+================================================================================
