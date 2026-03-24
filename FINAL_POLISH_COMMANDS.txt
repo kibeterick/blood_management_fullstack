@@ -1,0 +1,80 @@
+========================================
+FINAL POLISH - RUN BEFORE PRESENTATION
+========================================
+
+RUN THESE COMMANDS ON PYTHONANYWHERE:
+--------------------------------------
+
+cd ~/blood_management_fullstack
+
+# 1. Check system health
+python comprehensive_system_check.py
+
+# 2. Create demo data (if needed)
+python create_demo_data.py
+
+# 3. Ensure admin has correct role
+python manage.py shell -c "from core_blood_system.models import CustomUser; u = CustomUser.objects.get(username='admin'); u.role = 'admin'; u.is_staff = True; u.is_superuser = True; u.save(); print('Admin role:', u.role)"
+
+# 4. Collect static files
+python manage.py collectstatic --noinput
+
+# 5. Reload web app
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+RUN THESE ON LOCALHOST (OPTIONAL):
+-----------------------------------
+
+cd C:\Users\HP\blood_management_fullstack
+
+# 1. Check system
+python comprehensive_system_check.py
+
+# 2. Create demo data
+python create_demo_data.py
+
+# 3. Run server (for backup)
+python manage.py runserver
+
+
+QUICK TEST CHECKLIST:
+---------------------
+After running the commands, test these URLs:
+
+PYTHONANYWHERE:
+✓ https://kibeterick.pythonanywhere.com/
+✓ https://kibeterick.pythonanywhere.com/login/
+✓ https://kibeterick.pythonanywhere.com/admin-dashboard/
+✓ https://kibeterick.pythonanywhere.com/donors/
+✓ https://kibeterick.pythonanywhere.com/blood-requests/
+✓ https://kibeterick.pythonanywhere.com/inventory/
+
+LOCALHOST (BACKUP):
+✓ http://127.0.0.1:8000/
+✓ http://127.0.0.1:8000/login/
+✓ http://127.0.0.1:8000/admin-dashboard/
+
+
+WHAT TO EXPECT:
+---------------
+After running these commands:
+✓ System will have sample data
+✓ Dashboard will show statistics
+✓ Blood inventory will be populated
+✓ Donor list will have entries
+✓ Blood requests will be visible
+✓ Everything will look professional
+
+
+IF SOMETHING FAILS:
+-------------------
+1. Check the error message
+2. Run the command again
+3. Check PythonAnywhere error log
+4. Use localhost as backup
+
+
+YOU'RE READY! 🚀
+
+========================================
