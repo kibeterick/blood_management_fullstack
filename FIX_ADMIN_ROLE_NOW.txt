@@ -1,0 +1,50 @@
+========================================
+FIX ADMIN ROLE ON PYTHONANYWHERE
+========================================
+
+PROBLEM:
+Your admin user shows "Regular User" instead of "Administrator"
+This is because the role field is not set to 'admin'
+
+SOLUTION:
+Run this script on PythonAnywhere to fix the admin role
+
+STEP 1: UPLOAD THE FIX SCRIPT
+------------------------------
+1. Open the file: fix_admin_role_pythonanywhere.py
+2. Copy ALL the content
+3. Go to PythonAnywhere → Files
+4. Navigate to: /home/kibeterick/blood_management_fullstack/
+5. Click "New file" → Name it: fix_admin_role_pythonanywhere.py
+6. Paste the content and save
+
+
+STEP 2: RUN THE SCRIPT ON PYTHONANYWHERE
+-----------------------------------------
+Open PythonAnywhere Bash Console and run:
+
+cd ~/blood_management_fullstack
+python fix_admin_role_pythonanywhere.py
+
+
+STEP 3: RELOAD WEB APP
+-----------------------
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+STEP 4: TEST
+------------
+1. Logout from PythonAnywhere site
+2. Login again with username: admin
+3. You should now see:
+   ✓ "Administrator" badge (not "Regular User")
+   ✓ Full admin navigation menu
+   ✓ All admin features
+
+WHAT THIS DOES:
+- Sets user.role = 'admin'
+- Sets user.is_staff = True
+- Sets user.is_superuser = True
+- Gives full administrator access
+
+========================================

@@ -1,0 +1,48 @@
+========================================
+QUICK FIX - ADMIN ROLE (ONE COMMAND)
+========================================
+
+PROBLEM: Admin shows as "Regular User" on PythonAnywhere
+
+QUICK FIX - RUN THIS IN PYTHONANYWHERE BASH:
+---------------------------------------------
+
+cd ~/blood_management_fullstack && python manage.py shell -c "from core_blood_system.models import CustomUser; u = CustomUser.objects.get(username='admin'); u.role = 'admin'; u.is_staff = True; u.is_superuser = True; u.save(); print('✅ Admin role fixed! Role:', u.role)"
+
+
+THEN RELOAD:
+------------
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+
+THEN TEST:
+----------
+1. Logout from your site
+2. Login again as admin
+3. You should see "Administrator" badge
+4. Full admin navigation menu should appear
+
+========================================
+
+ALTERNATIVE - STEP BY STEP:
+---------------------------
+If the one-liner doesn't work, run these commands one by one:
+
+cd ~/blood_management_fullstack
+python manage.py shell
+
+Then in the Python shell, paste these lines:
+
+from core_blood_system.models import CustomUser
+u = CustomUser.objects.get(username='admin')
+u.role = 'admin'
+u.is_staff = True
+u.is_superuser = True
+u.save()
+print('Admin role:', u.role)
+exit()
+
+Then reload:
+touch /var/www/kibeterick_pythonanywhere_com_wsgi.py
+
+========================================
